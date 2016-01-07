@@ -90,7 +90,7 @@ public class TestModel implements Model {
     dx = KL/nx;   
 
     // Zeitschrittweite aus Wellengeschwindigkeit
-    dt=dx/Math.sqrt(9.81*OW)*0.5;
+    dt=dx/Math.sqrt(9.81*OW)*data.getCfl();
 
     // Maximale Anzahl Zeitschritte
     itmax = (int)(tmax/dt);

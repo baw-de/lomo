@@ -37,6 +37,8 @@ public class Case {
   private double culvertLoss = 0.;
 
   private double culvertTopEdge = -999.;
+  
+  private double cfl = 0.5;
 
   
   public Case() {
@@ -173,6 +175,14 @@ public class Case {
   public void setCulvertTopEdge(double culvertlTopEdge) {
     this.culvertTopEdge = culvertlTopEdge;
   } 
+
+  public double getCfl() {
+    return cfl;
+  }
+
+  public void setCfl(double cfl) {
+    this.cfl = cfl;
+  }
 
   public double getValveHeight(double time) {
     return Utils.linearInterpolate(valveHeightLookup, time);

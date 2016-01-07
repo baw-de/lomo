@@ -12,7 +12,7 @@ public class CaseBeanInfo extends SimpleBeanInfo {
 	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
 	  		
-		PropertyDescriptor[] properties = new PropertyDescriptor[13];
+		PropertyDescriptor[] properties = new PropertyDescriptor[14];
 		
 		try {
 		  
@@ -95,9 +95,14 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[12].setValue("order", 12); //$NON-NLS-1$
       properties[12].setDisplayName(Messages.getString("nameCulvertTopEdge")); //$NON-NLS-1$
       properties[12].setShortDescription(Messages.getString("descrCulvertTopEdge")); //$NON-NLS-1$
-      properties[12].setPropertyEditorClass(MyPropertyEditor.class);    
+      properties[12].setPropertyEditorClass(MyPropertyEditor.class);   
       
-      
+      properties[13] = new PropertyDescriptor("cfl", Case.class); //$NON-NLS-1$
+      properties[13].setValue("order", 13); //$NON-NLS-1$
+      properties[13].setDisplayName(Messages.getString("nameCfl")); //$NON-NLS-1$
+      properties[13].setShortDescription(Messages.getString("descrCfl")); //$NON-NLS-1$
+      properties[13].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[13].setExpert(true);      
       		
 		
 		} catch (IntrospectionException e) {
