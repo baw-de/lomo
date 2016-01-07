@@ -1,0 +1,61 @@
+#fgchart .readonly-checkbox *.text:disabled {
+    -fx-opacity: 1.0;
+}
+
+#fgchart .chart-content {
+   -fx-background-color: transparent;
+}
+
+#fgchart .chart-plot-background {
+   -fx-background-color: transparent;
+}
+
+#fgchart .chart-legend {
+   -fx-background-color: transparent;
+   -fx-padding: 6px 6px 6px 50px;
+}
+
+#bgchart .chart-legend {
+   -fx-padding: 6px 200px 6px 20px;   
+}
+
+#fgchart .default-color0.chart-series-line { -fx-stroke: #f9d900; }
+#fgchart .default-color1.chart-series-line { -fx-stroke: #a9e200; }
+#fgchart .default-color2.chart-series-line { -fx-stroke: #22bad9; }
+#fgchart .default-color3.chart-series-line { -fx-stroke: #0181e2; }
+#fgchart .default-color4.chart-series-line { -fx-stroke: #2f357f; }
+#fgchart .default-color5.chart-series-line { -fx-stroke: #860061; }
+#fgchart .default-color6.chart-series-line { -fx-stroke: #c62b00; }
+#fgchart .default-color7.chart-series-line { -fx-stroke: #ff5700; }
+
+#fgchart .default-color0.chart-line-symbol { -fx-background-color: #f9d900, white; }
+#fgchart .default-color1.chart-line-symbol { -fx-background-color: #a9e200, white; }
+#fgchart .default-color2.chart-line-symbol { -fx-background-color: #22bad9, white; }
+#fgchart .default-color3.chart-line-symbol { -fx-background-color: #0181e2, white; }
+#fgchart .default-color4.chart-line-symbol { -fx-background-color: #2f357f, white; }
+#fgchart .default-color5.chart-line-symbol { -fx-background-color: #860061, white; }
+#fgchart .default-color6.chart-line-symbol { -fx-background-color: #c62b00, white; }
+#fgchart .default-color7.chart-line-symbol { -fx-background-color: #ff5700, white; }
+
+#bgchart .default-color0.chart-series-line { -fx-stroke: #2f357f; }
+#bgchart .default-color1.chart-series-line { -fx-stroke: #860061; }
+#bgchart .default-color2.chart-series-line { -fx-stroke: #c62b00; }
+#bgchart .default-color3.chart-series-line { -fx-stroke: #ff5700; }
+#bgchart .default-color4.chart-series-line { -fx-stroke: #f9d900; }
+#bgchart .default-color5.chart-series-line { -fx-stroke: #a9e200; }
+#bgchart .default-color6.chart-series-line { -fx-stroke: #22bad9; }
+#bgchart .default-color7.chart-series-line { -fx-stroke: #0181e2; }
+
+#bgchart .default-color0.chart-line-symbol { -fx-background-color: #2f357f, white; }
+#bgchart .default-color1.chart-line-symbol { -fx-background-color: #860061, white; }
+#bgchart .default-color2.chart-line-symbol { -fx-background-color: #c62b00, white; }
+#bgchart .default-color3.chart-line-symbol { -fx-background-color: #ff5700, white; }
+#bgchart .default-color4.chart-line-symbol { -fx-background-color: #f9d900, white; }
+#bgchart .default-color5.chart-line-symbol { -fx-background-color: #a9e200, white; }
+#bgchart .default-color6.chart-line-symbol { -fx-background-color: #22bad9, white; }
+#bgchart .default-color7.chart-line-symbol { -fx-background-color: #0181e2, white; }
+
+
+#plot {
+   -fx-background-color: #fff;
+}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE project>
+<project name="BAW Lomo" basedir="." default="build">
+	<description>
+		BAW Lomo
+	</description>
+
+	<property name="src" value="src" />
+	<property name="build" value="build" />
+	<property name="dist" value="dist" />
+	<property name="lib" value="lib" />
+	<property name="main-class" value="de.baw.lomo.GuiStart" />
+
+	<path id="classpath">
+		<pathelement location="lib/controlsfx/controlsfx-8.40.10.jar" />		
+	</path>
+	
+	<path id="run.classpath">
+	  <path
+	   refid="classpath"/>
+	  <pathelement location="${build}" />
+	</path>
+
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+
+		<copy includeemptydirs="false" todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+
+	</target>
+
+	<target name="build" depends="init" description="description">
+		<javac srcdir="${src}" destdir="${build}" includeantruntime="false"
+			classpathref="classpath" />
+	</target>
+
+	<target name="dist" depends="build" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}" />
+		<mkdir dir="${build}/${lib}"/>
+        <copy todir="${build}/${lib}" flatten="true">
+            <path refid="classpath"/>
+        </copy>
+		
+		<manifestclasspath property="manifest.classpath" jarfile="${dist}/lomo-${DSTAMP}.jar">
+            <classpath refid="classpath"/>
+        </manifestclasspath>
+
+		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/lomo-${DSTAMP}.jar" basedir="${build}">
+		      <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+                <attribute name="Class-Path" value="${manifest.classpath}"/>
+            </manifest>
+		</jar>
+	</target>
+	
+	<target name="run">
+	  <java classname="${main-class}" classpathref="run.classpath" fork="true" />
+	</target>
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+</project>

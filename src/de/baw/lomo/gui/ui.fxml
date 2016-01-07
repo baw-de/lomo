@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import org.controlsfx.control.*?>
+<?import org.controlsfx.property.BeanProperty?>
+
+<BorderPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" fx:controller="de.baw.lomo.gui.Controller" stylesheets="@uistyle.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" >
+	<top>
+		<MenuBar>
+			<menus>
+				<Menu mnemonicParsing="false" text="%menuFile">
+					<items>
+						<MenuItem mnemonicParsing="false" text="%menuNew" onAction="#processMenuNew"/>
+						<MenuItem mnemonicParsing="false" text="%menuOpen" onAction="#processMenuFileOpen"/>
+						<MenuItem mnemonicParsing="false" text="%menuSave" onAction="#processMenuFileSave"/>
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem mnemonicParsing="false" text="%menuExportImage"  onAction="#processMenuExportImage"/>
+						<MenuItem mnemonicParsing="false" text="%menuExportResults"  onAction="#processMenuExportResults"/>
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem mnemonicParsing="false" text="%menuExit" onAction="#processMenuExit"/>
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="%menuSettings">
+					<items>
+						<CheckMenuItem disable="true" mnemonicParsing="false" text="%menuAutoCalc" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="%menuHelp">
+					<items>
+						<MenuItem mnemonicParsing="false" text="%menuAbout" onAction="#processMenuAbout"/>
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+	</top>
+	<center>
+		<SplitPane dividerPositions="0.2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+			<items>
+				<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity">
+					<children>
+						<VBox maxHeight="1.7976931348623157E308" maxWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+							<children>
+								<PropertySheet fx:id="propList" maxHeight="1.7976931348623157E308" mode="CATEGORY" modeSwitcherVisible="false" searchBoxVisible="false" VBox.vgrow="ALWAYS" />
+								<TilePane alignment="CENTER" hgap="10.0" prefColumns="3" prefRows="2" tileAlignment="BOTTOM_LEFT" vgap="8.0">
+									<children>
+										<Button fx:id="btnCalc" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#processButton" text="%btnCalc" />
+										<Button fx:id="btnStep" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#processButton" text="%btnStep" />
+										<Button fx:id="btnReset" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#processButton" text="%btnReset" />
+									</children>
+									<padding>
+										<Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+									</padding>
+								</TilePane>
+							</children>
+						</VBox>
+					</children>
+				</AnchorPane>
+				<AnchorPane fx:id="plotPane" id="plot" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+					<children>
+						<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+							<children>
+								<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+									<children>
+										<LineChart id="bgchart" fx:id="bgChart" animated="false" createSymbols="false" legendSide="TOP">
+											<xAxis>
+												<NumberAxis fx:id="bgXaxis" animated="false"  autoRanging="false" label="x1" side="BOTTOM" />
+											</xAxis>
+											<yAxis>
+												<NumberAxis fx:id="bgYaxis" animated="false" label="y1" maxWidth="60.0" prefWidth="60.0" side="LEFT" />
+											</yAxis>
+											<StackPane.margin>
+												<Insets />
+											</StackPane.margin>
+										</LineChart>
+										<LineChart id="fgchart" fx:id="fgChart" animated="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" translateX="60.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false" legendSide="TOP">
+											<xAxis>
+												<NumberAxis fx:id="fgXaxis" animated="false" autoRanging="false" label="x2" opacity="0.0" side="BOTTOM" visible="false" />
+											</xAxis>
+											<yAxis>
+												<NumberAxis fx:id="fgYaxis" animated="false" label="y2" maxWidth="60.0" prefWidth="60.0" side="RIGHT" />
+											</yAxis>
+										</LineChart>
+									</children>
+									<padding>
+										<Insets right="60.0" />
+									</padding>
+								</StackPane>
+							</children>
+						</VBox>
+					</children>
+				</AnchorPane>
+			</items>
+		</SplitPane>
+	</center>
+</BorderPane>

@@ -1,0 +1,189 @@
+package de.baw.lomo.core.data;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import de.baw.lomo.utils.Utils;
+
+@XmlRootElement(name="BAWLomoCase")
+public class Case {
+
+ private double timeMax = 1000.;
+
+  private int numberOfNodes = 100;
+
+  private double upstreamWaterDepth = 14.;
+
+  private double downstreamWaterDepth = 12.5;
+
+  private double deltaWaterDepthStop = 0.1;
+
+  private double chamberLength = 330.;
+
+  private double chamberWidth = 45.;
+  
+  private List<KeyValueEntry> valveHeightLookup = new ArrayList<>();
+
+  private List<KeyValueEntry> valveWidthLookup = new ArrayList<>();
+
+  private List<KeyValueEntry> valveLossLookup = new ArrayList<>();
+
+  private double culvertCrossSection = 1.3*16.2*0.6;
+
+  private double culvertLoss = 0.;
+
+  private double culvertTopEdge = -999.;
+
+  
+  public Case() {
+    
+    if (valveHeightLookup.size() == 0) {
+      valveHeightLookup.add(new KeyValueEntry(0., 0.));
+      valveHeightLookup.add(new KeyValueEntry(20., 0.));
+      valveHeightLookup.add(new KeyValueEntry(248., 1.3));
+      valveHeightLookup.add(new KeyValueEntry(1.e99, 1.3));
+    }
+    
+    if (valveWidthLookup.size() == 0) {
+      valveWidthLookup.add(new KeyValueEntry(0.0, 16.2));
+      valveWidthLookup.add(new KeyValueEntry(0.5, 16.2));
+      valveWidthLookup.add(new KeyValueEntry(1.0, 16.2));
+    }
+    
+    if (valveLossLookup.size() == 0) {
+      valveLossLookup.add(new KeyValueEntry(0., 0.65));
+      valveLossLookup.add(new KeyValueEntry(0.5, 0.8));
+      valveLossLookup.add(new KeyValueEntry(0.8, 0.95));
+      valveLossLookup.add(new KeyValueEntry(1., 0.95));
+      valveLossLookup.add(new KeyValueEntry(1.3, 0.8));
+    }
+  }  
+
+  public double getChamberLength() {
+    return chamberLength;
+  }
+
+  public void setChamberLength(double chamberLength) {
+    this.chamberLength = chamberLength;
+  }
+
+  public double getTimeMax() {
+    return timeMax;
+  }
+
+  public void setTimeMax(double timeMax) {
+    this.timeMax = timeMax;
+  }
+
+  public int getNumberOfNodes() {
+    return numberOfNodes;
+  }
+
+  public void setNumberOfNodes(int numberOfNodes) {
+    this.numberOfNodes = numberOfNodes;
+  }
+
+  public double getUpstreamWaterDepth() {
+    return upstreamWaterDepth;
+  }
+
+  public void setUpstreamWaterDepth(double upstreamWaterDepth) {
+    this.upstreamWaterDepth = upstreamWaterDepth;
+  }
+
+  public double getDownstreamWaterDepth() {
+    return downstreamWaterDepth;
+  }
+
+  public void setDownstreamWaterDepth(double downstreamWaterDepth) {
+    this.downstreamWaterDepth = downstreamWaterDepth;
+  }
+
+  public double getDeltaWaterDepthStop() {
+    return deltaWaterDepthStop;
+  }
+
+  public void setDeltaWaterDepthStop(double deltaWaterDepthStop) {
+    this.deltaWaterDepthStop = deltaWaterDepthStop;
+  }
+
+  public double getChamberWidth() {
+    return chamberWidth;
+  }
+
+  public void setChamberWidth(double chamberWidth) {
+    this.chamberWidth = chamberWidth;
+  }
+  
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
+  public List<KeyValueEntry> getValveHeightLookup() {
+    return valveHeightLookup;
+  }
+
+  public void setValveHeightLookup(List<KeyValueEntry> valveHeight) {
+    this.valveHeightLookup = valveHeight;
+  }
+
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
+  public List<KeyValueEntry> getValveWidthLookup() {
+    return valveWidthLookup;
+  }
+
+  public void setValveWidthLookup(List<KeyValueEntry> valveWidth) {
+    this.valveWidthLookup = valveWidth;
+  }
+
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
+  public List<KeyValueEntry> getValveLossLookup() {
+    return valveLossLookup;
+  }
+
+  public void setValveLossLookup(List<KeyValueEntry> valveLoss) {
+    this.valveLossLookup = valveLoss;
+  }  
+
+  public double getCulvertCrossSection() {
+    return culvertCrossSection;
+  }
+
+  public void setCulvertCrossSection(double culvertCrossSection) {
+    this.culvertCrossSection = culvertCrossSection;
+  }
+
+  public double getCulvertLoss() {
+    return culvertLoss;
+  }
+
+  public void setCulvertLoss(double culvertLoss) {
+    this.culvertLoss = culvertLoss;
+  }
+
+  public double getCulvertTopEdge() {
+    return culvertTopEdge;
+  }
+
+
+  public void setCulvertTopEdge(double culvertlTopEdge) {
+    this.culvertTopEdge = culvertlTopEdge;
+  } 
+
+  public double getValveHeight(double time) {
+    return Utils.linearInterpolate(valveHeightLookup, time);
+  }
+  
+  public double getValveWidth(double height) {
+    return Utils.linearInterpolate(valveWidthLookup, height);
+  }
+  
+  public double getValveLoss(double height) {
+    return Utils.linearInterpolate(valveLossLookup, height);
+  }
+
+}
