@@ -89,6 +89,7 @@
 										<Insets right="60.0" />
 									</padding>
 								</StackPane>
+								<TextArea fx:id="console" editable="false" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
 							</children>
 						</VBox>
 					</children>
@@ -96,7 +97,4 @@
 			</items>
 		</SplitPane>
 	</center>
-   <bottom>
-      <TextArea fx:id="console" editable="false" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
-   </bottom>
 </BorderPane>
