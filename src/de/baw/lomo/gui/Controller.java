@@ -168,7 +168,7 @@ public class Controller implements Initializable {
               console.deleteText(0, 5000);
             }
             // set cursor to end for scroll down
-            console.positionCaret(console.getText().length());
+            console.positionCaret(console.getText().length()-1);
           }
         });
       }
