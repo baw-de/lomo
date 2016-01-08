@@ -23,6 +23,8 @@ import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.Results;
 import de.baw.lomo.io.IOUtils;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -71,17 +73,23 @@ public class Controller implements Initializable {
   private Model model;
   private Case data;
   private Results lastResults;
-//  private ResourceBundle resources;
+  // private ResourceBundle resources;
 
   private XYChart.Series<Number, Number> seriesQ;
   private XYChart.Series<Number, Number> seriesI;
   private XYChart.Series<Number, Number> seriesH;
 
+  private final double[] multiples = new double[] { 0.01, 0.1, 0.25, 1, 2, 5,
+      10, 25, 50, 100, 500, 1000, 2000 };
+  private double bgYmax = Double.NaN;
+  private double bgYmin = Double.NaN;
+
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-    
+
     bgXaxis.setLabel(Messages.getString("lblXAxis")); //$NON-NLS-1$
-    bgXaxis.setAutoRanging(true);
+    fgXaxis.upperBoundProperty().bind(bgXaxis.upperBoundProperty());
+    fgXaxis.lowerBoundProperty().bind(bgXaxis.lowerBoundProperty());
     bgYaxis.setLabel(Messages.getString("lblYAxisLeft")); //$NON-NLS-1$
     fgYaxis.setLabel(Messages.getString("lblYAxisRight")); //$NON-NLS-1$
 
@@ -92,21 +100,60 @@ public class Controller implements Initializable {
     seriesI = new XYChart.Series<Number, Number>();
     seriesI.setName(Messages.getString("lblSeriesI")); //$NON-NLS-1$
     fgChart.getData().add(seriesI);
-    
+
     seriesH = new XYChart.Series<Number, Number>();
     seriesH.setName(Messages.getString("lblSeriesH")); //$NON-NLS-1$
     bgChart.getData().add(seriesH);
 
+    fgYaxis.needsLayoutProperty().addListener(new ChangeListener<Boolean>() {
+
+      @Override
+      public void changed(ObservableValue<? extends Boolean> observable,
+          Boolean oldValue, Boolean newValue) {
+
+        if (Double.isNaN(bgYmax)) {
+          return;
+        }
+
+        final double fgYUpper = fgYaxis.getUpperBound();
+        final double fgYLower = fgYaxis.getLowerBound();
+        final double fgYDelta = fgYaxis.getTickUnit();
+
+        final double fgYNegativeDeltaCount = fgYLower / fgYDelta;
+        final double fgYPositiveDeltaCount = fgYUpper / fgYDelta;
+
+        for (final double m : multiples) {
+
+          final double bgYLower = fgYNegativeDeltaCount * m;
+          final double bgYUpper = fgYPositiveDeltaCount * m;
+
+          if (bgYLower <= bgYmin && bgYUpper >= bgYmax) {
+
+            bgYaxis.setUpperBound(bgYUpper);
+            bgYaxis.setLowerBound(bgYLower);
+            bgYaxis.setTickUnit(m);
+
+            bgChart.layout();
+
+            return;
+          }
+        }
+
+        throw new RuntimeException("Could not fit axis.");
+      }
+
+    });
+
   }
-  
+
   public void initModel(Model model) {
-    
+
     this.model = model;
     this.data = new Case();
-    
+
     model.init(data);
-    
-    initPropertSheet();    
+
+    initPropertSheet();
   }
 
   @FXML
@@ -114,16 +161,22 @@ public class Controller implements Initializable {
 
     if (event.getSource() == btnCalc) {
       System.out.println(Messages.getString("promptStartCalc")); //$NON-NLS-1$
-      Results results = model.run();
+      final Results results = model.run();
 
       final double[] t = results.getTimeline();
       final double[] q = results.getDischargeOverTime();
       final double[] s = results.getSlopeOverTime();
       final double[] h = results.getChamberWaterDepthOverTime();
 
-      final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(t.length);
-      final List<XYChart.Data<Number, Number>> dataI = new ArrayList<>(t.length);
-      final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(t.length);
+      final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(
+          t.length);
+      final List<XYChart.Data<Number, Number>> dataI = new ArrayList<>(
+          t.length);
+      final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(
+          t.length);
+
+      bgYmax = Double.MIN_VALUE;
+      bgYmin = Double.MAX_VALUE;
 
       for (int i = 0; i < t.length; i++) {
 
@@ -132,14 +185,17 @@ public class Controller implements Initializable {
         }
 
         dataQ.add(new XYChart.Data<>(t[i], q[i]));
-        dataI.add(new XYChart.Data<>(t[i], s[i]));
+        dataI.add(new XYChart.Data<>(t[i], s[i] * 10000));
         dataH.add(new XYChart.Data<>(t[i], h[i]));
+
+        bgYmax = Math.max(bgYmax, h[i]);
+        bgYmin = Math.min(bgYmin, h[i]);
       }
 
       seriesQ.setData(FXCollections.observableList(dataQ));
       seriesI.setData(FXCollections.observableList(dataI));
       seriesH.setData(FXCollections.observableList(dataH));
-      
+
       lastResults = results;
 
     } else if (event.getSource() == btnStep) {
@@ -165,14 +221,18 @@ public class Controller implements Initializable {
   @FXML
   public void processMenuFileOpen(ActionEvent event) {
 
-    FileChooser fileChooser = new FileChooser();
+    final FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle(Messages.getString("dlgTitleOpenXmlCaseFile")); //$NON-NLS-1$
-    fileChooser.getExtensionFilters().add(new ExtensionFilter(Messages.getString("descrXmlCaseFileFilter"), "*.xml")); //$NON-NLS-1$ //$NON-NLS-2$
+    fileChooser.getExtensionFilters().add(new ExtensionFilter(
+        Messages.getString("descrXmlCaseFileFilter"), "*.xml")); //$NON-NLS-1$ //$NON-NLS-2$
 
-    File selectedFile = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+    final File selectedFile = fileChooser
+        .showOpenDialog(rootPane.getScene().getWindow());
 
-    if (selectedFile == null) return;
-    
+    if (selectedFile == null) {
+      return;
+    }
+
     data = IOUtils.readCaseFromXml(selectedFile);
     clearFigure();
     initPropertSheet();
@@ -182,67 +242,80 @@ public class Controller implements Initializable {
   @FXML
   public void processMenuFileSave(ActionEvent event) {
 
-    FileChooser fileChooser = new FileChooser();
+    final FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle(Messages.getString("dlgTitleSaveXmlCaseFile")); //$NON-NLS-1$
-    fileChooser.getExtensionFilters().add(new ExtensionFilter(Messages.getString("descrXmlCaseFileFilter"), "*.xml")); //$NON-NLS-1$ //$NON-NLS-2$
+    fileChooser.getExtensionFilters().add(new ExtensionFilter(
+        Messages.getString("descrXmlCaseFileFilter"), "*.xml")); //$NON-NLS-1$ //$NON-NLS-2$
 
-    File selectedFile = fileChooser.showSaveDialog(rootPane.getScene().getWindow());
+    final File selectedFile = fileChooser
+        .showSaveDialog(rootPane.getScene().getWindow());
 
-    if (selectedFile == null) return;
-    
+    if (selectedFile == null) {
+      return;
+    }
+
     IOUtils.writeCaseToXml(data, selectedFile);
   }
 
   @FXML
   public void processMenuExportImage(ActionEvent event) {
-    
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle(Messages.getString("dlgTitleExportImage")); //$NON-NLS-1$
-    fileChooser.getExtensionFilters().add(new ExtensionFilter(Messages.getString("descrPngFileFilter"), "*.png")); //$NON-NLS-1$ //$NON-NLS-2$
 
-    File selectedFile = fileChooser.showSaveDialog(rootPane.getScene().getWindow());
-    
-    if (selectedFile == null) return;
-    
-    WritableImage snapshot = plotPane.snapshot(new SnapshotParameters(), null);
-    BufferedImage image = SwingFXUtils.fromFXImage(snapshot, null);
+    final FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle(Messages.getString("dlgTitleExportImage")); //$NON-NLS-1$
+    fileChooser.getExtensionFilters().add(
+        new ExtensionFilter(Messages.getString("descrPngFileFilter"), "*.png")); //$NON-NLS-1$ //$NON-NLS-2$
+
+    final File selectedFile = fileChooser
+        .showSaveDialog(rootPane.getScene().getWindow());
+
+    if (selectedFile == null) {
+      return;
+    }
+
+    final WritableImage snapshot = plotPane.snapshot(new SnapshotParameters(),
+        null);
+    final BufferedImage image = SwingFXUtils.fromFXImage(snapshot, null);
     try {
       ImageIO.write(image, "png", selectedFile); //$NON-NLS-1$
-    } catch (IOException e) {
-      
+    } catch (final IOException e) {
+
       throw new RuntimeException(Messages.getString("errExportImageFailed"), e); //$NON-NLS-1$
     }
   }
-  
+
   @FXML
   public void processMenuExportResults(ActionEvent event) {
-    
-    FileChooser fileChooser = new FileChooser();
+
+    final FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle(Messages.getString("dlgTitleExportResults")); //$NON-NLS-1$
-    fileChooser.getExtensionFilters().add(new ExtensionFilter(Messages.getString("descrDatFileFilter"), "*.dat")); //$NON-NLS-1$ //$NON-NLS-2$
+    fileChooser.getExtensionFilters().add(
+        new ExtensionFilter(Messages.getString("descrDatFileFilter"), "*.dat")); //$NON-NLS-1$ //$NON-NLS-2$
 
-    File selectedFile = fileChooser.showSaveDialog(rootPane.getScene().getWindow());
+    final File selectedFile = fileChooser
+        .showSaveDialog(rootPane.getScene().getWindow());
 
-    if (selectedFile == null) return;
-    
-    IOUtils.writeResultsToText(lastResults, selectedFile);    
+    if (selectedFile == null) {
+      return;
+    }
+
+    IOUtils.writeResultsToText(lastResults, selectedFile);
   }
-  
+
   @FXML
   public void processMenuExit(ActionEvent event) {
-    
+
     Platform.exit();
   }
-  
+
   @FXML
   public void processMenuAbout(ActionEvent event) {
-    
-    Alert dlg = new Alert(AlertType.INFORMATION);
+
+    final Alert dlg = new Alert(AlertType.INFORMATION);
     dlg.initModality(Modality.APPLICATION_MODAL);
     dlg.initOwner(rootPane.getScene().getWindow());
     dlg.setTitle(Messages.getString("dlgTitleAbout")); //$NON-NLS-1$
-    dlg.getDialogPane().setContentText(Messages.getString("dlgMessageAbout") + 
-        Messages.getString("dlgMessageAboutVersion")); //$NON-NLS-1$
+    dlg.getDialogPane().setContentText(Messages.getString("dlgMessageAbout")
+        + Messages.getString("dlgMessageAboutVersion")); //$NON-NLS-1$
     dlg.showAndWait();
   }
 

@@ -67,10 +67,10 @@
 									<children>
 										<LineChart id="bgchart" fx:id="bgChart" animated="false" createSymbols="false" legendSide="TOP">
 											<xAxis>
-												<NumberAxis fx:id="bgXaxis" animated="false"  autoRanging="false" label="x1" side="BOTTOM" />
+												<NumberAxis fx:id="bgXaxis" animated="false" autoRanging="true" label="x1" side="BOTTOM" />
 											</xAxis>
 											<yAxis>
-												<NumberAxis fx:id="bgYaxis" animated="false" label="y1" maxWidth="60.0" prefWidth="60.0" side="LEFT" />
+												<NumberAxis fx:id="bgYaxis" animated="false" autoRanging="false" label="y1" maxWidth="60.0" prefWidth="60.0" side="LEFT" />
 											</yAxis>
 											<StackPane.margin>
 												<Insets />
@@ -81,7 +81,7 @@
 												<NumberAxis fx:id="fgXaxis" animated="false" autoRanging="false" label="x2" opacity="0.0" side="BOTTOM" visible="false" />
 											</xAxis>
 											<yAxis>
-												<NumberAxis fx:id="fgYaxis" animated="false" label="y2" maxWidth="60.0" prefWidth="60.0" side="RIGHT" />
+												<NumberAxis fx:id="fgYaxis" animated="false" autoRanging="true" forceZeroInRange="true" label="y2" maxWidth="60.0" prefWidth="60.0" side="RIGHT" />
 											</yAxis>
 										</LineChart>
 									</children>
