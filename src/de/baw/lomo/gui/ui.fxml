@@ -8,20 +8,20 @@
 <?import org.controlsfx.control.*?>
 <?import org.controlsfx.property.BeanProperty?>
 
-<BorderPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" fx:controller="de.baw.lomo.gui.Controller" stylesheets="@uistyle.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" >
+<BorderPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@uistyle.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.baw.lomo.gui.Controller">
 	<top>
 		<MenuBar>
 			<menus>
 				<Menu mnemonicParsing="false" text="%menuFile">
 					<items>
-						<MenuItem mnemonicParsing="false" text="%menuNew" onAction="#processMenuNew"/>
-						<MenuItem mnemonicParsing="false" text="%menuOpen" onAction="#processMenuFileOpen"/>
-						<MenuItem mnemonicParsing="false" text="%menuSave" onAction="#processMenuFileSave"/>
+						<MenuItem mnemonicParsing="false" onAction="#processMenuNew" text="%menuNew" />
+						<MenuItem mnemonicParsing="false" onAction="#processMenuFileOpen" text="%menuOpen" />
+						<MenuItem mnemonicParsing="false" onAction="#processMenuFileSave" text="%menuSave" />
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" text="%menuExportImage"  onAction="#processMenuExportImage"/>
-						<MenuItem mnemonicParsing="false" text="%menuExportResults"  onAction="#processMenuExportResults"/>
+						<MenuItem mnemonicParsing="false" onAction="#processMenuExportImage" text="%menuExportImage" />
+						<MenuItem mnemonicParsing="false" onAction="#processMenuExportResults" text="%menuExportResults" />
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" text="%menuExit" onAction="#processMenuExit"/>
+						<MenuItem mnemonicParsing="false" onAction="#processMenuExit" text="%menuExit" />
 					</items>
 				</Menu>
 				<Menu mnemonicParsing="false" text="%menuSettings">
@@ -31,7 +31,7 @@
 				</Menu>
 				<Menu mnemonicParsing="false" text="%menuHelp">
 					<items>
-						<MenuItem mnemonicParsing="false" text="%menuAbout" onAction="#processMenuAbout"/>
+						<MenuItem mnemonicParsing="false" onAction="#processMenuAbout" text="%menuAbout" />
 					</items>
 				</Menu>
 			</menus>
@@ -59,7 +59,7 @@
 						</VBox>
 					</children>
 				</AnchorPane>
-				<AnchorPane fx:id="plotPane" id="plot" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+				<AnchorPane id="plot" fx:id="plotPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
 					<children>
 						<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<children>
@@ -76,7 +76,7 @@
 												<Insets />
 											</StackPane.margin>
 										</LineChart>
-										<LineChart id="fgchart" fx:id="fgChart" animated="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" translateX="60.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false" legendSide="TOP">
+										<LineChart id="fgchart" fx:id="fgChart" animated="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendSide="TOP" translateX="60.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
 											<xAxis>
 												<NumberAxis fx:id="fgXaxis" animated="false" autoRanging="false" label="x2" opacity="0.0" side="BOTTOM" visible="false" />
 											</xAxis>
@@ -96,4 +96,7 @@
 			</items>
 		</SplitPane>
 	</center>
+   <bottom>
+      <TextArea fx:id="console" editable="false" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
+   </bottom>
 </BorderPane>

@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +40,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -69,6 +72,8 @@ public class Controller implements Initializable {
   private NumberAxis fgXaxis;
   @FXML
   private NumberAxis fgYaxis;
+  @FXML
+  private TextArea console;
 
   private Model model;
   private Case data;
@@ -142,6 +147,37 @@ public class Controller implements Initializable {
         throw new RuntimeException("Could not fit axis.");
       }
 
+    });
+
+    initConsole();
+
+  }
+
+  private void initConsole() {
+
+    final OutputStream my = new OutputStream() {
+
+      @Override
+      public void write(int b) throws IOException {
+        Platform.runLater(new Runnable() {
+          public void run() {
+            console.appendText(String.valueOf((char) b));
+          }
+        });
+      }
+    };
+
+    final PrintStream out = new PrintStream(my, true);
+
+    System.setOut(out);
+    System.setErr(out);
+
+    console.textProperty().addListener(new ChangeListener<Object>() {
+      @Override
+      public void changed(ObservableValue<?> observable, Object oldValue,
+          Object newValue) {
+        console.setScrollTop(Double.MAX_VALUE);
+      }
     });
 
   }
