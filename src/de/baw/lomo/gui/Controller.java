@@ -162,6 +162,13 @@ public class Controller implements Initializable {
         Platform.runLater(new Runnable() {
           public void run() {
             console.appendText(String.valueOf((char) b));
+            
+            // limit text length
+            if (console.getText().length() > 10000) {
+              console.deleteText(0, 5000);
+            }
+            // set cursor to end for scroll down
+            console.positionCaret(console.getText().length());
           }
         });
       }
@@ -171,15 +178,6 @@ public class Controller implements Initializable {
 
     System.setOut(out);
     System.setErr(out);
-
-    console.textProperty().addListener(new ChangeListener<Object>() {
-      @Override
-      public void changed(ObservableValue<?> observable, Object oldValue,
-          Object newValue) {
-        console.setScrollTop(Double.MAX_VALUE);
-      }
-    });
-
   }
 
   public void initModel(Model model) {
