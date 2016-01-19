@@ -149,11 +149,11 @@ public class Controller implements Initializable {
 
     });
 
-    initConsole();
+//    initConsole();
 
   }
 
-  private void initConsole() {
+  public void initConsole() {
 
     final OutputStream my = new OutputStream() {
 

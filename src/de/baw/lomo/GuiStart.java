@@ -27,6 +27,7 @@ public class GuiStart extends Application {
     primaryStage.setScene(new Scene(root));
     primaryStage.setTitle(Messages.getString("appTitle"));
     primaryStage.show();
+    c.initConsole();
   }
   
   public static void main(String[] args) {

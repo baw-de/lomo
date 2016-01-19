@@ -210,8 +210,8 @@ public class TestModel implements Model {
         } 
         // Q fuer RB-Knoten
         // Q1[0]    = 0.;  // Impulsfreies Einleiten
-        Q1[0]    = 1.*zufluss[0];   // Einleiten mit Impuls am Knoten 0 mit Faktor fuer die Richtung
-        Q1[nx]   = 0.;
+        Q1[0]    = 0;//1.*zufluss[0];   // Einleiten mit Impuls am Knoten 0 mit Faktor fuer die Richtung
+        Q1[nx]   = 1.*zufluss[0];
         // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ 
 
         // Neues Q05 mit Crank-Nicolson ermitteln
