@@ -361,9 +361,11 @@ public class Controller implements Initializable {
 
   private void clearFigure() {
 
+    final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>();
     final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>();
     final List<XYChart.Data<Number, Number>> dataI = new ArrayList<>();
 
+    seriesH.setData(FXCollections.observableList(dataH));
     seriesQ.setData(FXCollections.observableList(dataQ));
     seriesI.setData(FXCollections.observableList(dataI));
   }
