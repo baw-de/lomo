@@ -18,4 +18,10 @@ public interface Results {
   @XmlList
   double[] getChamberWaterDepthOverTime();
 
+  @XmlList
+  double[] getLongitudinalForceOverTime();
+  
+  @XmlList
+  double[] getValveOpeningOverTime();
+
 }

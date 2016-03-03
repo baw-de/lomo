@@ -1,5 +1,5 @@
 #fgchart .readonly-checkbox *.text:disabled {
-    -fx-opacity: 1.0;
+   -fx-opacity: 1.0;
 }
 
 #fgchart .chart-content {
@@ -12,11 +12,11 @@
 
 #fgchart .chart-legend {
    -fx-background-color: transparent;
-   -fx-padding: 6px 6px 6px 50px;
+   -fx-padding: 6px 0px 6px 160px;
 }
 
 #bgchart .chart-legend {
-   -fx-padding: 6px 200px 6px 20px;   
+   -fx-padding: 6px 170px 6px 20px;   
 }
 
 #fgchart .default-color0.chart-series-line { -fx-stroke: #f9d900; }

@@ -81,8 +81,9 @@ public class Controller implements Initializable {
   // private ResourceBundle resources;
 
   private XYChart.Series<Number, Number> seriesQ;
-  private XYChart.Series<Number, Number> seriesI;
+  private XYChart.Series<Number, Number> seriesF;
   private XYChart.Series<Number, Number> seriesH;
+  private XYChart.Series<Number, Number> seriesO;
 
   private final double[] multiples = new double[] { 0.01, 0.1, 0.25, 1, 2, 5,
       10, 25, 50, 100, 500, 1000, 2000 };
@@ -98,17 +99,22 @@ public class Controller implements Initializable {
     bgYaxis.setLabel(Messages.getString("lblYAxisLeft")); //$NON-NLS-1$
     fgYaxis.setLabel(Messages.getString("lblYAxisRight")); //$NON-NLS-1$
 
+    seriesF = new XYChart.Series<Number, Number>();
+    seriesF.setName(Messages.getString("lblSeriesF")); //$NON-NLS-1$
+    fgChart.getData().add(seriesF);
+
     seriesQ = new XYChart.Series<Number, Number>();
     seriesQ.setName(Messages.getString("lblSeriesQ")); //$NON-NLS-1$
     fgChart.getData().add(seriesQ);
 
-    seriesI = new XYChart.Series<Number, Number>();
-    seriesI.setName(Messages.getString("lblSeriesI")); //$NON-NLS-1$
-    fgChart.getData().add(seriesI);
 
     seriesH = new XYChart.Series<Number, Number>();
     seriesH.setName(Messages.getString("lblSeriesH")); //$NON-NLS-1$
     bgChart.getData().add(seriesH);
+    
+    seriesO = new XYChart.Series<Number, Number>();
+    seriesO.setName(Messages.getString("lblSeriesO")); //$NON-NLS-1$
+    bgChart.getData().add(seriesO);
 
     fgYaxis.needsLayoutProperty().addListener(new ChangeListener<Boolean>() {
 
@@ -199,14 +205,17 @@ public class Controller implements Initializable {
 
       final double[] t = results.getTimeline();
       final double[] q = results.getDischargeOverTime();
-      final double[] s = results.getSlopeOverTime();
+      final double[] lf = results.getLongitudinalForceOverTime();
       final double[] h = results.getChamberWaterDepthOverTime();
+      final double[] o = results.getValveOpeningOverTime();
 
       final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(
           t.length);
-      final List<XYChart.Data<Number, Number>> dataI = new ArrayList<>(
+      final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(
           t.length);
       final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(
+          t.length);
+      final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(
           t.length);
 
       bgYmax = Double.MIN_VALUE;
@@ -219,16 +228,18 @@ public class Controller implements Initializable {
         }
 
         dataQ.add(new XYChart.Data<>(t[i], q[i]));
-        dataI.add(new XYChart.Data<>(t[i], s[i] * 10000));
+        dataF.add(new XYChart.Data<>(t[i], lf[i] / 1000.));
         dataH.add(new XYChart.Data<>(t[i], h[i]));
+        dataO.add(new XYChart.Data<>(t[i], o[i] * 10.));
 
-        bgYmax = Math.max(bgYmax, h[i]);
-        bgYmin = Math.min(bgYmin, h[i]);
+        bgYmax = Math.max(bgYmax, Math.max(h[i],o[i] * 10.));
+        bgYmin = Math.min(bgYmin, Math.min(h[i],o[i] * 10.));
       }
 
       seriesQ.setData(FXCollections.observableList(dataQ));
-      seriesI.setData(FXCollections.observableList(dataI));
+      seriesF.setData(FXCollections.observableList(dataF));
       seriesH.setData(FXCollections.observableList(dataH));
+      seriesO.setData(FXCollections.observableList(dataO));
 
       lastResults = results;
 
@@ -367,7 +378,7 @@ public class Controller implements Initializable {
 
     seriesH.setData(FXCollections.observableList(dataH));
     seriesQ.setData(FXCollections.observableList(dataQ));
-    seriesI.setData(FXCollections.observableList(dataI));
+    seriesF.setData(FXCollections.observableList(dataI));
   }
 
   private static Comparator<Item> propertyComparator = new Comparator<Item>() {
