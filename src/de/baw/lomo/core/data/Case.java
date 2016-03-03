@@ -3,6 +3,7 @@ package de.baw.lomo.core.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -11,8 +12,10 @@ import de.baw.lomo.utils.Utils;
 
 @XmlRootElement(name="BAWLomoCase")
 public class Case {
+    
+  private final static String VERSION = "0.1";
 
- private double timeMax = 1000.;
+  private double timeMax = 1000.;
 
   private int numberOfNodes = 100;
 
@@ -63,7 +66,19 @@ public class Case {
       valveLossLookup.add(new KeyValueEntry(1., 0.95));
       valveLossLookup.add(new KeyValueEntry(1.3, 0.8));
     }
-  }  
+  }
+  
+  @XmlAttribute(required=true)
+  public String getVersion() {
+    return VERSION;
+  }
+
+  public void setVersion(String version) {
+    if (!version.equals(VERSION)) {
+      throw new IllegalArgumentException("Wrong case version: " + version
+          + " Required version is: " + VERSION);
+    }
+  }
 
   public double getChamberLength() {
     return chamberLength;
