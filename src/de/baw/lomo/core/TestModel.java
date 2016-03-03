@@ -67,14 +67,14 @@ public class TestModel implements Model {
     double z[];
 
     // Zeitabhaengige Ergebnisse protokollieren
-    double I[],h_mean[],Q[],Vol;
+    double I[],h_mean[],Q[],F[],Vol;
 
     // Aktueller Zeitschritt
     int it;
     // Aktuelle Zeit
     double at;
     // Aktuelle Schuetzoeffnungshoehe
-    double s_s;
+    double[] s_s;
 
 
 
@@ -106,9 +106,11 @@ public class TestModel implements Model {
     v1 = new double[nx+1]; 
     h1 = new double[nx];
 
+    s_s = new double[itmax+1];
     Q      = new double[itmax+1];
     h_mean = new double[itmax+1];
     I      = new double[itmax+1];
+    F      = new double[itmax+1];
     tResult = new double[itmax+1];
      
     // Anfangsbedingungen der Felder setzen
@@ -149,13 +151,13 @@ public class TestModel implements Model {
       it = it +1;
 
       // Aktuelle Schützöffnungsweite ermitteln
-      s_s=data.getValveHeight(at);   
+      s_s[it]=data.getValveHeight(at);   
 
       // Aktuelle Schützöffnungsflaeche ermitteln
-      A_schuetz = s_s * data.getValveWidth(s_s);
+      A_schuetz = s_s[it] * data.getValveWidth(s_s[it]);
 
       // mue-Beiwert fuer Schuetz
-      mue_schuetz = data.getValveLoss(s_s);
+      mue_schuetz = data.getValveLoss(s_s[it]);
       mueA = A_schuetz * mue_schuetz;
 
       // Vorkopffuellung: Wirksame Fallhoehe am Knoten 0
@@ -233,6 +235,7 @@ public class TestModel implements Model {
 
       // Gefaelle ausrechnen: Nur fuer Postprocessing!
       I[it]=(h1[0]-h1[nx-2])/(KL-dx);
+      F[it]=3300.e3*9.81*I[it];
 
       // Mittleren Wasserstand ausrechnen: Nur fuer Postprocessing! 
       h_mean[it]=0.;
@@ -291,6 +294,16 @@ public class TestModel implements Model {
       @Override
       public double[] getChamberWaterDepthOverTime() {
         return h_mean;
+      }
+
+      @Override
+      public double[] getLongitudinalForceOverTime() {
+        return F;
+      }
+
+      @Override
+      public double[] getValveOpeningOverTime() {
+        return s_s;
       }
     };
   }
