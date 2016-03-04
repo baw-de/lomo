@@ -129,6 +129,10 @@ public class Controller implements Initializable {
         final double fgYUpper = fgYaxis.getUpperBound();
         final double fgYLower = fgYaxis.getLowerBound();
         final double fgYDelta = fgYaxis.getTickUnit();
+        
+        if ((fgYLower == 0 && fgYUpper == 0) || fgYDelta == 0) {
+          return;
+        }
 
         final double fgYNegativeDeltaCount = fgYLower / fgYDelta;
         final double fgYPositiveDeltaCount = fgYUpper / fgYDelta;
