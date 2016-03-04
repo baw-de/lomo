@@ -12,7 +12,7 @@ public class CaseBeanInfo extends SimpleBeanInfo {
 	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
 	  		
-		PropertyDescriptor[] properties = new PropertyDescriptor[14];
+		PropertyDescriptor[] properties = new PropertyDescriptor[19];
 		
 		try {
 		  
@@ -103,8 +103,41 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[13].setShortDescription(Messages.getString("descrCfl")); //$NON-NLS-1$
       properties[13].setPropertyEditorClass(MyPropertyEditor.class);  
       properties[13].setExpert(true);      
-      		
-		
+      
+      properties[14] = new PropertyDescriptor("theta", Case.class); //$NON-NLS-1$
+      properties[14].setValue("order", 14); //$NON-NLS-1$
+      properties[14].setDisplayName(Messages.getString("nameTheta")); //$NON-NLS-1$
+      properties[14].setShortDescription(Messages.getString("descrTheta")); //$NON-NLS-1$
+      properties[14].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[14].setExpert(true);    
+      
+      properties[15] = new PropertyDescriptor("upwind", Case.class); //$NON-NLS-1$
+      properties[15].setValue("order", 15); //$NON-NLS-1$
+      properties[15].setDisplayName(Messages.getString("nameUpwind")); //$NON-NLS-1$
+      properties[15].setShortDescription(Messages.getString("descrUpwind")); //$NON-NLS-1$
+      properties[15].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[15].setExpert(true);    
+                  
+      properties[16] = new PropertyDescriptor("strahlpow", Case.class); //$NON-NLS-1$
+      properties[16].setValue("order", 16); //$NON-NLS-1$
+      properties[16].setDisplayName(Messages.getString("nameStrahlpow")); //$NON-NLS-1$
+      properties[16].setShortDescription(Messages.getString("descrStrahlpow")); //$NON-NLS-1$
+      properties[16].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[16].setExpert(true);    
+		          
+      properties[17] = new PropertyDescriptor("strahlbeiwert", Case.class); //$NON-NLS-1$
+      properties[17].setValue("order", 17); //$NON-NLS-1$
+      properties[17].setDisplayName(Messages.getString("nameStrahlbeiwert")); //$NON-NLS-1$
+      properties[17].setShortDescription(Messages.getString("descrStrahlbeiwert")); //$NON-NLS-1$
+      properties[17].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[17].setExpert(true);    
+      
+      properties[18] = new PropertyDescriptor("shipAreaLookup", Case.class); //$NON-NLS-1$
+      properties[18].setValue("order", 18); //$NON-NLS-1$
+      properties[18].setDisplayName(Messages.getString("nameShipAreaLookup")); //$NON-NLS-1$
+      properties[18].setShortDescription(Messages.getString("descrShipAreaLookup")); //$NON-NLS-1$
+      properties[18].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);     
+      
 		} catch (IntrospectionException e) {
 			e.printStackTrace();
 		}

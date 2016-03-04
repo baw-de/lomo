@@ -35,30 +35,39 @@ public class Case {
 
   private List<KeyValueEntry> valveLossLookup = new ArrayList<>();
 
-  private double culvertCrossSection = 1.3*16.2*0.6;
+  private double culvertCrossSection = 1.3 * 16.2 * 0.6;
 
   private double culvertLoss = 0.;
 
   private double culvertTopEdge = -999.;
-  
+
   private double cfl = 0.5;
 
-  
+  private double theta = 1.;
+
+  private double upwind = 1.;
+
+  private double strahlpow = 0.5;
+
+  private double strahlbeiwert = 0.1;
+
+  private List<KeyValueEntry> shipAreaLookup = new ArrayList<>();
+
   public Case() {
-    
+
     if (valveHeightLookup.size() == 0) {
       valveHeightLookup.add(new KeyValueEntry(0., 0.));
       valveHeightLookup.add(new KeyValueEntry(20., 0.));
       valveHeightLookup.add(new KeyValueEntry(248., 1.3));
       valveHeightLookup.add(new KeyValueEntry(1.e99, 1.3));
     }
-    
+
     if (valveWidthLookup.size() == 0) {
       valveWidthLookup.add(new KeyValueEntry(0.0, 16.2));
       valveWidthLookup.add(new KeyValueEntry(0.5, 16.2));
       valveWidthLookup.add(new KeyValueEntry(1.0, 16.2));
     }
-    
+
     if (valveLossLookup.size() == 0) {
       valveLossLookup.add(new KeyValueEntry(0., 0.65));
       valveLossLookup.add(new KeyValueEntry(0.5, 0.8));
@@ -66,9 +75,16 @@ public class Case {
       valveLossLookup.add(new KeyValueEntry(1., 0.95));
       valveLossLookup.add(new KeyValueEntry(1.3, 0.8));
     }
+
+    if (shipAreaLookup.size() == 0) {
+      shipAreaLookup.add(new KeyValueEntry(5, 0));
+      shipAreaLookup.add(new KeyValueEntry(10, 32.2));
+      shipAreaLookup.add(new KeyValueEntry(135, 32.2));
+      shipAreaLookup.add(new KeyValueEntry(145, 0));
+    }
   }
-  
-  @XmlAttribute(required=true)
+
+  @XmlAttribute(required = true)
   public String getVersion() {
     return VERSION;
   }
@@ -135,7 +151,7 @@ public class Case {
   public void setChamberWidth(double chamberWidth) {
     this.chamberWidth = chamberWidth;
   }
-  
+
   @XmlElementWrapper
   @XmlElement(name = "entry")
   public List<KeyValueEntry> getValveHeightLookup() {
@@ -164,7 +180,7 @@ public class Case {
 
   public void setValveLossLookup(List<KeyValueEntry> valveLoss) {
     this.valveLossLookup = valveLoss;
-  }  
+  }
 
   public double getCulvertCrossSection() {
     return culvertCrossSection;
@@ -186,10 +202,9 @@ public class Case {
     return culvertTopEdge;
   }
 
-
   public void setCulvertTopEdge(double culvertlTopEdge) {
     this.culvertTopEdge = culvertlTopEdge;
-  } 
+  }
 
   public double getCfl() {
     return cfl;
@@ -202,13 +217,57 @@ public class Case {
   public double getValveHeight(double time) {
     return Utils.linearInterpolate(valveHeightLookup, time);
   }
-  
+
   public double getValveWidth(double height) {
     return Utils.linearInterpolate(valveWidthLookup, height);
   }
-  
+
   public double getValveLoss(double height) {
     return Utils.linearInterpolate(valveLossLookup, height);
+  }
+
+  public double getTheta() {
+    return theta;
+  }
+
+  public void setTheta(double theta) {
+    this.theta = theta;
+  }
+
+  public double getUpwind() {
+    return upwind;
+  }
+
+  public void setUpwind(double upwind) {
+    this.upwind = upwind;
+  }
+
+  public double getStrahlpow() {
+    return strahlpow;
+  }
+
+  public void setStrahlpow(double strahlpow) {
+    this.strahlpow = strahlpow;
+  }
+
+  public double getStrahlbeiwert() {
+    return strahlbeiwert;
+  }
+
+  public void setStrahlbeiwert(double strahlbeiwert) {
+    this.strahlbeiwert = strahlbeiwert;
+  }
+
+  public double getShipArea(double x) {
+    return Utils.linearInterpolate(shipAreaLookup, x);
+  }
+
+  public List<KeyValueEntry> getShipAreaLookup() {
+    return shipAreaLookup;
+  }
+
+  public void setShipAreaLookup(List<KeyValueEntry> shipAreaLookup) {
+    this.shipAreaLookup = shipAreaLookup;
   }
 
 }
