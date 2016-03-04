@@ -4,6 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -54,11 +57,22 @@ public class IOUtils {
   public static void writeResultsToText(Results results, File file) {
 
     final double[] t = results.getTimeline();
-    final double[] q = results.getDischargeOverTime();
-    final double[] s = results.getSlopeOverTime();
+    final double[] o = results.getValveOpeningOverTime();
     final double[] h = results.getChamberWaterDepthOverTime();
+    final double[] q = results.getDischargeOverTime();
+    final double[] s = results.getSlopeOverTime();   
+    final double[] lf = results.getLongitudinalForceOverTime();  
+    
+    
+    DecimalFormatSymbols dSep = new DecimalFormatSymbols();
+    dSep.setDecimalSeparator('.');
+    
+    DecimalFormat df = new DecimalFormat("#.######", dSep);
 
     try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+      
+      bw.write("t[s] s[m] H[m] Q[m^3/s] I[-] Fl[N]");
+      bw.newLine();
 
       for (int i = 0; i < t.length; i++) {
 
@@ -66,10 +80,12 @@ public class IOUtils {
           break;
         }
 
-        bw.write(t[i] + " ");
-        bw.write(h[i] + " ");
-        bw.write(q[i] + " ");
-        bw.write(s[i] + "");
+        bw.write(df.format(t[i]) + " ");
+        bw.write(df.format(o[i]) + " ");
+        bw.write(df.format(h[i]) + " ");
+        bw.write(df.format(q[i]) + " ");
+        bw.write(df.format(s[i]) + " ");
+        bw.write(df.format(lf[i]) + "");
         bw.newLine();
       }
 
