@@ -51,6 +51,17 @@ public class PopOverKeyValueListPropertyEditor implements PropertyEditor<List<Ke
 
     popOver.setHeaderAlwaysVisible(true);
     popOver.setTitle(item.getName());
+            
+    String tbColKey = Messages.getString("tbColKey");
+    String tbColValue = Messages.getString("tbColValue");
+    
+    final String[] colHeader = item.getDescription().split(";");
+    
+    if (colHeader.length == 3) {
+      tbColKey = colHeader[1];
+      tbColValue = colHeader[2];
+    }
+    
 
     VBox vbox = new VBox(5.);
     vbox.setPadding(new Insets(10.));
@@ -58,7 +69,7 @@ public class PopOverKeyValueListPropertyEditor implements PropertyEditor<List<Ke
     table.setPrefSize(200., 200.);
     table.setEditable(true);   
     
-    TableColumn<KeyValueEntry, Double> keyCol = new TableColumn<>(Messages.getString("tbColKey"));
+    TableColumn<KeyValueEntry, Double> keyCol = new TableColumn<>(tbColKey);
     keyCol.setPrefWidth(99);
     keyCol.setCellValueFactory(new PropertyValueFactory<>("key"));
     keyCol.setCellFactory(TextFieldTableCell.<KeyValueEntry, Double> forTableColumn(new DoubleStringConverter()));
@@ -67,7 +78,7 @@ public class PopOverKeyValueListPropertyEditor implements PropertyEditor<List<Ke
       ((KeyValueEntry) t.getTableView().getItems().get(t.getTablePosition().getRow())).setKey(t.getNewValue());
     });
 
-    TableColumn<KeyValueEntry, Double> valueCol = new TableColumn<>(Messages.getString("tbColValue"));
+    TableColumn<KeyValueEntry, Double> valueCol = new TableColumn<>(tbColValue);
     valueCol.setPrefWidth(99);
     valueCol.setCellValueFactory(new PropertyValueFactory<>("value"));
     valueCol.setCellFactory(TextFieldTableCell.<KeyValueEntry, Double> forTableColumn(new DoubleStringConverter()));
