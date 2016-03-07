@@ -1,6 +1,6 @@
 package de.baw.lomo;
 
-import de.baw.lomo.core.Schleuse;
+import de.baw.lomo.core.OneDimensionalModel;
 import de.baw.lomo.gui.Controller;
 import de.baw.lomo.gui.Messages;
 import javafx.application.Application;
@@ -21,7 +21,7 @@ public class GuiStart extends Application {
     loader.load();  
       
     Controller c = loader.getController();    
-    c.initModel(new Schleuse());
+    c.initModel(new OneDimensionalModel());
     
     Parent root = loader.getRoot();    
     Scene scene = new Scene(root);

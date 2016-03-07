@@ -3,7 +3,7 @@ package de.baw.lomo;
 import java.io.File;
 
 import de.baw.lomo.core.Model;
-import de.baw.lomo.core.Schleuse;
+import de.baw.lomo.core.OneDimensionalModel;
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.Results;
 import de.baw.lomo.io.IOUtils;
@@ -18,7 +18,7 @@ public class Headless {
     
     Case data = IOUtils.readCaseFromXml(new File("D:\\testlomo.xml"));
     
-    Model model = new Schleuse();
+    Model model = new OneDimensionalModel();
     
     model.init(data);
     

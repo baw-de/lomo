@@ -1,11 +1,10 @@
 package de.baw.lomo.core;
 
-import java.io.*;
-
 import de.baw.lomo.core.data.Case;
+import de.baw.lomo.core.data.Case.ValveType;
 import de.baw.lomo.core.data.Results;
 
-public class Schleuse implements Model {
+public class OneDimensionalModel implements Model {
 	private Case data;
 	private double[] tResult;
 
@@ -196,6 +195,12 @@ public class Schleuse implements Model {
 		//Amue = new double[];
 
 		tResult = new double[itmax+1];
+		
+		////////////
+		
+
+		
+		////////////
 		
 		// Anfangsbedingungen der Felder setzen
 		// Zellwerte
