@@ -259,7 +259,7 @@ public class Schleuse implements Model {
 				//System.out.println("DEBUG:Amue: " + Amue);
 			}
 
-			// Fuer Drucksegmente: FABIAN TO DO!!!!
+//TODO: Fuer Drucksegmente:
 //			if (drucksegment)
 //				Amue[it] = twoVectorsLinearInterpolate(schuetzAmue[0], schuetzAmue[1], s_s);
 //
@@ -270,8 +270,8 @@ public class Schleuse implements Model {
 //			// Volumenstrom in die Kammer ausrechnen
 			Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh) / (1 + zeta_kanal / A_kanal / A_kanal * Amue * Amue));
 
-//			if (dh < 0.)
-//				Q[it] = 0.;
+			if (dh < 0.)
+				Q[it] = 0.;
 
 			// Q[it]=-(Math.cos(at/97.5)-1.)*5.;
 
@@ -408,7 +408,7 @@ public class Schleuse implements Model {
 				double AB = A_schiff_node[i];
 
 				F0[it] += 1000. * 9.81 * AA * dx; // Massenkraft des Schiffes
-				F1[it] += -1000. * 9.81 * h1[i] * (AA - AB) / 1000.; // Summe
+				F1[it] += -1000. * 9.81 * h1[i] * (AA - AB); // Summe
 																		// Ã¼ber
 																		// FlÃ¤chendifferenzen*Druecke
 				F2[it] += -(h1[i] - h1[i + 1]) / dx * 1000. * 9.81 * 0.5 * (AA + AB) * dx;
@@ -445,25 +445,25 @@ public class Schleuse implements Model {
 		double Qmax = 0., Imax = -1.e99, Imin = 1.e99, Fmax = -1.e99, Fmin = 1.e99, schiff = 0., dQ_dt_min = 1.e99,
 				dQ_dt_max = -1.e99;
 
-		try {
-			FileWriter fw = new FileWriter("Schleuse.dat");
-			BufferedWriter bw = new BufferedWriter(fw);
-
-			for (int i = 0; i < itmax; i++) {
-				bw.write(Double.toString(i * dt) + " ");
-				//bw.write(Double.toString(Amue) + " ");
-				bw.write(Double.toString(h_mean[i]) + " ");
-				bw.write(Double.toString(Q[i]) + " ");
-				bw.write(Double.toString(I[i]) + " ");
-				bw.write(Double.toString(F0[i]) + " ");
-				bw.write(Double.toString(F1[i]) + " ");
-				bw.write(Double.toString(F2[i]));
-				bw.newLine();
-			}
-			bw.close();
-		} catch (IOException e) {
-			System.out.println("IOException : " + e);
-		}
+//		try {
+//			FileWriter fw = new FileWriter("Schleuse.dat");
+//			BufferedWriter bw = new BufferedWriter(fw);
+//
+//			for (int i = 0; i < itmax; i++) {
+//				bw.write(Double.toString(i * dt) + " ");
+//				//bw.write(Double.toString(Amue) + " ");
+//				bw.write(Double.toString(h_mean[i]) + " ");
+//				bw.write(Double.toString(Q[i]) + " ");
+//				bw.write(Double.toString(I[i]) + " ");
+//				bw.write(Double.toString(F0[i]) + " ");
+//				bw.write(Double.toString(F1[i]) + " ");
+//				bw.write(Double.toString(F2[i]));
+//				bw.newLine();
+//			}
+//			bw.close();
+//		} catch (IOException e) {
+//			System.out.println("IOException : " + e);
+//		}
 
 		for (int i = 0; i < itmax; i++) {
 			Qmax = Math.max(Qmax, Q[i]);
@@ -529,7 +529,7 @@ public class Schleuse implements Model {
 
       @Override
       public double[] getLongitudinalForceOverTime() {
-        return F2;
+        return F1;
       }
 
       @Override

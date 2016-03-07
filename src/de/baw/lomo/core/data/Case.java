@@ -12,7 +12,7 @@ import de.baw.lomo.utils.Utils;
 
 @XmlRootElement(name="BAWLomoCase")
 public class Case {
-    
+
   private final static String VERSION = "0.1";
 
   private double timeMax = 1000.;
@@ -28,7 +28,7 @@ public class Case {
   private double chamberLength = 330.;
 
   private double chamberWidth = 45.;
-  
+
   private List<KeyValueEntry> valveHeightLookup = new ArrayList<>();
 
   private List<KeyValueEntry> valveWidthLookup = new ArrayList<>();
@@ -60,6 +60,8 @@ public class Case {
       valveHeightLookup.add(new KeyValueEntry(20., 0.));
       valveHeightLookup.add(new KeyValueEntry(248., 1.3));
       valveHeightLookup.add(new KeyValueEntry(1.e99, 1.3));
+      valveHeightLookup.add(new KeyValueEntry(1.e99, 1.3));
+      valveHeightLookup.add(new KeyValueEntry(1.e99, 1.3));
     }
 
     if (valveWidthLookup.size() == 0) {
@@ -80,6 +82,15 @@ public class Case {
       shipAreaLookup.add(new KeyValueEntry(5, 0));
       shipAreaLookup.add(new KeyValueEntry(10, 32.2));
       shipAreaLookup.add(new KeyValueEntry(135, 32.2));
+      shipAreaLookup.add(new KeyValueEntry(145, 0));
+      shipAreaLookup.add(new KeyValueEntry(145, 0));
+      shipAreaLookup.add(new KeyValueEntry(145, 0));
+      shipAreaLookup.add(new KeyValueEntry(145, 0));
+      shipAreaLookup.add(new KeyValueEntry(145, 0));
+      shipAreaLookup.add(new KeyValueEntry(145, 0));
+      shipAreaLookup.add(new KeyValueEntry(145, 0));
+      shipAreaLookup.add(new KeyValueEntry(145, 0));
+      shipAreaLookup.add(new KeyValueEntry(145, 0));
       shipAreaLookup.add(new KeyValueEntry(145, 0));
     }
   }
