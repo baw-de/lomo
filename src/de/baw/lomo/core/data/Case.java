@@ -13,7 +13,7 @@ import de.baw.lomo.utils.Utils;
 @XmlRootElement(name="BAWLomoCase")
 public class Case {
     
-  private final static String VERSION = "0.1";
+  private final static String VERSION = "0.2";
 
   private double timeMax = 1000.;
 
