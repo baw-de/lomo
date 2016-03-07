@@ -306,7 +306,7 @@ public class OneDimensionalModel implements Model {
 //    dh = Math.min(OW - h_mean[it-1], OW - data.getSubmergenceStart());
 
       //TODO: Fabian mit CT diskutieren!
-      if (data.getSubmergenceStart() > OW){
+      if (data.getSubmergenceStart() >= OW){
         dh = OW - h_mean[it-1]; // nur falls sinnloser Wert;
       }
       else {
