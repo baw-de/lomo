@@ -12,7 +12,7 @@ public class CaseBeanInfo extends SimpleBeanInfo {
 	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
 	  		
-		PropertyDescriptor[] properties = new PropertyDescriptor[14];
+		PropertyDescriptor[] properties = new PropertyDescriptor[15];
 		
 		try {
 		  
@@ -103,6 +103,11 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[13].setShortDescription(Messages.getString("descrCfl")); //$NON-NLS-1$
       properties[13].setPropertyEditorClass(MyPropertyEditor.class);  
       properties[13].setExpert(true);      
+      
+      properties[14] = new PropertyDescriptor("valveType", Case.class); //$NON-NLS-1$
+      properties[14].setValue("order", 14); //$NON-NLS-1$
+      properties[14].setDisplayName(Messages.getString("nameValveType")); //$NON-NLS-1$
+      properties[14].setShortDescription(Messages.getString("descrValveType")); //$NON-NLS-1$    
       		
 		
 		} catch (IntrospectionException e) {

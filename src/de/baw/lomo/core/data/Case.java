@@ -42,8 +42,27 @@ public class Case {
   private double culvertTopEdge = -999.;
   
   private double cfl = 0.5;
+  
+  private ValveType valveType = ValveType.SEGMENT_GATE;
 
   
+  public enum ValveType {    
+        
+    SEGMENT_GATE("valveTypeSegmentGate"), //$NON-NLS-1$
+    SLUICE_GATE("valveTypeSluiceGate"); //$NON-NLS-1$
+    
+    private final String key;
+    
+    private ValveType(String key) {
+      this.key = key;
+    }
+  
+    @Override
+    public String toString() {
+      return Messages.getString(key);
+    }
+  }
+
   public Case() {
     
     if (valveHeightLookup.size() == 0) {
@@ -209,6 +228,14 @@ public class Case {
   
   public double getValveLoss(double height) {
     return Utils.linearInterpolate(valveLossLookup, height);
+  }
+  
+  public ValveType getValveType() {
+    return valveType;
+  }
+
+  public void setValveType(ValveType valveType) {
+    this.valveType = valveType;
   }
 
 }
