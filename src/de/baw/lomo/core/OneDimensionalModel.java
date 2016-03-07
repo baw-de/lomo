@@ -264,8 +264,15 @@ public class OneDimensionalModel implements Model {
         break;
 
       case SEGMENT_GATE: //DRUCKSEGMENT
-//        System.out.print("Drucksegment");
-        //Amue = twoVectorsLinearInterpolate(schuetzAmue[0], schuetzAmue[1], s_s);
+        
+        //TODO: Bisher gleich wie bei Tafelschütz, muss noch verbessert werden.
+        // Aktuelle Schuetzoeffnungsflaeche ermitteln
+        A_schuetz = s_s[it] *  data.getValveWidth(s_s[it]);
+        // mue-Beiwert fuer Schuetz
+        mue_schuetz = data.getValveLoss(s_s[it]);
+        //System.out.println("DEBUG: mue_schuetz: " + mue_schuetz);
+        Amue = A_schuetz * mue_schuetz;
+        //System.out.println("DEBUG:Amue: " + Amue);
 
         break;
 
@@ -296,18 +303,26 @@ public class OneDimensionalModel implements Model {
       // Vorkopffuellung: Wirksame Fallhoehe am Knoten 0
       // dh = Math.min(OW - h_mean[it-1], max_dh);
       
+//    dh = Math.min(OW - h_mean[it-1], OW - data.getSubmergenceStart());
 
-
-      if (h_mean[it-1] <= data.getSubmergenceStart()){
-        dh = OW - data.getSubmergenceStart();
-//        System.out.println("h < z_kanal, dh = " +dh);
+      //TODO: Fabian mit CT diskutieren!
+      if (data.getSubmergenceStart() > OW){
+        dh = OW - h_mean[it-1]; // nur falls sinnloser Wert;
       }
-      else if (h_mean[it-1] > data.getSubmergenceStart()){
-        dh = OW - h_mean[it-1];
-//        System.out.println("h > z_kanal, dh = " +dh);
-      }
+      else {
+        if (h_mean[it-1] <= data.getSubmergenceStart()){
+          dh = OW - data.getSubmergenceStart();
+          //          System.out.println("h < z_kanal, dh = " +dh);
+        }
+        else if (h_mean[it-1] > data.getSubmergenceStart()){
+          dh = OW - h_mean[it-1];
+          //          System.out.println("h > z_kanal, dh = " +dh);
+        }
 
-        
+      }
+      
+
+ 
       
       //
       //			// Volumenstrom in die Kammer ausrechnen
