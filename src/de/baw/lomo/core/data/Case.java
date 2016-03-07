@@ -300,6 +300,8 @@ public class Case {
     return Utils.linearInterpolate(shipAreaLookup, x);
   }
 
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
   public List<KeyValueEntry> getShipAreaLookup() {
     return shipAreaLookup;
   }
