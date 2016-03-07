@@ -39,11 +39,11 @@ public class Case {
 
   private double culvertLoss = 0.;
 
-  private double culvertTopEdge = -999.;
+  private double submergenceStart = 13.5;
 
   private double cfl = 0.5;
   
-  private ValveType valveType = ValveType.SEGMENT_GATE;
+  private ValveType valveType = ValveType.SLUICE_GATE;
 
   private double theta = 1.;
 
@@ -57,18 +57,18 @@ public class Case {
 
   public enum ValveType {    
         
-    SEGMENT_GATE("valveTypeSegmentGate"), //$NON-NLS-1$
-    SLUICE_GATE("valveTypeSluiceGate"); //$NON-NLS-1$
+    SEGMENT_GATE(Messages.getString("valveTypeSegmentGate")), //$NON-NLS-1$
+    SLUICE_GATE(Messages.getString("valveTypeSluiceGate")); //$NON-NLS-1$
     
-    private final String key;
+    private final String name;
     
-    private ValveType(String key) {
-      this.key = key;
+    private ValveType(String name) {
+      this.name = name;
     }
   
     @Override
     public String toString() {
-      return Messages.getString(key);
+      return name;
     }
   }
 
@@ -228,12 +228,12 @@ public class Case {
     this.culvertLoss = culvertLoss;
   }
 
-  public double getCulvertTopEdge() {
-    return culvertTopEdge;
+  public double getSubmergenceStart() {
+    return submergenceStart;
   }
 
-  public void setCulvertTopEdge(double culvertlTopEdge) {
-    this.culvertTopEdge = culvertlTopEdge;
+  public void setSubmergenceStart(double submergenceStart) {
+    this.submergenceStart = submergenceStart;
   }
 
   public double getCfl() {

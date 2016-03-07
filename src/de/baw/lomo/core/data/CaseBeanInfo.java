@@ -91,10 +91,10 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[11].setShortDescription(Messages.getString("descrCulvertLoss")); //$NON-NLS-1$
       properties[11].setPropertyEditorClass(MyPropertyEditor.class);
       
-      properties[12] = new PropertyDescriptor("culvertTopEdge", Case.class); //$NON-NLS-1$
+      properties[12] = new PropertyDescriptor("submergenceStart", Case.class); //$NON-NLS-1$
       properties[12].setValue("order", 12); //$NON-NLS-1$
-      properties[12].setDisplayName(Messages.getString("nameCulvertTopEdge")); //$NON-NLS-1$
-      properties[12].setShortDescription(Messages.getString("descrCulvertTopEdge")); //$NON-NLS-1$
+      properties[12].setDisplayName(Messages.getString("nameSubmergenceStart")); //$NON-NLS-1$
+      properties[12].setShortDescription(Messages.getString("descrSubmergenceStart")); //$NON-NLS-1$
       properties[12].setPropertyEditorClass(MyPropertyEditor.class);   
       
       properties[13] = new PropertyDescriptor("cfl", Case.class); //$NON-NLS-1$
