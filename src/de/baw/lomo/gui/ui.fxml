@@ -59,11 +59,11 @@
 						</VBox>
 					</children>
 				</AnchorPane>
-				<AnchorPane id="plot" fx:id="plotPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+				<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
 					<children>
 						<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<children>
-								<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+								<StackPane id="plot" fx:id="plotPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
 									<children>
 										<LineChart id="bgchart" fx:id="bgChart" animated="false" createSymbols="false" legendSide="TOP">
 											<xAxis>
