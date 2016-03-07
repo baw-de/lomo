@@ -24,7 +24,10 @@ public class GuiStart extends Application {
     c.initModel(new Schleuse());
     
     Parent root = loader.getRoot();    
-    primaryStage.setScene(new Scene(root));
+    Scene scene = new Scene(root);
+    scene.getStylesheets().add(
+        Controller.class.getResource("uistyle.css").toExternalForm());
+    primaryStage.setScene(scene);
     primaryStage.setTitle(Messages.getString("appTitle"));
     primaryStage.show();
     c.initConsole();

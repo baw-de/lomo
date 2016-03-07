@@ -13,7 +13,7 @@ import de.baw.lomo.utils.Utils;
 @XmlRootElement(name="BAWLomoCase")
 public class Case {
 
-  private final static String VERSION = "0.1";
+  private final static String VERSION = "0.2";
 
   private double timeMax = 1000.;
 
@@ -42,6 +42,8 @@ public class Case {
   private double culvertTopEdge = -999.;
 
   private double cfl = 0.5;
+  
+  private ValveType valveType = ValveType.SEGMENT_GATE;
 
   private double theta = 1.;
 
@@ -52,6 +54,23 @@ public class Case {
   private double strahlbeiwert = 0.1;
 
   private List<KeyValueEntry> shipAreaLookup = new ArrayList<>();
+
+  public enum ValveType {    
+        
+    SEGMENT_GATE("valveTypeSegmentGate"), //$NON-NLS-1$
+    SLUICE_GATE("valveTypeSluiceGate"); //$NON-NLS-1$
+    
+    private final String key;
+    
+    private ValveType(String key) {
+      this.key = key;
+    }
+  
+    @Override
+    public String toString() {
+      return Messages.getString(key);
+    }
+  }
 
   public Case() {
 
@@ -235,6 +254,14 @@ public class Case {
 
   public double getValveLoss(double height) {
     return Utils.linearInterpolate(valveLossLookup, height);
+  }
+  
+  public ValveType getValveType() {
+    return valveType;
+  }
+
+  public void setValveType(ValveType valveType) {
+    this.valveType = valveType;
   }
 
   public double getTheta() {
