@@ -293,6 +293,7 @@ public class Controller implements Initializable {
     data = IOUtils.readCaseFromXml(selectedFile);
     clearFigure();
     initPropertSheet();
+    initFillingTypeMenu();
     model.init(data);
   }
 
@@ -377,6 +378,8 @@ public class Controller implements Initializable {
   }
 
   private void initFillingTypeMenu() {
+    
+    menuFillingType.getItems().clear();
     
     ToggleGroup toggleGroup = new ToggleGroup();
   
