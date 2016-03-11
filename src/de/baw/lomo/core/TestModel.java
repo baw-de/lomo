@@ -2,6 +2,7 @@ package de.baw.lomo.core;
 
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.Results;
+import de.baw.lomo.core.data.SluiceGateFillingType;
 
 public class TestModel implements Model {
 
@@ -42,13 +43,20 @@ public class TestModel implements Model {
     // Kammerbreite
     double KB = data.getChamberWidth();
 
+    SluiceGateFillingType fillingType;
+    
+    if(data.getFillingType() instanceof SluiceGateFillingType) {
+      fillingType = (SluiceGateFillingType) data.getFillingType();
+    } else {
+      throw new RuntimeException("Not implemented.");
+    }    
 
     // Kanalflaeche: Austrittsflaeche
-    double A_kanal = data.getCulvertCrossSection();
+    double A_kanal = fillingType.getCulvertCrossSection();
     // Verlustbeiwert am Kanal
-    double zeta_kanal = data.getCulvertLoss();
+    double zeta_kanal = fillingType.getCulvertLoss();
     // Oberkante Kanal fuer Rueckstaueinfluss
-    double z_kanal  = data.getCulvertTopEdge();
+    double z_kanal  = data.getSubmergenceStart();
 
     // Felder fuer Geschwindigkeit und Wasserstand in der Kammer
     double Q00[],A00[]; // Ganz alte Zeitebene
@@ -75,8 +83,6 @@ public class TestModel implements Model {
     double at;
     // Aktuelle Schuetzoeffnungshoehe
     double[] s_s;
-
-
 
 
     // *************************************************************************************
@@ -151,13 +157,13 @@ public class TestModel implements Model {
       it = it +1;
 
       // Aktuelle Schützöffnungsweite ermitteln
-      s_s[it]=data.getValveHeight(at);   
+      s_s[it]=fillingType.getSluiceGateHeight(at);   
 
       // Aktuelle Schützöffnungsflaeche ermitteln
-      A_schuetz = s_s[it] * data.getValveWidth(s_s[it]);
+      A_schuetz = s_s[it] * fillingType.getSluiceGateWidth(s_s[it]);
 
       // mue-Beiwert fuer Schuetz
-      mue_schuetz = data.getValveLoss(s_s[it]);
+      mue_schuetz = fillingType.getSluiceGateLoss(s_s[it]);
       mueA = A_schuetz * mue_schuetz;
 
       // Vorkopffuellung: Wirksame Fallhoehe am Knoten 0
