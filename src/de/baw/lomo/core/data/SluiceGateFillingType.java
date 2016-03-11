@@ -109,4 +109,9 @@ public class SluiceGateFillingType extends FillingType {
   public String toString() {
     return Messages.getString("fillingTypeSluiceGate");
   }
+
+  public double getValveLoss(double d) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
 }

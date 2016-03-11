@@ -1,8 +1,9 @@
 package de.baw.lomo.core;
 
 import de.baw.lomo.core.data.Case;
-import de.baw.lomo.core.data.Case.ValveType;
 import de.baw.lomo.core.data.Results;
+import de.baw.lomo.core.data.SegmentGateFillingType;
+import de.baw.lomo.core.data.SluiceGateFillingType;
 
 public class OneDimensionalModel implements Model {
   private Case data;
@@ -52,21 +53,58 @@ public class OneDimensionalModel implements Model {
     // Kammerbreite
     double KB = data.getChamberWidth();
 
-    // Kanalflaeche: Austrittsflaeche fÃ¼r Strahl
-    double A_kanal = data.getCulvertCrossSection();
-    // Verlustbeiwert am Kanal
-    double zeta_kanal = data.getCulvertLoss();
-    // Strahlausbreitung:
-    // A_strahl=A_kanal+Math.pow(A_kanal,strahlpow)*(dx*i)*strahlbeiwert
-    double strahlpow = data.getStrahlpow();
-    double strahlbeiwert = data.getStrahlbeiwert();
+
+    double A_kanal, zeta_kanal, jetExponent, jetCoefficient;
+
+
+    if(data.getFillingType() instanceof SluiceGateFillingType) {
+
+      SluiceGateFillingType sluice = (SluiceGateFillingType) data.getFillingType();
+
+      // Kanalflaeche: Austrittsflaeche fuer Strahl
+      A_kanal = sluice.getCulvertCrossSection();
+
+      // Verlustbeiwert am Kanal
+      zeta_kanal = sluice.getCulvertLoss();
+
+      // Strahlausbreitung:
+      // A_strahl=A_kanal+Math.pow(A_kanal,strahlpow)*(dx*i)*strahlbeiwert
+      jetExponent = data.getJetExponent();
+      jetCoefficient = data.getJetCoefficient();      
+
+    } else if (data.getFillingType() instanceof SegmentGateFillingType) {
+
+      //SegmentGateFillingType segment = (SegmentGateFillingType) data.getFillingType();
+
+      System.out.println("Segment");
+
+      //TODO: Mit CT diskutieren
+      //////////////////////////////////////////////////////////////////////////
+      // Kanalflaeche: Austrittsflaeche fuer Strahl
+      A_kanal = 0;
+
+      // Verlustbeiwert am Kanal
+      zeta_kanal = 0;
+
+      jetExponent = 1;
+      jetCoefficient = 0;
+      //////////////////////////////////////////////////////////////////////////
+
+    } else {
+      throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
+    }
+
+
+
+
+
 
     // Bei freiem Ausfluss: Maximale DruckhÃ¶he, bspw. WSP-OW bis Unterkante
     // Drucksegment
 
-//     OW-max_dh = Beginn Rueckstau
-//    double max_dh = OW - data.getSubmergenceStart();
-//    System.out.print("max_dh= " + max_dh); 
+    //     OW-max_dh = Beginn Rueckstau
+    //    double max_dh = OW - data.getSubmergenceStart();
+    //    System.out.print("max_dh= " + max_dh); 
 
     // Oeffnungscharakteristik
     // Komplettfuellung
@@ -88,11 +126,11 @@ public class OneDimensionalModel implements Model {
     // Oeffnung
 
     // Nur fuer DruckSegmente: A*mue ueber schuetzoeffnung
-    boolean drucksegment = false; //FABIAN TO DO!!!!
+    //    boolean drucksegment = false; //FABIAN TO DO!!!!
     // Passend hinkalibriert fuer max_dh = 4.5;
-    double schuetzAmue[][] = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 },
-        { 0., 0., 0., 0.28, 0.58, 1.1, 1.6, 2.2, 2.80, 3.5, 4.2, 4.90, 5.5, 6.0, 6.5, 6.8, 7.3, 7.6, 7.8, 7.9,
-      7.7 } };
+    //    double schuetzAmue[][] = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 },
+    //        { 0., 0., 0., 0.28, 0.58, 1.1, 1.6, 2.2, 2.80, 3.5, 4.2, 4.90, 5.5, 6.0, 6.5, 6.8, 7.3, 7.6, 7.8, 7.9,
+    //      7.7 } };
 
     // Beginn Bolzum
     // Aus
@@ -248,39 +286,43 @@ public class OneDimensionalModel implements Model {
       at = at + dt;
       it = it + 1;
 
-      // Aktuelle SchÃ¼tzÃ¶ffnungsweite ermitteln
-      s_s[it] = data.getValveHeight(at);
+      if(data.getFillingType() instanceof SluiceGateFillingType) {
 
-      switch (data.getValveType() ) { 
+        SluiceGateFillingType sluice = (SluiceGateFillingType) data.getFillingType();
 
-      case SLUICE_GATE: //TAFELSCHUETZ
+        // Aktuelle SchÃ¼tzÃ¶ffnungsweite ermitteln
+        s_s[it] = sluice.getSluiceGateHeight(at);
+
         // Aktuelle Schuetzoeffnungsflaeche ermitteln
-        A_schuetz = s_s[it] *  data.getValveWidth(s_s[it]);
+        A_schuetz = s_s[it] *  sluice.getSluiceGateWidth(s_s[it]);
+
         // mue-Beiwert fuer Schuetz
-        mue_schuetz = data.getValveLoss(s_s[it]);
+        mue_schuetz = sluice.getSluiceGateLoss(s_s[it]);
+
         //System.out.println("DEBUG: mue_schuetz: " + mue_schuetz);
         Amue = A_schuetz * mue_schuetz;
-        //System.out.println("DEBUG:Amue: " + Amue);
-        break;
 
-      case SEGMENT_GATE: //DRUCKSEGMENT
+
+      } else if (data.getFillingType() instanceof SegmentGateFillingType) {
+
+        SegmentGateFillingType segment = (SegmentGateFillingType) data.getFillingType();
+
+        //Oeffnungswinkel
+        double segmentAngle = segment.getSegmentGateAngle(at);
         
-        //TODO: Bisher gleich wie bei Tafelschütz, muss noch verbessert werden.
-        // Aktuelle Schuetzoeffnungsflaeche ermitteln
-        A_schuetz = s_s[it] *  data.getValveWidth(s_s[it]);
-        // mue-Beiwert fuer Schuetz
-        mue_schuetz = data.getValveLoss(s_s[it]);
-        //System.out.println("DEBUG: mue_schuetz: " + mue_schuetz);
-        Amue = A_schuetz * mue_schuetz;
-        //System.out.println("DEBUG:Amue: " + Amue);
+        //TODO:
+        s_s[it] = segmentAngle; //Dreckige Loesung fuer Plot solange Franz in Urlaub
+        
+        //A * mue
+        Amue = segment.getSegmentGateLoss(segmentAngle);
 
-        break;
+        //System.out.println(Amue);
 
-      default:
-        System.out.print("Kein Bekannter Verschlusstyp defniert!"); 
-        break;
 
+      } else {
+        throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
       }
+
 
 
 
@@ -302,8 +344,8 @@ public class OneDimensionalModel implements Model {
       //
       // Vorkopffuellung: Wirksame Fallhoehe am Knoten 0
       // dh = Math.min(OW - h_mean[it-1], max_dh);
-      
-//    dh = Math.min(OW - h_mean[it-1], OW - data.getSubmergenceStart());
+
+      //    dh = Math.min(OW - h_mean[it-1], OW - data.getSubmergenceStart());
 
       //TODO: Fabian mit CT diskutieren!
       if (data.getSubmergenceStart() >= OW){
@@ -312,22 +354,33 @@ public class OneDimensionalModel implements Model {
       else {
         if (h_mean[it-1] <= data.getSubmergenceStart()){
           dh = OW - data.getSubmergenceStart();
-          //          System.out.println("h < z_kanal, dh = " +dh);
+//          System.out.println("h < z_kanal, dh = " +dh);
         }
         else if (h_mean[it-1] > data.getSubmergenceStart()){
           dh = OW - h_mean[it-1];
-          //          System.out.println("h > z_kanal, dh = " +dh);
+//          System.out.println("h > z_kanal, dh = " +dh);
         }
 
       }
-      
 
- 
-      
-      //
-      //			// Volumenstrom in die Kammer ausrechnen
-      Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh) / (1 + zeta_kanal / A_kanal / A_kanal * Amue * Amue));
 
+      if(data.getFillingType() instanceof SluiceGateFillingType) {
+
+        // Volumenstrom in die Kammer ausrechnen fuer TAFELSCHUETZ
+        Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh) / (1 + zeta_kanal / A_kanal / A_kanal * Amue * Amue));
+
+
+      } else if (data.getFillingType() instanceof SegmentGateFillingType) {
+
+        // Volumenstrom in die Kammer ausrechnen fuer DRUCKSEGMENT
+        Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh));
+
+      } else {
+        throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
+      }
+
+      //System.out.println(Q[it]);
+      
       if (dh < 0.)
         Q[it] = 0.;
 
@@ -368,14 +421,23 @@ public class OneDimensionalModel implements Model {
           // waere anzupassen ...
           // A_strahl=A_kanal+dx*i*0.1*dx*i*0.1; // Strahlausbreitung
           // waere anzupassen ...
-          A_strahl = A_kanal + Math.pow(A_kanal, strahlpow) * (dx * i) * strahlbeiwert; // Strahlausbreitung
-          // waere
-          // anzupassen
-          // ...
-          // A_strahl=A_kanal+(dx*i)*0.2; // Strahlausbreitung waere
-          // anzupassen ...
-          A_strahl = Math.min(A_strahl, A05[i]);
-          beta[i] = A05[i] / A_strahl;
+
+          
+          if(data.getFillingType() instanceof SluiceGateFillingType) {
+
+            A_strahl = A_kanal + Math.pow(A_kanal, jetExponent) * (dx * i) * jetCoefficient; // Strahlausbreitung
+            A_strahl = Math.min(A_strahl, A05[i]);
+            beta[i] = A05[i] / A_strahl;
+
+
+          } else if (data.getFillingType() instanceof SegmentGateFillingType) {
+
+            beta[i] = 1;
+
+          } else {
+            throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
+          }          
+          
         }
 
         // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
