@@ -22,6 +22,7 @@ import org.controlsfx.property.BeanPropertyUtils;
 
 import de.baw.lomo.core.Model;
 import de.baw.lomo.core.data.Case;
+import de.baw.lomo.core.data.FillingType;
 import de.baw.lomo.core.data.Results;
 import de.baw.lomo.io.IOUtils;
 import javafx.application.Platform;
@@ -40,7 +41,11 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -74,6 +79,8 @@ public class Controller implements Initializable {
   private NumberAxis fgYaxis;
   @FXML
   private TextArea console;
+  @FXML
+  private Menu menuFillingType;
 
   private Model model;
   private Case data;
@@ -159,10 +166,10 @@ public class Controller implements Initializable {
 
     });
 
-//    initConsole();
-
+//    initConsole();    
+    
   }
-
+  
   public void initConsole() {
 
     final OutputStream my = new OutputStream() {
@@ -198,6 +205,7 @@ public class Controller implements Initializable {
     model.init(data);
 
     initPropertSheet();
+    initFillingTypeMenu();
   }
 
   @FXML
@@ -363,15 +371,55 @@ public class Controller implements Initializable {
     dlg.initModality(Modality.APPLICATION_MODAL);
     dlg.initOwner(rootPane.getScene().getWindow());
     dlg.setTitle(Messages.getString("dlgTitleAbout")); //$NON-NLS-1$
-    dlg.getDialogPane().setContentText(Messages.getString("dlgMessageAbout")
+    dlg.getDialogPane().setContentText(Messages.getString("dlgMessageAbout") //$NON-NLS-1$
         + Messages.getString("dlgMessageAboutVersion")); //$NON-NLS-1$
     dlg.showAndWait();
   }
 
+  private void initFillingTypeMenu() {
+    
+    ToggleGroup toggleGroup = new ToggleGroup();
+  
+    for(FillingType fillingType : FillingType.LIST) {
+      
+       RadioMenuItem item = new RadioMenuItem(fillingType.toString());
+       item.setToggleGroup(toggleGroup);
+      
+      if (fillingType.getClass() == data.getFillingType().getClass()) {
+        item.setUserData(data.getFillingType());
+        item.setSelected(true);
+      } else {
+        item.setUserData(fillingType);
+        item.setSelected(false);
+      }      
+            
+      menuFillingType.getItems().add(item);
+    }
+    
+    toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+  
+      @Override
+      public void changed(ObservableValue<? extends Toggle> observable,
+          Toggle oldValue, Toggle newValue) {
+  
+        if(newValue != null) {
+          FillingType fillingType = (FillingType) newValue.getUserData();        
+          data.setFillingType(fillingType);
+          initPropertSheet();
+        }        
+      }
+      
+    });
+  }
+
   private void initPropertSheet() {
-    final ObservableList<Item> liste = BeanPropertyUtils.getProperties(data);
+    ObservableList<Item> liste = BeanPropertyUtils.getProperties(data);
     Collections.sort(liste, propertyComparator);
     propList.getItems().setAll(liste);
+    
+    liste = BeanPropertyUtils.getProperties(data.getFillingType());
+    Collections.sort(liste, propertyComparator);
+    propList.getItems().addAll(liste);
   }
 
   private void clearFigure() {

@@ -25,8 +25,10 @@
 					</items>
 				</Menu>
 				<Menu mnemonicParsing="false" text="%menuSettings">
-					<items>
-						<CheckMenuItem disable="true" mnemonicParsing="false" text="%menuAutoCalc" />
+					<items>					
+						<Menu fx:id="menuFillingType" mnemonicParsing="false" text="%menuFillingType"/>	
+						<SeparatorMenuItem mnemonicParsing="false" />	 
+						<CheckMenuItem disable="true" mnemonicParsing="false" text="%menuAutoCalc" />    
 					</items>
 				</Menu>
 				<Menu mnemonicParsing="false" text="%menuHelp">
