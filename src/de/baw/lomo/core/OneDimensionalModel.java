@@ -649,7 +649,7 @@ public class OneDimensionalModel implements Model {
 
       @Override
       public double[] getLongitudinalForceOverTime() {
-        return F1;
+        return F2;
       }
 
       @Override
