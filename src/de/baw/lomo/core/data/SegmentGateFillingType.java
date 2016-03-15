@@ -14,6 +14,10 @@ public class SegmentGateFillingType extends FillingType {
 
   private List<KeyValueEntry> segmentGateLossLookup = new ArrayList<>();
   
+  private double culvertCrossSection = 1.3 * 16.2 * 0.6;
+
+  private double culvertLoss = 0.;
+  
   public SegmentGateFillingType() {
     
     if (segmentGateAngleLookup.isEmpty()) {
@@ -56,9 +60,27 @@ public class SegmentGateFillingType extends FillingType {
   public double getSegmentGateLoss(double angle) {
     return Utils.linearInterpolate(segmentGateLossLookup, angle);
   }
+  
+  public double getCulvertCrossSection() {
+    return culvertCrossSection;
+  }
+
+  public void setCulvertCrossSection(double culvertCrossSection) {
+    this.culvertCrossSection = culvertCrossSection;
+  }
+
+  public double getCulvertLoss() {
+    return culvertLoss;
+  }
+
+  public void setCulvertLoss(double culvertLoss) {
+    this.culvertLoss = culvertLoss;
+  }
 
   @Override
   public String toString() {
     return Messages.getString("fillingTypeSegmentGate");
   }
+
+
 }

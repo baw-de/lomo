@@ -66,6 +66,7 @@ public class OneDimensionalModel implements Model {
 
       // Verlustbeiwert am Kanal
       zeta_kanal = sluice.getCulvertLoss();
+      
 
       // Strahlausbreitung:
       // A_strahl=A_kanal+Math.pow(A_kanal,strahlpow)*(dx*i)*strahlbeiwert
@@ -74,20 +75,20 @@ public class OneDimensionalModel implements Model {
 
     } else if (data.getFillingType() instanceof SegmentGateFillingType) {
 
-      //SegmentGateFillingType segment = (SegmentGateFillingType) data.getFillingType();
+      SegmentGateFillingType segment = (SegmentGateFillingType) data.getFillingType();
 
       System.out.println("Segment");
 
       //TODO: Mit CT diskutieren
       //////////////////////////////////////////////////////////////////////////
       // Kanalflaeche: Austrittsflaeche fuer Strahl
-      A_kanal = 0;
+      A_kanal = segment.getCulvertCrossSection();
 
       // Verlustbeiwert am Kanal
-      zeta_kanal = 0;
+      zeta_kanal = segment.getCulvertLoss();
 
-      jetExponent = 1;
-      jetCoefficient = 0;
+      jetExponent = data.getJetExponent(); 
+      jetCoefficient = data.getJetCoefficient(); //evtl. gleich 0 für Segment?  
       //////////////////////////////////////////////////////////////////////////
 
     } else {
@@ -311,7 +312,7 @@ public class OneDimensionalModel implements Model {
         double segmentAngle = segment.getSegmentGateAngle(at);
         
         //TODO:
-        s_s[it] = segmentAngle; //Dreckige Loesung fuer Plot solange Franz in Urlaub
+        s_s[it] = segmentAngle/10; //Dreckige Loesung fuer Plot solange Franz in Urlaub
         
         //A * mue
         Amue = segment.getSegmentGateLoss(segmentAngle);
@@ -347,37 +348,42 @@ public class OneDimensionalModel implements Model {
 
       //    dh = Math.min(OW - h_mean[it-1], OW - data.getSubmergenceStart());
 
+      
+      //Loesung Carsten:
+      dh = Math.min(OW - h1[0]       , data.getSubmergenceStart());
+
+      
       //TODO: Fabian mit CT diskutieren!
-      if (data.getSubmergenceStart() >= OW){
-        dh = OW - h_mean[it-1]; // nur falls sinnloser Wert;
-      }
-      else {
-        if (h_mean[it-1] <= data.getSubmergenceStart()){
-          dh = OW - data.getSubmergenceStart();
-//          System.out.println("h < z_kanal, dh = " +dh);
-        }
-        else if (h_mean[it-1] > data.getSubmergenceStart()){
-          dh = OW - h_mean[it-1];
-//          System.out.println("h > z_kanal, dh = " +dh);
-        }
+//      if (data.getSubmergenceStart() >= OW){
+//        dh = OW - h_mean[it-1]; // nur falls sinnloser Wert;
+//      }
+//      else {
+//        if (h_mean[it-1] <= data.getSubmergenceStart()){
+//          dh = OW - data.getSubmergenceStart();
+//        }
+//        else if (h_mean[it-1] > data.getSubmergenceStart()){
+//          dh = OW - h_mean[it-1];
+//        }
+//
+//      }
 
-      }
+      
+      Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh) / (1 + zeta_kanal / A_kanal / A_kanal * Amue * Amue));
 
-
-      if(data.getFillingType() instanceof SluiceGateFillingType) {
-
-        // Volumenstrom in die Kammer ausrechnen fuer TAFELSCHUETZ
-        Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh) / (1 + zeta_kanal / A_kanal / A_kanal * Amue * Amue));
-
-
-      } else if (data.getFillingType() instanceof SegmentGateFillingType) {
-
-        // Volumenstrom in die Kammer ausrechnen fuer DRUCKSEGMENT
-        Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh));
-
-      } else {
-        throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
-      }
+//      if(data.getFillingType() instanceof SluiceGateFillingType) {
+//
+//        // Volumenstrom in die Kammer ausrechnen fuer TAFELSCHUETZ
+//        Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh) / (1 + zeta_kanal / A_kanal / A_kanal * Amue * Amue));
+//
+//
+//      } else if (data.getFillingType() instanceof SegmentGateFillingType) {
+//
+//        // Volumenstrom in die Kammer ausrechnen fuer DRUCKSEGMENT
+//        Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh));
+//
+//      } else {
+//        throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
+//      }
 
       //System.out.println(Q[it]);
       
@@ -423,20 +429,20 @@ public class OneDimensionalModel implements Model {
           // waere anzupassen ...
 
           
-          if(data.getFillingType() instanceof SluiceGateFillingType) {
+//          if(data.getFillingType() instanceof SluiceGateFillingType) {
 
             A_strahl = A_kanal + Math.pow(A_kanal, jetExponent) * (dx * i) * jetCoefficient; // Strahlausbreitung
             A_strahl = Math.min(A_strahl, A05[i]);
             beta[i] = A05[i] / A_strahl;
 
 
-          } else if (data.getFillingType() instanceof SegmentGateFillingType) {
+//          } else if (data.getFillingType() instanceof SegmentGateFillingType) {
 
-            beta[i] = 1;
+//            beta[i] = 1;
 
-          } else {
-            throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
-          }          
+//          } else {
+//            throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
+//          }          
           
         }
 
