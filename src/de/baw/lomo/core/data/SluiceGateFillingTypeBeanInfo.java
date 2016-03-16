@@ -12,7 +12,7 @@ public class SluiceGateFillingTypeBeanInfo extends SimpleBeanInfo {
   @Override
   public PropertyDescriptor[] getPropertyDescriptors() {
         
-    PropertyDescriptor[] properties = new PropertyDescriptor[5];
+    PropertyDescriptor[] properties = new PropertyDescriptor[6];
     
     try {
       
@@ -45,6 +45,12 @@ public class SluiceGateFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[4].setDisplayName(Messages.getString("nameCulvertLoss")); //$NON-NLS-1$
       properties[4].setShortDescription(Messages.getString("descrCulvertLoss")); //$NON-NLS-1$
       properties[4].setPropertyEditorClass(MyPropertyEditor.class);
+      
+      properties[5] = new PropertyDescriptor("submergenceStart", SluiceGateFillingType.class); //$NON-NLS-1$
+      properties[5].setValue("order", 7); //$NON-NLS-1$
+      properties[5].setDisplayName(Messages.getString("nameSubmergenceStart")); //$NON-NLS-1$
+      properties[5].setShortDescription(Messages.getString("descrSubmergenceStart")); //$NON-NLS-1$
+      properties[5].setPropertyEditorClass(MyPropertyEditor.class); 
 
       
     } catch (IntrospectionException e) {

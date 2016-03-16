@@ -12,7 +12,7 @@ public class CaseBeanInfo extends SimpleBeanInfo {
 	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
 	  		
-		PropertyDescriptor[] properties = new PropertyDescriptor[15];
+		PropertyDescriptor[] properties = new PropertyDescriptor[14];
 		
 		try {
 		  
@@ -51,67 +51,67 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[5].setShortDescription(Messages.getString("descrShipAreaLookup")); //$NON-NLS-1$
       properties[5].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);  
             
-      properties[6] = new PropertyDescriptor("submergenceStart", Case.class); //$NON-NLS-1$
-      properties[6].setValue("order", 7); //$NON-NLS-1$
-      properties[6].setDisplayName(Messages.getString("nameSubmergenceStart")); //$NON-NLS-1$
-      properties[6].setShortDescription(Messages.getString("descrSubmergenceStart")); //$NON-NLS-1$
-      properties[6].setPropertyEditorClass(MyPropertyEditor.class);  
+//      properties[6] = new PropertyDescriptor("submergenceStart", Case.class); //$NON-NLS-1$
+//      properties[6].setValue("order", 7); //$NON-NLS-1$
+//      properties[6].setDisplayName(Messages.getString("nameSubmergenceStart")); //$NON-NLS-1$
+//      properties[6].setShortDescription(Messages.getString("descrSubmergenceStart")); //$NON-NLS-1$
+//      properties[6].setPropertyEditorClass(MyPropertyEditor.class);  
 		  
-      properties[7] = new PropertyDescriptor("timeMax", Case.class); //$NON-NLS-1$
+      properties[6] = new PropertyDescriptor("timeMax", Case.class); //$NON-NLS-1$
+      properties[6].setValue("order", 7); //$NON-NLS-1$
+      properties[6].setDisplayName(Messages.getString("nameMaxSimTime")); //$NON-NLS-1$
+      properties[6].setShortDescription(Messages.getString("descrMaxSimTime")); //$NON-NLS-1$
+      properties[6].setPropertyEditorClass(MyPropertyEditor.class);
+      properties[6].setExpert(true);
+      
+      properties[7] = new PropertyDescriptor("numberOfNodes", Case.class); //$NON-NLS-1$
       properties[7].setValue("order", 8); //$NON-NLS-1$
-      properties[7].setDisplayName(Messages.getString("nameMaxSimTime")); //$NON-NLS-1$
-      properties[7].setShortDescription(Messages.getString("descrMaxSimTime")); //$NON-NLS-1$
+      properties[7].setDisplayName(Messages.getString("nameNbOfNodes")); //$NON-NLS-1$
+      properties[7].setShortDescription(Messages.getString("descrNbOfNodes")); //$NON-NLS-1$
       properties[7].setPropertyEditorClass(MyPropertyEditor.class);
       properties[7].setExpert(true);
       
-      properties[8] = new PropertyDescriptor("numberOfNodes", Case.class); //$NON-NLS-1$
+      properties[8] = new PropertyDescriptor("deltaWaterDepthStop", Case.class); //$NON-NLS-1$
       properties[8].setValue("order", 9); //$NON-NLS-1$
-      properties[8].setDisplayName(Messages.getString("nameNbOfNodes")); //$NON-NLS-1$
-      properties[8].setShortDescription(Messages.getString("descrNbOfNodes")); //$NON-NLS-1$
+      properties[8].setDisplayName(Messages.getString("nameDeltaWaterDepthStop")); //$NON-NLS-1$
+      properties[8].setShortDescription(Messages.getString("descrDeltaWaterDepthStop")); //$NON-NLS-1$
       properties[8].setPropertyEditorClass(MyPropertyEditor.class);
-      properties[8].setExpert(true);
+      properties[8].setExpert(true); 
       
-      properties[9] = new PropertyDescriptor("deltaWaterDepthStop", Case.class); //$NON-NLS-1$
+      properties[9] = new PropertyDescriptor("cfl", Case.class); //$NON-NLS-1$
       properties[9].setValue("order", 10); //$NON-NLS-1$
-      properties[9].setDisplayName(Messages.getString("nameDeltaWaterDepthStop")); //$NON-NLS-1$
-      properties[9].setShortDescription(Messages.getString("descrDeltaWaterDepthStop")); //$NON-NLS-1$
-      properties[9].setPropertyEditorClass(MyPropertyEditor.class);
-      properties[9].setExpert(true); 
+      properties[9].setDisplayName(Messages.getString("nameCfl")); //$NON-NLS-1$
+      properties[9].setShortDescription(Messages.getString("descrCfl")); //$NON-NLS-1$
+      properties[9].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[9].setExpert(true);      
       
-      properties[10] = new PropertyDescriptor("cfl", Case.class); //$NON-NLS-1$
+      properties[10] = new PropertyDescriptor("theta", Case.class); //$NON-NLS-1$
       properties[10].setValue("order", 11); //$NON-NLS-1$
-      properties[10].setDisplayName(Messages.getString("nameCfl")); //$NON-NLS-1$
-      properties[10].setShortDescription(Messages.getString("descrCfl")); //$NON-NLS-1$
+      properties[10].setDisplayName(Messages.getString("nameTheta")); //$NON-NLS-1$
+      properties[10].setShortDescription(Messages.getString("descrTheta")); //$NON-NLS-1$
       properties[10].setPropertyEditorClass(MyPropertyEditor.class);  
-      properties[10].setExpert(true);      
-      
-      properties[11] = new PropertyDescriptor("theta", Case.class); //$NON-NLS-1$
+      properties[10].setExpert(true);    
+                 
+      properties[11] = new PropertyDescriptor("upwind", Case.class); //$NON-NLS-1$
       properties[11].setValue("order", 12); //$NON-NLS-1$
-      properties[11].setDisplayName(Messages.getString("nameTheta")); //$NON-NLS-1$
-      properties[11].setShortDescription(Messages.getString("descrTheta")); //$NON-NLS-1$
+      properties[11].setDisplayName(Messages.getString("nameUpwind")); //$NON-NLS-1$
+      properties[11].setShortDescription(Messages.getString("descrUpwind")); //$NON-NLS-1$
       properties[11].setPropertyEditorClass(MyPropertyEditor.class);  
-      properties[11].setExpert(true);    
-      
-      properties[12] = new PropertyDescriptor("upwind", Case.class); //$NON-NLS-1$
-      properties[12].setValue("order", 13); //$NON-NLS-1$
-      properties[12].setDisplayName(Messages.getString("nameUpwind")); //$NON-NLS-1$
-      properties[12].setShortDescription(Messages.getString("descrUpwind")); //$NON-NLS-1$
-      properties[12].setPropertyEditorClass(MyPropertyEditor.class);  
-      properties[12].setExpert(true);          
+      properties[11].setExpert(true);          
             
-      properties[13] = new PropertyDescriptor("jetCoefficient", Case.class); //$NON-NLS-1$
-      properties[13].setValue("order", 14); //$NON-NLS-1$
-      properties[13].setDisplayName(Messages.getString("nameJetCoefficient")); //$NON-NLS-1$
-      properties[13].setShortDescription(Messages.getString("descrJetCoefficient")); //$NON-NLS-1$
-      properties[13].setPropertyEditorClass(MyPropertyEditor.class);  
-      properties[13].setExpert(true); 
+      properties[12] = new PropertyDescriptor("jetCoefficient", Case.class); //$NON-NLS-1$
+      properties[12].setValue("order", 13); //$NON-NLS-1$
+      properties[12].setDisplayName(Messages.getString("nameJetCoefficient")); //$NON-NLS-1$
+      properties[12].setShortDescription(Messages.getString("descrJetCoefficient")); //$NON-NLS-1$
+      properties[12].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[12].setExpert(true); 
                   
-      properties[14] = new PropertyDescriptor("jetExponent", Case.class); //$NON-NLS-1$
-      properties[14].setValue("order", 15); //$NON-NLS-1$
-      properties[14].setDisplayName(Messages.getString("nameJetExponent")); //$NON-NLS-1$
-      properties[14].setShortDescription(Messages.getString("descrJetExponent")); //$NON-NLS-1$
-      properties[14].setPropertyEditorClass(MyPropertyEditor.class);  
-      properties[14].setExpert(true);   
+      properties[13] = new PropertyDescriptor("jetExponent", Case.class); //$NON-NLS-1$
+      properties[13].setValue("order", 14); //$NON-NLS-1$
+      properties[13].setDisplayName(Messages.getString("nameJetExponent")); //$NON-NLS-1$
+      properties[13].setShortDescription(Messages.getString("descrJetExponent")); //$NON-NLS-1$
+      properties[13].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[13].setExpert(true);   
       
 		} catch (IntrospectionException e) {
 			e.printStackTrace();

@@ -22,6 +22,8 @@ public class SluiceGateFillingType extends FillingType {
 
   private double culvertLoss = 0.;
   
+  private double submergenceStart = 9999;
+  
   public SluiceGateFillingType() {
     
     if (sluiceGateHeightLookup.isEmpty()) {
@@ -75,6 +77,14 @@ public class SluiceGateFillingType extends FillingType {
 
   public void setSluiceGateLossLookup(List<KeyValueEntry> sluiceGateLossLookup) {
     this.sluiceGateLossLookup = sluiceGateLossLookup;
+  }
+  
+  public double getSubmergenceStart() {
+    return submergenceStart;
+  }
+
+  public void setSubmergenceStart(double submergenceStart) {
+    this.submergenceStart = submergenceStart;
   }
 
   public double getCulvertCrossSection() {

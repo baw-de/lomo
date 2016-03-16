@@ -14,28 +14,52 @@ public class SegmentGateFillingType extends FillingType {
 
   private List<KeyValueEntry> segmentGateLossLookup = new ArrayList<>();
   
-  private double culvertCrossSection = 1.3 * 16.2 * 0.6;
+  private double culvertCrossSection = 12.*666;
 
   private double culvertLoss = 0.;
+  
+  private double submergenceStart = 4.5;
   
   public SegmentGateFillingType() {
     
     if (segmentGateAngleLookup.isEmpty()) {
       segmentGateAngleLookup.add(new KeyValueEntry(0., 0.));
-      segmentGateAngleLookup.add(new KeyValueEntry(20., 0.));
-      segmentGateAngleLookup.add(new KeyValueEntry(248., 1.3));
-      segmentGateAngleLookup.add(new KeyValueEntry(1.e99, 1.3));
+      segmentGateAngleLookup.add(new KeyValueEntry(800., 20.));
     }
     
     if (segmentGateLossLookup.isEmpty()) {
-      segmentGateLossLookup.add(new KeyValueEntry(0., 0.65));
-      segmentGateLossLookup.add(new KeyValueEntry(0.5, 0.8));
-      segmentGateLossLookup.add(new KeyValueEntry(0.8, 0.95));
-      segmentGateLossLookup.add(new KeyValueEntry(1., 0.95));
-      segmentGateLossLookup.add(new KeyValueEntry(1.3, 0.8));
+      segmentGateLossLookup.add(new KeyValueEntry(0., 0.));
+      segmentGateLossLookup.add(new KeyValueEntry(1., 0.));
+      segmentGateLossLookup.add(new KeyValueEntry(2., 0.08));
+      segmentGateLossLookup.add(new KeyValueEntry(3., 0.2));
+      segmentGateLossLookup.add(new KeyValueEntry(4., 0.4));
+      segmentGateLossLookup.add(new KeyValueEntry(5., 0.7));
+      segmentGateLossLookup.add(new KeyValueEntry(6., 1.));
+      segmentGateLossLookup.add(new KeyValueEntry(7., 1.5));
+      segmentGateLossLookup.add(new KeyValueEntry(8., 2.1));
+      segmentGateLossLookup.add(new KeyValueEntry(9., 2.7));
+      segmentGateLossLookup.add(new KeyValueEntry(10., 3.4));
+      segmentGateLossLookup.add(new KeyValueEntry(11., 4.));
+      segmentGateLossLookup.add(new KeyValueEntry(12., 4.5));
+      segmentGateLossLookup.add(new KeyValueEntry(13., 4.9));
+      segmentGateLossLookup.add(new KeyValueEntry(14., 5.2));
+      segmentGateLossLookup.add(new KeyValueEntry(15., 5.4));
+      segmentGateLossLookup.add(new KeyValueEntry(16., 5.5));
+      segmentGateLossLookup.add(new KeyValueEntry(17., 5.6));
+      segmentGateLossLookup.add(new KeyValueEntry(18., 5.5));
+      segmentGateLossLookup.add(new KeyValueEntry(19., 5.5));
+      segmentGateLossLookup.add(new KeyValueEntry(20., 5.4));
     }
     
   }  
+  
+  public double getSubmergenceStart() {
+    return submergenceStart;
+  }
+
+  public void setSubmergenceStart(double submergenceStart) {
+    this.submergenceStart = submergenceStart;
+  }
 
   public List<KeyValueEntry> getSegmentGateAngleLookup() {
     return segmentGateAngleLookup;

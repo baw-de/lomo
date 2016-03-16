@@ -56,7 +56,8 @@ public class TestModel implements Model {
     // Verlustbeiwert am Kanal
     double zeta_kanal = fillingType.getCulvertLoss();
     // Oberkante Kanal fuer Rueckstaueinfluss
-    double z_kanal  = data.getSubmergenceStart();
+//    double z_kanal  = data.getSubmergenceStart();
+    double z_kanal  = 9999999;
 
     // Felder fuer Geschwindigkeit und Wasserstand in der Kammer
     double Q00[],A00[]; // Ganz alte Zeitebene

@@ -54,7 +54,7 @@ public class OneDimensionalModel implements Model {
     double KB = data.getChamberWidth();
 
 
-    double A_kanal, zeta_kanal, jetExponent, jetCoefficient;
+    double A_kanal, zeta_kanal, jetExponent, jetCoefficient, max_dh;
 
 
     if(data.getFillingType() instanceof SluiceGateFillingType) {
@@ -72,6 +72,8 @@ public class OneDimensionalModel implements Model {
       // A_strahl=A_kanal+Math.pow(A_kanal,strahlpow)*(dx*i)*strahlbeiwert
       jetExponent = data.getJetExponent();
       jetCoefficient = data.getJetCoefficient();      
+      
+      max_dh = sluice.getSubmergenceStart();
 
     } else if (data.getFillingType() instanceof SegmentGateFillingType) {
 
@@ -90,6 +92,8 @@ public class OneDimensionalModel implements Model {
       jetExponent = data.getJetExponent(); 
       jetCoefficient = data.getJetCoefficient(); //evtl. gleich 0 für Segment?  
       //////////////////////////////////////////////////////////////////////////
+      
+      max_dh = segment.getSubmergenceStart();
 
     } else {
       throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
@@ -204,7 +208,8 @@ public class OneDimensionalModel implements Model {
     dx = KL / nx;
 
     // Zeitschrittweite aus Wellengeschwindigkeit
-    dt = dx / Math.sqrt(9.81 * OW) * 0.5;
+//    dt = dx / Math.sqrt(9.81 * OW) * 0.5;
+    dt = dx / Math.sqrt(9.81 * OW) * data.getCfl();
 
     // Maximale Anzahl Zeitschritte
     itmax = (int) (tmax / dt);
@@ -350,7 +355,7 @@ public class OneDimensionalModel implements Model {
 
       
       //Loesung Carsten:
-      dh = Math.min(OW - h1[0]       , data.getSubmergenceStart());
+      dh = Math.min(OW - h1[0]       , max_dh);
 
       
       //TODO: Fabian mit CT diskutieren!
