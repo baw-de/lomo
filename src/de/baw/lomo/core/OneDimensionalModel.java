@@ -19,44 +19,47 @@ public class OneDimensionalModel implements Model {
 
     // Zeitschritt dt
     double dt;
+    
     // Endzeit
     double tmax = data.getTimeMax();
+    
     // Max. Zeitschritte
     int itmax;
+    
     // Zeitwichtung theta
     double theta = data.getTheta();
+    
     // Upwind-Faktor
     double upwind = data.getUpwind();
 
     // Ortsschritte nx. Q hat einen Wert mehr!
     int nx = data.getNumberOfNodes();;
+    
     // Ortsschrittweite dx
     double dx;
 
 
     // Oberwasserstand
-    // Kammersohle auf NN-10m, Modell um 10 m verschoben
-    // Foerde: Oberer Bemessungswasserstand NN + 1,70 m
-    // Foerde: Unterer Bemessungswasserstand NN -1,40 m
-    // Maximales dH= 1,2 m
-
     double OW = data.getUpstreamWaterDepth();
+    
     // Unterwasserstand
-    // double UW = 15.;
     double UW = data.getDownstreamWaterDepth();
-    // Ende der Fuellung
-    // double OW_UW = 0.07;
+    
+    //Ende der Füllung: min_dh
     double OW_UW = data.getDeltaWaterDepthStop();
 
     // Kammerlaenge
     double KL = data.getChamberLength();
+    
     // Kammerbreite
     double KB = data.getChamberWidth();
 
 
     double A_kanal, zeta_kanal, jetExponent, jetCoefficient, max_dh;
 
-
+    
+    //TODO: Drucksehment und Tafelschütz zusammenlegen, if-Abfrage hier wegwerfen!
+    // Spezifische Angaben für Tafelschütze:
     if(data.getFillingType() instanceof SluiceGateFillingType) {
 
       SluiceGateFillingType sluice = (SluiceGateFillingType) data.getFillingType();
@@ -73,103 +76,33 @@ public class OneDimensionalModel implements Model {
       jetExponent = data.getJetExponent();
       jetCoefficient = data.getJetCoefficient();      
       
+      // Beginn Rückstaueindluss
       max_dh = sluice.getSubmergenceStart();
 
+      // Spezifische Angaben für Drucksegnent
     } else if (data.getFillingType() instanceof SegmentGateFillingType) {
 
       SegmentGateFillingType segment = (SegmentGateFillingType) data.getFillingType();
 
-      System.out.println("Segment");
-
-      //TODO: Mit CT diskutieren
-      //////////////////////////////////////////////////////////////////////////
       // Kanalflaeche: Austrittsflaeche fuer Strahl
       A_kanal = segment.getCulvertCrossSection();
 
       // Verlustbeiwert am Kanal
       zeta_kanal = segment.getCulvertLoss();
 
+      // Strahlausbreitung:
+      // A_strahl=A_kanal+Math.pow(A_kanal,strahlpow)*(dx*i)*strahlbeiwert
       jetExponent = data.getJetExponent(); 
       jetCoefficient = data.getJetCoefficient(); //evtl. gleich 0 für Segment?  
-      //////////////////////////////////////////////////////////////////////////
-      
+
+      // Beginn Rückstaueindluss
       max_dh = segment.getSubmergenceStart();
 
     } else {
       throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
     }
 
-
-
-
-
-
-    // Bei freiem Ausfluss: Maximale DruckhÃ¶he, bspw. WSP-OW bis Unterkante
-    // Drucksegment
-
-    //     OW-max_dh = Beginn Rueckstau
-    //    double max_dh = OW - data.getSubmergenceStart();
-    //    System.out.print("max_dh= " + max_dh); 
-
-    // Oeffnungscharakteristik
-    // Komplettfuellung
-    // double schuetzoeffnung [][] ={{0., 100, 1000.},
-    // {0., 5., 25. }}; // Oeffnung ueber Zeit
-    // double schuetzoeffnung [][] ={{0., 500., 800, 1100.},
-    // {0., 12., 15, 20.}}; // Oeffnung ueber Zeit
-    // Restfuellung
-    // double schuetzoeffnung[][] = { { 0., 200, 400., 99999. }, { 0., 7, 16., 16. } }; // Oeffnung
-    // ueber
-    // Zeit
-
-    //double schuetzbreite[][] = { { 0., 0.5, 1. }, { 8., 8., 8. } }; // Breite
-    // ueber
-    // Oeffnung
-
-    //double schuetzmue[][] = { { 0., 0.8, 1.5, 2. }, { 0.6, 0.8, 0.8, 0.6 } }; // Mue
-    // ueber
-    // Oeffnung
-
-    // Nur fuer DruckSegmente: A*mue ueber schuetzoeffnung
-    //    boolean drucksegment = false; //FABIAN TO DO!!!!
-    // Passend hinkalibriert fuer max_dh = 4.5;
-    //    double schuetzAmue[][] = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 },
-    //        { 0., 0., 0., 0.28, 0.58, 1.1, 1.6, 2.2, 2.80, 3.5, 4.2, 4.90, 5.5, 6.0, 6.5, 6.8, 7.3, 7.6, 7.8, 7.9,
-    //      7.7 } };
-
-    // Beginn Bolzum
-    // Aus
-    // ...\Bolzum\10064_neue_Schleuse\5_Untersuchungen\Modelluntersuchungen\4_Segmentkalibrierung
-    // double schuetzAmue [][] ={{0 , 1 , 2 , 3, 4, 5, 6, 7, 8, 9, 10, 11,
-    // 12, 13, 14, 15, 16, 17, 18, 19, 20},
-    // {0.00,0.00,0.08,0.2,0.4 ,0.7 ,1.,1.5,2.1,2.7, 3.4, 4. , 4.5, 4.9
-    // ,5.2,5.4,5.5, 5.6, 5.5, 5.5, 5.4}};
-    // for (int i = 0; i < schuetzAmue [1].length; i++) schuetzAmue [1][i]
-    // *= Math.sqrt(5./max_dh);
-    // Ende Bolzum
-
-    // Beginn Gleesen Numerik
-    // double schuetzAmue [][] ={{0, 1, 2 , 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-    // 13, 14, 15, 16, 17, 18, 19, 20},
-    // {0., 0.03, 0.09,0.17,0.29, 0.46,0.71,1.04,1.50,2.08,2.7,
-    // 3.30,3.97,4.95,6.04,6.72,6.96,7.11,7.3,7.5,7.7}};
-    // Ende Gleesen Numerik
-
-    // Benetzte Schiffsquerschnittsflaeche: A_schiff ueber x
-    //double A_schiff[][] = { { 5., 10., 135., 145. }, { 0., 11.5 * 2.8, 11.5 * 2.8, 0. } };
-
-    /*
-     * Bolzum Winkel A*mue_Versuch_Bolzum A*mue_Versuch_Bolzum_geglaettet
-     * A*mue_Numerik_Gleesen 0 0,00 0,00 0,00 0,00 1 0,03 0,00 0,00 0,03 2
-     * 0,09 0,00 0,07 0,09 3 0,17 0,23 0,28 0,17 4 0,29 0,63 0,58 0,29 5
-     * 0,46 0,90 0,89 0,46 6 0,71 1,16 1,23 0,71 7 1,04 1,68 1,66 1,04 8
-     * 1,50 2,20 2,20 1,50 9 2,08 2,79 2,75 2,08 10 2,70 3,37 3,36 2,70 11
-     * 3,30 4,05 4,00 3,30 12 3,97 4,73 4,75 3,97 13 4,95 5,66 5,50 4,95 14
-     * 6,04 6,31 6,15 6,04 15 6,72 6,70 6,53 6,72 16 6,96 6,81 6,85 6,96 17
-     * 7,11 7,28 7,17 7,11 18 7,28 7,69 7,47 7,28 19 7,50 7,73 7,53 7,50 20
-     * 7,50 7,44 7,45 7,74 21 7,50 7,46 7,41
-     */
-
+    
     // Felder fuer Geschwindigkeit und Wasserstand in der Kammer
     double Q00[], A00[]; // Ganz alte Zeitebene
     double Q0[], A0[]; // Alte Zeitebene
@@ -177,6 +110,7 @@ public class OneDimensionalModel implements Model {
     double Q1[], A1[]; // Neue Zeitebene
     double v1[], h1[]; // Postprozessing
     double A_schiff_node[], A_schiff_cell[]; // Schiffsquerschnitte
+    
     // Beta-Beiwerte
     double beta[];
 
@@ -188,12 +122,14 @@ public class OneDimensionalModel implements Model {
 
     // Zeitabhaengige Ergebnisse protokollieren
     double I[], h_mean[], Q[], F0[], F1[], F2[], Vol;
-    double Amue = 0;
+    double Amue;
 
     // Aktueller Zeitschritt
     int it;
+    
     // Aktuelle Zeit
     double at;
+    
     // Aktuelle Schuetzoeffnungshoehe
     double[] s_s;
 
@@ -207,8 +143,7 @@ public class OneDimensionalModel implements Model {
     // Ortsschrittweite
     dx = KL / nx;
 
-    // Zeitschrittweite aus Wellengeschwindigkeit
-//    dt = dx / Math.sqrt(9.81 * OW) * 0.5;
+    // Zeitschrittweite aus Wellengeschwindigkeit und CFL
     dt = dx / Math.sqrt(9.81 * OW) * data.getCfl();
 
     // Maximale Anzahl Zeitschritte
@@ -240,7 +175,6 @@ public class OneDimensionalModel implements Model {
     F0 = new double[itmax + 1];
     F1 = new double[itmax + 1];
     F2 = new double[itmax + 1];
-    //Amue = new double[];
 
     tResult = new double[itmax+1];
 
@@ -249,10 +183,8 @@ public class OneDimensionalModel implements Model {
     // Anfangsbedingungen der Felder setzen
     // Zellwerte
     for (int i = 0; i < nx; i++) {
-      //A_schiff_cell[i] = twoVectorsLinearInterpolate(A_schiff[0], A_schiff[1], dx * (i + 0.5));
       A_schiff_cell[i] = data.getShipArea(dx * (i + 0.5));
       A00[i] = UW * KB - A_schiff_cell[i];
-      // A00[i] = UW*KB;
       A0[i] = A00[i];
       A1[i] = A0[i];
       z[i] = 0.;
@@ -262,7 +194,6 @@ public class OneDimensionalModel implements Model {
 
     // Knotenwerte
     for (int i = 0; i < nx + 1; i++) {
-      //A_schiff_node[i] = twoVectorsLinearInterpolate(A_schiff[0], A_schiff[1], dx * i);
       A_schiff_node[i] = data.getShipArea(dx * i);
       Q00[i] = 0.;
       Q0[i] = 0.;
@@ -292,6 +223,7 @@ public class OneDimensionalModel implements Model {
       at = at + dt;
       it = it + 1;
 
+      // Spezifische Werte für Tafelschütze:
       if(data.getFillingType() instanceof SluiceGateFillingType) {
 
         SluiceGateFillingType sluice = (SluiceGateFillingType) data.getFillingType();
@@ -305,10 +237,11 @@ public class OneDimensionalModel implements Model {
         // mue-Beiwert fuer Schuetz
         mue_schuetz = sluice.getSluiceGateLoss(s_s[it]);
 
-        //System.out.println("DEBUG: mue_schuetz: " + mue_schuetz);
+        //A*mue für Tafelschütz
         Amue = A_schuetz * mue_schuetz;
 
 
+     // Spezifische Angaben für Drucksegmente:
       } else if (data.getFillingType() instanceof SegmentGateFillingType) {
 
         SegmentGateFillingType segment = (SegmentGateFillingType) data.getFillingType();
@@ -322,80 +255,22 @@ public class OneDimensionalModel implements Model {
         //A * mue
         Amue = segment.getSegmentGateLoss(segmentAngle);
 
-        //System.out.println(Amue);
 
 
       } else {
         throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
       }
 
-
-
-
-      // Fuer Tafelschuetze etc.:
-      //			if (!drucksegment) {
-      //				// Aktuelle SchÃ¼tzÃ¶ffnungsflaeche ermitteln
-      //				A_schuetz = s_s[it] *  data.getValveWidth(s_s[it]);
-      //				//System.out.println("DEBUG: A_schuetz: " + A_schuetz);
-      //				// mue-Beiwert fuer Schuetz
-      //				mue_schuetz = data.getValveLoss(s_s[it]);
-      //				//System.out.println("DEBUG: mue_schuetz: " + mue_schuetz);
-      //				Amue = A_schuetz * mue_schuetz;
-      //				//System.out.println("DEBUG:Amue: " + Amue);
-      //			}
-
-      // Fuer Drucksegmente:
-      //			if (drucksegment)
-      //				Amue[it] = twoVectorsLinearInterpolate(schuetzAmue[0], schuetzAmue[1], s_s);
-      //
-      // Vorkopffuellung: Wirksame Fallhoehe am Knoten 0
-      // dh = Math.min(OW - h_mean[it-1], max_dh);
-
-      //    dh = Math.min(OW - h_mean[it-1], OW - data.getSubmergenceStart());
-
       
-      //Loesung Carsten:
+      // Effektive Fallhöhe: Entwerden OW bis Schütz oder OW bis UW
       dh = Math.min(OW - h1[0]       , max_dh);
-
-      
-      //TODO: Fabian mit CT diskutieren!
-//      if (data.getSubmergenceStart() >= OW){
-//        dh = OW - h_mean[it-1]; // nur falls sinnloser Wert;
-//      }
-//      else {
-//        if (h_mean[it-1] <= data.getSubmergenceStart()){
-//          dh = OW - data.getSubmergenceStart();
-//        }
-//        else if (h_mean[it-1] > data.getSubmergenceStart()){
-//          dh = OW - h_mean[it-1];
-//        }
-//
-//      }
-
       
       Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh) / (1 + zeta_kanal / A_kanal / A_kanal * Amue * Amue));
-
-//      if(data.getFillingType() instanceof SluiceGateFillingType) {
-//
-//        // Volumenstrom in die Kammer ausrechnen fuer TAFELSCHUETZ
-//        Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh) / (1 + zeta_kanal / A_kanal / A_kanal * Amue * Amue));
-//
-//
-//      } else if (data.getFillingType() instanceof SegmentGateFillingType) {
-//
-//        // Volumenstrom in die Kammer ausrechnen fuer DRUCKSEGMENT
-//        Q[it] = Amue * Math.sqrt(2. * 9.81 * Math.abs(dh));
-//
-//      } else {
-//        throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
-//      }
-
-      //System.out.println(Q[it]);
       
+      //TODO: Warum eigentlich?
+      // Negative Qs abfangen
       if (dh < 0.)
         Q[it] = 0.;
-
-      // Q[it]=-(Math.cos(at/97.5)-1.)*5.;
 
       // Vorkopffuellung: Zufluss am nullten Knoten, mit Zeitwichtung
       zufluss[0] = Q[it];
@@ -413,8 +288,7 @@ public class OneDimensionalModel implements Model {
         Q00[i] = Q0[i];
         Q0[i] = Q1[i];
         Q05[i] = 1.5 * Q0[i] - 0.5 * Q00[i]; // Schaetzung der Werte
-        // fuer Q05 mit
-        // Adams-Bashforth
+        // fuer Q05 mit Adams-Bashforth
       }
 
       // Gemischte Zeitdiskretisieerung:
@@ -428,28 +302,11 @@ public class OneDimensionalModel implements Model {
         // Strahlbeiwert beta anpassen beta=integral(U*U)dA / (U_mean*Q)
         // = integral(U*U)dA / (integral(U)dA*integral(U)dA / A)
         for (int i = 0; i < nx; i++) {
-          // A_strahl=A_kanal+dx*i*0.015*KB; // Strahlausbreitung
-          // waere anzupassen ...
-          // A_strahl=A_kanal+dx*i*0.1*dx*i*0.1; // Strahlausbreitung
-          // waere anzupassen ...
-
-          
-//          if(data.getFillingType() instanceof SluiceGateFillingType) {
 
             A_strahl = A_kanal + Math.pow(A_kanal, jetExponent) * (dx * i) * jetCoefficient; // Strahlausbreitung
             A_strahl = Math.min(A_strahl, A05[i]);
             beta[i] = A05[i] / A_strahl;
-
-
-//          } else if (data.getFillingType() instanceof SegmentGateFillingType) {
-
-//            beta[i] = 1;
-
-//          } else {
-//            throw new IllegalArgumentException("Unknown filling type: " + data.getFillingType());
-//          }          
-          
-        }
+                      }
 
         // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         // A und Q sind "staggered", darum A nur bis nx-1! A[0] liegt
@@ -576,6 +433,7 @@ public class OneDimensionalModel implements Model {
     double Qmax = 0., Imax = -1.e99, Imin = 1.e99, Fmax = -1.e99, Fmin = 1.e99, schiff = 0., dQ_dt_min = 1.e99,
         dQ_dt_max = -1.e99;
 
+    // Ausgabe in Textfile
     //		try {
     //			FileWriter fw = new FileWriter("Schleuse.dat");
     //			BufferedWriter bw = new BufferedWriter(fw);
@@ -671,27 +529,6 @@ public class OneDimensionalModel implements Model {
 
   }
 
-  //	public static double twoVectorsLinearInterpolate(double[] x, double[] y, double xin) {
-  //		int nx = x.length;
-  //
-  //		if (x.length != y.length)
-  //			throw new IllegalArgumentException("x and y have different length!");
-  //
-  //		if (xin <= x[0])
-  //			return y[0];
-  //		if (xin >= x[nx - 1])
-  //			return y[nx - 1];
-  //
-  //		for (int i = 0; i < nx - 1; i++) {
-  //			if (x[i + 1] < x[i])
-  //				throw new IllegalArgumentException("x is not monotonic!");
-  //
-  //			if ((xin >= x[i]) && (xin <= x[i + 1]))
-  //				return y[i] + (y[i + 1] - y[i]) / (x[i + 1] - x[i]) * (xin - x[i]);
-  //		}
-  //
-  //		return -1.e99;
-  //	}
 
   @Override
   public Results step() {
