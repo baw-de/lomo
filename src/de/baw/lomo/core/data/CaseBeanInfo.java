@@ -12,7 +12,7 @@ public class CaseBeanInfo extends SimpleBeanInfo {
 	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
 	  		
-		PropertyDescriptor[] properties = new PropertyDescriptor[14];
+		PropertyDescriptor[] properties = new PropertyDescriptor[16];
 		
 		try {
 		  
@@ -50,12 +50,6 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[5].setDisplayName(Messages.getString("nameShipAreaLookup")); //$NON-NLS-1$
       properties[5].setShortDescription(Messages.getString("descrShipAreaLookup")); //$NON-NLS-1$
       properties[5].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);  
-            
-//      properties[6] = new PropertyDescriptor("submergenceStart", Case.class); //$NON-NLS-1$
-//      properties[6].setValue("order", 7); //$NON-NLS-1$
-//      properties[6].setDisplayName(Messages.getString("nameSubmergenceStart")); //$NON-NLS-1$
-//      properties[6].setShortDescription(Messages.getString("descrSubmergenceStart")); //$NON-NLS-1$
-//      properties[6].setPropertyEditorClass(MyPropertyEditor.class);  
 		  
       properties[6] = new PropertyDescriptor("timeMax", Case.class); //$NON-NLS-1$
       properties[6].setValue("order", 7); //$NON-NLS-1$
@@ -112,6 +106,18 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[13].setShortDescription(Messages.getString("descrJetExponent")); //$NON-NLS-1$
       properties[13].setPropertyEditorClass(MyPropertyEditor.class);  
       properties[13].setExpert(true);   
+      
+      properties[14] = new PropertyDescriptor("author", Case.class); //$NON-NLS-1$
+      properties[14].setValue("order", 15); //$NON-NLS-1$
+      properties[14].setDisplayName(Messages.getString("nameAuthor")); //$NON-NLS-1$
+      properties[14].setShortDescription(Messages.getString("descrAuthor")); //$NON-NLS-1$
+      properties[14].setExpert(true); 
+      
+      properties[15] = new PropertyDescriptor("description", Case.class); //$NON-NLS-1$
+      properties[15].setValue("order", 16); //$NON-NLS-1$
+      properties[15].setDisplayName(Messages.getString("nameDescription")); //$NON-NLS-1$
+      properties[15].setShortDescription(Messages.getString("descrDescription")); //$NON-NLS-1$
+      properties[15].setExpert(true); 
       
 		} catch (IntrospectionException e) {
 			e.printStackTrace();

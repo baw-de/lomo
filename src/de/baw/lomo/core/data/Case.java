@@ -15,6 +15,10 @@ import de.baw.lomo.utils.Utils;
 public class Case {
 
   private final static String VERSION = "0.3";
+  
+  private String author = "BAW";
+  
+  private String description = "";
 
   private double chamberLength = 330.;
 
@@ -27,8 +31,6 @@ public class Case {
   private FillingType fillingType = new SluiceGateFillingType();
 
   private List<KeyValueEntry> shipAreaLookup = new ArrayList<>();
-
-//  private double submergenceStart = 13.5;
 
   private double timeMax = 1000.;
 
@@ -119,14 +121,6 @@ public class Case {
     this.shipAreaLookup = shipAreaLookup;
   }
 
-//  public double getSubmergenceStart() {
-//    return submergenceStart;
-//  }
-//
-//  public void setSubmergenceStart(double submergenceStart) {
-//    this.submergenceStart = submergenceStart;
-//  }
-
   public double getTimeMax() {
     return timeMax;
   }
@@ -196,5 +190,20 @@ public class Case {
     return Utils.linearInterpolate(shipAreaLookup, x);
   }
 
+  public String getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(String author) {
+    this.author = author;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
 }
