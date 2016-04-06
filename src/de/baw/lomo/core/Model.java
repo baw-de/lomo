@@ -5,7 +5,7 @@ import de.baw.lomo.core.data.Results;
 
 public interface Model {
   
-  void init(Case caseData);
+  void setCaseData(Case caseData);
   
   Results run();
 

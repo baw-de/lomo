@@ -198,7 +198,7 @@ public class Controller implements Initializable {
     this.model = model;
     this.data = new Case();
 
-    model.init(data);
+    model.setCaseData(data);
 
     initPropertSheet();
     initFillingTypeMenu();
@@ -260,7 +260,7 @@ public class Controller implements Initializable {
     data = new Case();
     clearFigure();
     initPropertSheet();
-    model.init(data);
+    model.setCaseData(data);
   }
 
   @FXML
@@ -282,7 +282,7 @@ public class Controller implements Initializable {
     clearFigure();
     initPropertSheet();
     initFillingTypeMenu();
-    model.init(data);
+    model.setCaseData(data);
   }
 
   @FXML

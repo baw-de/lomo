@@ -10,7 +10,7 @@ public class TestModel implements Model {
   private double[] tResult;
 
   @Override
-  public void init(Case caseData) {
+  public void setCaseData(Case caseData) {
     this.data = caseData;
   }
 

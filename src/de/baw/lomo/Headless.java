@@ -20,7 +20,7 @@ public class Headless {
     
     Model model = new OneDimensionalModel();
     
-    model.init(data);
+    model.setCaseData(data);
     
     Results results = model.run();
     
