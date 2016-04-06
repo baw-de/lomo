@@ -24,6 +24,7 @@ import de.baw.lomo.core.Model;
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.FillingType;
 import de.baw.lomo.core.data.Results;
+import de.baw.lomo.core.data.SluiceGateFillingType;
 import de.baw.lomo.io.IOUtils;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -257,10 +258,17 @@ public class Controller implements Initializable {
             dataQ.add(new XYChart.Data<>(t[i], q[i]));
             dataF.add(new XYChart.Data<>(t[i], lf[i] / 1000.));
             dataH.add(new XYChart.Data<>(t[i], h[i]));
-            dataO.add(new XYChart.Data<>(t[i], o[i] * 10.));
+            
+            double scale = 1.;
+            
+            if (data.getFillingType() instanceof SluiceGateFillingType) {
+              scale = 10.;
+            }
+            
+            dataO.add(new XYChart.Data<>(t[i], o[i] * scale));
 
-            bgYmax = Math.max(bgYmax, Math.max(h[i],o[i] * 10.));
-            bgYmin = Math.min(bgYmin, Math.min(h[i],o[i] * 10.));
+            bgYmax = Math.max(bgYmax, Math.max(h[i],o[i] * scale));
+            bgYmin = Math.min(bgYmin, Math.min(h[i],o[i] * scale));
           }
 
           seriesQ.setData(FXCollections.observableList(dataQ));
