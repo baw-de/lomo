@@ -4,8 +4,12 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.PrintStream;
+import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -173,29 +177,62 @@ public class Controller implements Initializable {
   
   public void initConsole() {
 
-    final OutputStream my = new OutputStream() {
+    try {
 
-      @Override
-      public void write(int b) throws IOException {
-        Platform.runLater(new Runnable() {
-          public void run() {
-            console.appendText(String.valueOf((char) b));
+      PrintStream out = new PrintStream(new MyOutputStream(), true, "UTF-8");
+
+      System.setOut(out);
+      System.setErr(out);
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    } 
+  }
+  
+  public class MyOutputStream extends OutputStream {
+
+    private PipedOutputStream out = new PipedOutputStream();
+    private Reader reader;
+
+    public MyOutputStream() throws IOException {
+      PipedInputStream in = new PipedInputStream(out);
+      reader = new InputStreamReader(in, "UTF-8");
+    }
+
+    public void write(int i) throws IOException {
+      out.write(i);
+    }
+
+    public void write(byte[] bytes, int i, int i1) throws IOException {
+      out.write(bytes, i, i1);
+    }
+
+    public void flush() throws IOException {
+      Platform.runLater(new Runnable() {
+        public void run() {
+          try {
             
-            // limit text length
-            if (console.getText().length() > 10000) {
-              console.deleteText(0, 5000);
+            if (reader.ready()) {
+              char[] chars = new char[1024];
+              int n = reader.read(chars);
+
+              console.appendText(new String(chars, 0, n));
+
+              // limit text length
+              if (console.getText().length() > 10000) {
+                console.deleteText(0, 5000);
+              }
+              // set cursor to end for scroll down
+              console.positionCaret(console.getText().length() - 1);
             }
-            // set cursor to end for scroll down
-            console.positionCaret(console.getText().length()-1);
+            
+          } catch (IOException e) {
+            e.printStackTrace();
           }
-        });
-      }
-    };
+        }
+      });
 
-    final PrintStream out = new PrintStream(my, true);
-
-    System.setOut(out);
-    System.setErr(out);
+    }
   }
 
   public void initModel(Model model) {

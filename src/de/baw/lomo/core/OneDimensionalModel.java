@@ -430,21 +430,21 @@ public class OneDimensionalModel implements Model {
     }
     
     System.out.println("*******************************************************");
-    System.out.println(String.format("Zeitschritte: %d", step));
-    System.out.println(String.format("Füllzeit: %f s", time));
-    System.out.println(String.format("Fuellvolumen: %f m^3/s", vol));
-    System.out.println(String.format("Schiffsvolumen: %f m^3/s", schiff));
-    System.out.println(String.format("Qmax: %f m^3/s", Qmax));
-    System.out.println(String.format("Fx_min: %f kN  Fx_max: %f kN", Fmin, Fmax));
-    System.out.println(String.format("Fx/G: %f o/oo",
-        Math.max(Fmax, Math.abs(Fmin)) / schiff / GRAVITY * 1000.));
-    System.out.println(String.format("Imin: %f o/oo  Imax: %f o/oo",
-        Imin * 1000., Imax * 1000.));
-    System.out.println(String.format("dQ/dt_min: %f m^3/s/s  dQ/dt_max: %f m^3/s/s",
-            dQ_dt_min, dQ_dt_max));
+    System.out.printf("Zeitschritte: %d \n", step);
+    System.out.printf("Füllzeit: %f s \n", time);
+    System.out.printf("Füllvolumen: %f m³/s \n", vol);
+    System.out.printf("Schiffsvolumen: %f m³/s \n", schiff);
+    System.out.printf("Qmax: %f m³/s \n", Qmax);
+    System.out.printf("Fx_min: %f kN  Fx_max: %f kN \n", Fmin, Fmax);
+    System.out.printf("Fx/G: %f  \n",
+        Math.max(Fmax, Math.abs(Fmin)) / schiff / GRAVITY * 1000.);
+    System.out.printf("Imin: %f ‰  Imax: %f ‰ \n",
+        Imin * 1000., Imax * 1000.);
+    System.out.printf("dQ/dt_min: %f m³/s²  dQ/dt_max: %f m³/s² \n",
+            dQ_dt_min, dQ_dt_max);
     System.out.println("*******************************************************");
-    System.out.println(String.format("Gesamtlaufzeit: %f s ",
-        (System.nanoTime() - startTime) * 1.e-9));
+    System.out.printf("Gesamtlaufzeit: %f s \n",
+        (System.nanoTime() - startTime) * 1.e-9);
 
     return new Results() {
 
