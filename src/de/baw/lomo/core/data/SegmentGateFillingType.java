@@ -10,19 +10,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 import de.baw.lomo.utils.Utils;
 
 @XmlRootElement(name="segmentGateFillingType")
-public class SegmentGateFillingType extends FillingType {
+public class SegmentGateFillingType extends GateFillingType {
   
   private List<KeyValueEntry> segmentGateAngleLookup = new ArrayList<>();
 
   private List<KeyValueEntry> segmentGateLossLookup = new ArrayList<>();
   
   private double culvertCrossSection = 12.*666;
-
+  
   private double culvertLoss = 0.;
   
   private double submergenceStart = 4.5;
   
   public SegmentGateFillingType() {
+    
     
     if (segmentGateAngleLookup.isEmpty()) {
       segmentGateAngleLookup.add(new KeyValueEntry(0., 0.));
@@ -55,14 +56,6 @@ public class SegmentGateFillingType extends FillingType {
     
   }  
   
-  public double getSubmergenceStart() {
-    return submergenceStart;
-  }
-
-  public void setSubmergenceStart(double submergenceStart) {
-    this.submergenceStart = submergenceStart;
-  }
-
   public List<KeyValueEntry> getSegmentGateAngleLookup() {
     return segmentGateAngleLookup;
   }
@@ -105,6 +98,22 @@ public class SegmentGateFillingType extends FillingType {
 
   public void setCulvertLoss(double culvertLoss) {
     this.culvertLoss = culvertLoss;
+  }
+
+  public double getSubmergenceStart() {
+    return submergenceStart;
+  }
+
+  public void setSubmergenceStart(double submergenceStart) {
+    this.submergenceStart = submergenceStart;
+  }
+
+  @Override
+  public double getAreaTimesLoss(double time) {
+
+    final double angle = getSegmentGateAngle(time);
+    
+    return getSegmentGateLoss(angle);
   }
 
   @Override

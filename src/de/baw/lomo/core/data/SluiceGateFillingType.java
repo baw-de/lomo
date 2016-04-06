@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import de.baw.lomo.utils.Utils;
 
 @XmlRootElement(name="sluiceGateFillingType")
-public class SluiceGateFillingType extends FillingType {
+public class SluiceGateFillingType extends GateFillingType {
 
   private List<KeyValueEntry> sluiceGateHeightLookup = new ArrayList<>();
 
@@ -79,14 +79,18 @@ public class SluiceGateFillingType extends FillingType {
     this.sluiceGateLossLookup = sluiceGateLossLookup;
   }
   
-  public double getSubmergenceStart() {
-    return submergenceStart;
+  public double getSluiceGateHeight(double time) {
+    return Utils.linearInterpolate(sluiceGateHeightLookup, time);
   }
 
-  public void setSubmergenceStart(double submergenceStart) {
-    this.submergenceStart = submergenceStart;
+  public double getSluiceGateWidth(double height) {
+    return Utils.linearInterpolate(sluiceGateWidthLookup, height);
   }
 
+  public double getSluiceGateLoss(double height) {
+    return Utils.linearInterpolate(sluiceGateLossLookup, height);
+  }
+  
   public double getCulvertCrossSection() {
     return culvertCrossSection;
   }
@@ -102,17 +106,23 @@ public class SluiceGateFillingType extends FillingType {
   public void setCulvertLoss(double culvertLoss) {
     this.culvertLoss = culvertLoss;
   }
-  
-  public double getSluiceGateHeight(double time) {
-    return Utils.linearInterpolate(sluiceGateHeightLookup, time);
+
+  public double getSubmergenceStart() {
+    return submergenceStart;
   }
 
-  public double getSluiceGateWidth(double height) {
-    return Utils.linearInterpolate(sluiceGateWidthLookup, height);
+  public void setSubmergenceStart(double submergenceStart) {
+    this.submergenceStart = submergenceStart;
   }
 
-  public double getSluiceGateLoss(double height) {
-    return Utils.linearInterpolate(sluiceGateLossLookup, height);
+  @Override
+  public double getAreaTimesLoss(double time) {    
+    
+    final double height = getSluiceGateHeight(time);
+    final double width = getSluiceGateWidth(height);
+    final double loss = getSluiceGateLoss(height);
+    
+    return height * width * loss;
   }
 
   @Override
@@ -120,8 +130,4 @@ public class SluiceGateFillingType extends FillingType {
     return Messages.getString("fillingTypeSluiceGate");
   }
 
-  public double getValveLoss(double d) {
-    // TODO Auto-generated method stub
-    return 0;
-  }
 }
