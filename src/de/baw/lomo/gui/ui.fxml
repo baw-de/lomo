@@ -7,6 +7,7 @@
 <?import javafx.scene.chart.*?>
 <?import org.controlsfx.control.*?>
 <?import org.controlsfx.property.BeanProperty?>
+<?import javafx.scene.control.ProgressIndicator?>
 
 <BorderPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.baw.lomo.gui.Controller">
 	<top>
@@ -49,6 +50,7 @@
 								<PropertySheet fx:id="propList" maxHeight="1.7976931348623157E308" mode="CATEGORY" modeSwitcherVisible="false" searchBoxVisible="false" VBox.vgrow="ALWAYS" />
 								<TilePane alignment="CENTER_RIGHT" hgap="10.0" prefColumns="3" prefRows="2" tileAlignment="BOTTOM_LEFT" vgap="8.0">
 									<children>
+									   <ProgressIndicator fx:id="progress" centerShape="true" prefHeight="25" progress="-1" visible="false"/>
 										<Button fx:id="btnCalc" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#processButton" text="%btnCalc" />
 									</children>
 									<padding>

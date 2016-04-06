@@ -30,6 +30,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,6 +43,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Toggle;
@@ -77,6 +79,8 @@ public class Controller implements Initializable {
   private TextArea console;
   @FXML
   private Menu menuFillingType;
+  @FXML
+  private ProgressIndicator progress;
 
   private Model model;
   private Case data;
@@ -208,51 +212,71 @@ public class Controller implements Initializable {
   public void processButton(ActionEvent event) {
 
     if (event.getSource() == btnCalc) {
-      System.out.println(Messages.getString("promptStartCalc")); //$NON-NLS-1$
-      final Results results = model.run();
+      
+      progress.visibleProperty().set(true);
+      System.out.println(Messages.getString("promptStartCalc")); //$NON-NLS-1$      
+      
+      final Task<Results> task = new Task<Results>() {
 
-      final double[] t = results.getTimeline();
-      final double[] q = results.getDischargeOverTime();
-      final double[] lf = results.getLongitudinalForceOverTime();
-      final double[] h = results.getChamberWaterDepthOverTime();
-      final double[] o = results.getValveOpeningOverTime();
-
-      final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(
-          t.length);
-      final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(
-          t.length);
-      final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(
-          t.length);
-      final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(
-          t.length);
-
-      bgYmax = Double.MIN_VALUE;
-      bgYmin = Double.MAX_VALUE;
-
-      for (int i = 0; i < t.length; i++) {
-
-        if (i > 0 && t[i] == 0) {
-          break;
+        @Override
+        protected Results call() throws Exception {
+       
+          return model.run();
         }
 
-        dataQ.add(new XYChart.Data<>(t[i], q[i]));
-        dataF.add(new XYChart.Data<>(t[i], lf[i] / 1000.));
-        dataH.add(new XYChart.Data<>(t[i], h[i]));
-        dataO.add(new XYChart.Data<>(t[i], o[i] * 10.));
+        @Override
+        protected void succeeded() {
+          super.succeeded();
+          
+          Results results = getValue();
+          
+          final double[] t = results.getTimeline();
+          final double[] q = results.getDischargeOverTime();
+          final double[] lf = results.getLongitudinalForceOverTime();
+          final double[] h = results.getChamberWaterDepthOverTime();
+          final double[] o = results.getValveOpeningOverTime();
 
-        bgYmax = Math.max(bgYmax, Math.max(h[i],o[i] * 10.));
-        bgYmin = Math.min(bgYmin, Math.min(h[i],o[i] * 10.));
-      }
+          final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(
+              t.length);
+          final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(
+              t.length);
+          final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(
+              t.length);
+          final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(
+              t.length);
 
-      seriesQ.setData(FXCollections.observableList(dataQ));
-      seriesF.setData(FXCollections.observableList(dataF));
-      seriesH.setData(FXCollections.observableList(dataH));
-      seriesO.setData(FXCollections.observableList(dataO));
+          bgYmax = Double.MIN_VALUE;
+          bgYmin = Double.MAX_VALUE;
 
-      lastResults = results;
+          for (int i = 0; i < t.length; i++) {
+
+            if (i > 0 && t[i] == 0) {
+              break;
+            }
+
+            dataQ.add(new XYChart.Data<>(t[i], q[i]));
+            dataF.add(new XYChart.Data<>(t[i], lf[i] / 1000.));
+            dataH.add(new XYChart.Data<>(t[i], h[i]));
+            dataO.add(new XYChart.Data<>(t[i], o[i] * 10.));
+
+            bgYmax = Math.max(bgYmax, Math.max(h[i],o[i] * 10.));
+            bgYmin = Math.min(bgYmin, Math.min(h[i],o[i] * 10.));
+          }
+
+          seriesQ.setData(FXCollections.observableList(dataQ));
+          seriesF.setData(FXCollections.observableList(dataF));
+          seriesH.setData(FXCollections.observableList(dataH));
+          seriesO.setData(FXCollections.observableList(dataO));
+
+          lastResults = results;
+          
+          progress.visibleProperty().set(false);
+        }        
+      };
+      
+      new Thread(task).start();
 
     } 
-
   }
 
   @FXML
