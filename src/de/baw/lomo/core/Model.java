@@ -7,8 +7,6 @@ public interface Model {
   
   void init(Case caseData);
   
-  Results step();
-  
   Results run();
 
 }

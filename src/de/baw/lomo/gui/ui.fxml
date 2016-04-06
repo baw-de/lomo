@@ -47,11 +47,9 @@
 						<VBox maxHeight="1.7976931348623157E308" maxWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<children>
 								<PropertySheet fx:id="propList" maxHeight="1.7976931348623157E308" mode="CATEGORY" modeSwitcherVisible="false" searchBoxVisible="false" VBox.vgrow="ALWAYS" />
-								<TilePane alignment="CENTER" hgap="10.0" prefColumns="3" prefRows="2" tileAlignment="BOTTOM_LEFT" vgap="8.0">
+								<TilePane alignment="CENTER_RIGHT" hgap="10.0" prefColumns="3" prefRows="2" tileAlignment="BOTTOM_LEFT" vgap="8.0">
 									<children>
 										<Button fx:id="btnCalc" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#processButton" text="%btnCalc" />
-										<Button fx:id="btnStep" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#processButton" text="%btnStep" />
-										<Button fx:id="btnReset" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#processButton" text="%btnReset" />
 									</children>
 									<padding>
 										<Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />

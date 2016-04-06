@@ -62,10 +62,6 @@ public class Controller implements Initializable {
   @FXML
   private Button btnCalc;
   @FXML
-  private Button btnStep;
-  @FXML
-  private Button btnReset;
-  @FXML
   private LineChart<Number, Number> bgChart;
   @FXML
   private LineChart<Number, Number> fgChart;
@@ -255,15 +251,7 @@ public class Controller implements Initializable {
 
       lastResults = results;
 
-    } else if (event.getSource() == btnStep) {
-      // model.step();
-      System.out.println(Messages.getString("promptStepCalc")); //$NON-NLS-1$
-
-    } else if (event.getSource() == btnReset) {
-      // model.init(caseData);
-
-      System.out.println(Messages.getString("promptReset")); //$NON-NLS-1$
-    }
+    } 
 
   }
 

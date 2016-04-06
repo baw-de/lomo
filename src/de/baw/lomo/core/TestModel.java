@@ -315,11 +315,4 @@ public class TestModel implements Model {
     };
   }
 
-  @Override
-  public Results step() {
-    
-    return null;
-  }
-
-
 }

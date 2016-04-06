@@ -530,10 +530,6 @@ public class OneDimensionalModel implements Model {
   }
 
 
-  @Override
-  public Results step() {
-    // TODO Auto-generated method stub
-    return null;
   }
 
 }
