@@ -10,7 +10,7 @@ public class OneDimensionalModel implements Model {
   private static final double GRAVITY = 9.81;
   private Case data;
   /** Für Laufzeitmessung **/
-  private long startTime;
+  private long runtime;
   private double[] timeSeries;
 
   /** Zeitschritt dt **/
@@ -99,7 +99,7 @@ public class OneDimensionalModel implements Model {
     } else {
 
       throw new IllegalArgumentException(
-          "Unknown filling type: " + data.getFillingType());
+          Messages.getString("errUnknownFillingType") + data.getFillingType()); //$NON-NLS-1$
     }
 
     aKanal = filling.getCulvertCrossSection();
@@ -198,207 +198,223 @@ public class OneDimensionalModel implements Model {
     }
   }
 
-  private void step() {
+  private void compute() {
 
-    // Zeitzaehler erhoehen
-    time = time + dt;
-    step = step + 1;
+    // Laufzeitmessung
+    runtime = System.nanoTime();
 
-    timeSeries[step] = time;
+    // Ende der Füllung: min_dh
+    final double ow_uw = data.getDeltaWaterDepthStop();
 
-    final double aMue = filling.getAreaTimesLoss(time);
-    
-    if (filling instanceof SegmentGateFillingType) {
-      valveOpening[step] = ((SegmentGateFillingType)filling).getSegmentGateAngle(time);
-    } else if (filling instanceof SluiceGateFillingType) {
-      valveOpening[step] = ((SluiceGateFillingType)filling).getSluiceGateHeight(time);
-    } else {
-      throw new IllegalArgumentException(
-          "Unknown filling type: " + data.getFillingType());
-    }
+    do {
 
-    // Effektive Fallhöhe: Entweder OW bis Schütz oder OW bis UW
-    final double dh = Math.min(ow - h1[0], maxDh);
+      // Zeitzaehler erhoehen
+      time = time + dt;
+      step = step + 1;
 
-    Q[step] = aMue * Math.sqrt(2. * GRAVITY * Math.abs(dh)
-        / (1. + zetaKanal / aKanal / aKanal * aMue * aMue));
+      timeSeries[step] = time;
 
-    // TODO: Warum eigentlich?
-    // Negative Qs abfangen
-    if (dh < 0.) {
-      Q[step] = 0.;
-    }
+      final double aMue = filling.getAreaTimesLoss(time);
 
-    // Vorkopffuellung: Zufluss am nullten Knoten, mit Zeitwichtung:
-    zufluss[0] = Q[step];
+      if (filling instanceof SegmentGateFillingType) {
+        valveOpening[step] = ((SegmentGateFillingType) filling)
+            .getSegmentGateAngle(time);
+      } else if (filling instanceof SluiceGateFillingType) {
+        valveOpening[step] = ((SluiceGateFillingType) filling)
+            .getSluiceGateHeight(time);
+      } else {
+        throw new IllegalArgumentException(
+            Messages.getString("errUnknownFillingType") //$NON-NLS-1$
+                + data.getFillingType());
+      }
 
-    // Alte Zeitebene wird ganz alte Zeitebene, neue Zeitebene wird alte
-    // Zeitebene:
-    for (int i = 0; i < nx; i++) {
-      A00[i] = A0[i];
-      A0[i] = A1[i];
-      // Schaetzung der Werte fuer A05 mit Adams-Bashforth:
-      A05[i] = 1.5 * A0[i] - 0.5 * A00[i];
-    }
-    for (int i = 0; i < nx + 1; i++) {
-      Q00[i] = Q0[i];
-      Q0[i] = Q1[i];
-      // Schaetzung der Werte fuer Q05 mit Adams-Bashforth
-      Q05[i] = 1.5 * Q0[i] - 0.5 * Q00[i];
-    }
+      // Effektive Fallhöhe: Entweder OW bis Schütz oder OW bis UW
+      final double dh = Math.min(ow - h1[0], maxDh);
 
-    // Gemischte Zeitdiskretisieerung:
-    // A mit Adams-Bashforth-Diskretisierung
-    // Q mit Adams-Bashforth-Diskretisierung fuer Q und mit
-    //  Crank-Nicolson fuer A mit implizitem A fuer dh/dx-Term
+      Q[step] = aMue * Math.sqrt(2. * GRAVITY * Math.abs(dh)
+          / (1. + zetaKanal / aKanal / aKanal * aMue * aMue));
 
-    // Schleife fuer Predictor-Corrector
-    for (int corrStep = 0; corrStep <= 2; corrStep++) {
+      // TODO: Warum eigentlich?
+      // Negative Qs abfangen
+      if (dh < 0.) {
+        Q[step] = 0.;
+      }
 
-      // Strahlbeiwert beta anpassen beta=integral(U*U)dA / (U_mean*Q)
-      // = integral(U*U)dA / (integral(U)dA*integral(U)dA / A)
+      // Vorkopffuellung: Zufluss am nullten Knoten, mit Zeitwichtung:
+      zufluss[0] = Q[step];
+
+      // Alte Zeitebene wird ganz alte Zeitebene, neue Zeitebene wird alte
+      // Zeitebene:
       for (int i = 0; i < nx; i++) {
-
-        // Strahlausbreitung
-        double aStrahl = aKanal
-            + Math.pow(aKanal, jetExponent) * (dx * i) * jetCoefficient;
-        aStrahl = Math.min(aStrahl, A05[i]);
-
-        beta[i] = A05[i] / aStrahl;
+        A00[i] = A0[i];
+        A0[i] = A1[i];
+        // Schaetzung der Werte fuer A05 mit Adams-Bashforth:
+        A05[i] = 1.5 * A0[i] - 0.5 * A00[i];
+      }
+      for (int i = 0; i < nx + 1; i++) {
+        Q00[i] = Q0[i];
+        Q0[i] = Q1[i];
+        // Schaetzung der Werte fuer Q05 mit Adams-Bashforth
+        Q05[i] = 1.5 * Q0[i] - 0.5 * Q00[i];
       }
 
-      // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-      // A und Q sind "staggered", darum A nur bis nx-1! A[0] liegt
-      // zwischen Q[0] und Q[1].
-      for (int i = 0; i < nx - 1; i++) {
-        A1[i] = A0[i] - dt * (Q05[i + 1] - Q05[i]) / dx;
-      }
+      // Gemischte Zeitdiskretisieerung:
+      // A mit Adams-Bashforth-Diskretisierung
+      // Q mit Adams-Bashforth-Diskretisierung fuer Q und mit
+      // Crank-Nicolson fuer A mit implizitem A fuer dh/dx-Term
 
-      // A berechnen fuer Rand-Volumen
-      A1[0] = A0[0] - dt * Q05[1] / dx;
-      A1[nx - 1] = A0[nx - 1] + dt * Q05[nx - 1] / dx;
+      // Schleife fuer Predictor-Corrector
+      for (int corrStep = 0; corrStep <= 2; corrStep++) {
 
-      // Quellterme fuer jedes Volumen
-      for (int i = 0; i < nx; i++) {
-        A1[i] += dt * zufluss[i] / dx;
-      }
+        // Strahlbeiwert beta anpassen beta=integral(U*U)dA / (U_mean*Q)
+        // = integral(U*U)dA / (integral(U)dA*integral(U)dA / A)
+        for (int i = 0; i < nx; i++) {
 
-      // Neues A05 mit variabler Zeitwichtung ermitteln
-      for (int i = 0; i < nx; i++) {
-        A05[i] = (1. - theta) * A0[i] + theta * A1[i];
-      }
-      // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          // Strahlausbreitung
+          double aStrahl = aKanal
+              + Math.pow(aKanal, jetExponent) * (dx * i) * jetCoefficient;
+          aStrahl = Math.min(aStrahl, A05[i]);
 
-      // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-      // Q berechnen fuer Knoten im Feld
-      for (int i = 1; i < nx; i++) {
+          beta[i] = A05[i] / aStrahl;
+        }
 
-        // Wert fuer Q links von Q[i]:
-        final double QM = 0.5 * (Q05[i - 1] + Q05[i]);
+        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        // A und Q sind "staggered", darum A nur bis nx-1! A[0] liegt
+        // zwischen Q[0] und Q[1].
+        for (int i = 0; i < nx - 1; i++) {
+          A1[i] = A0[i] - dt * (Q05[i + 1] - Q05[i]) / dx;
+        }
 
-        // Wert fuer Q rechts von Q[i]
-        final double QP = 0.5 * (Q05[i] + Q05[i + 1]);
-        final double vM = QM / A05[i - 1]; // Wert fuer v links von Q[i]
-        final double vP = QP / A05[i]; // Wert fuer v rechts von Q[i]
-        final double rhy = 0.5 * (A05[i] + A05[i - 1]) / (3. * kB);
+        // A berechnen fuer Rand-Volumen
+        A1[0] = A0[0] - dt * Q05[1] / dx;
+        A1[nx - 1] = A0[nx - 1] + dt * Q05[nx - 1] / dx;
 
-        // Wasserspiegelgefaelle mit Schiff:
-        final double gradH = ((A1[i] + A_schiff_cell[i]) / kB
-            - (A1[i - 1] + A_schiff_cell[i - 1]) / kB) / dx;
-        // Wasserspiegelgefaelle ohne Schiff:
-        // double gradH=( A1[i]/KB -A1[i-1]/KB)/dx;
+        // Quellterme fuer jedes Volumen
+        for (int i = 0; i < nx; i++) {
+          A1[i] += dt * zufluss[i] / dx;
+        }
 
-        Q1[i] = Q0[i]
-            - dt * (1. - upwind) * (beta[i] * QP * vP - beta[i - 1] * QM * vM)
-                / dx
-            - dt * GRAVITY * 0.5 * (A05[i] + A05[i - 1]) * gradH
-            - dt * GRAVITY * 0.5 * (A05[i] + A05[i - 1])
-                * (0.5 * Math.abs(vM + vP)) * (0.5 * (vM + vP)) / kSt / kSt
-                * Math.pow(rhy, -4. / 3.)
-            - dt * (vM + vP) * 0.0; // Kuenstliche Daempfung
-        // - dt*Q0[i]*0.002; // Kuenstliche Daempfung
+        // Neues A05 mit variabler Zeitwichtung ermitteln
+        for (int i = 0; i < nx; i++) {
+          A05[i] = (1. - theta) * A0[i] + theta * A1[i];
+        }
+        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
-        // Upwind
-        if (upwind > 0.) {
-          if (Q0[i] >= 0.) {
-            Q1[i] += -dt * upwind
-                * (beta[i] * Q05[i] * vP - beta[i - 1] * Q05[i - 1] * vM) / dx;
-          } else {
-            Q1[i] += -dt * upwind
-                * (beta[i] * Q05[i + 1] * vP - beta[i - 1] * Q05[i] * vM) / dx;
+        // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+        // Q berechnen fuer Knoten im Feld
+        for (int i = 1; i < nx; i++) {
+
+          // Wert fuer Q links von Q[i]:
+          final double QM = 0.5 * (Q05[i - 1] + Q05[i]);
+
+          // Wert fuer Q rechts von Q[i]
+          final double QP = 0.5 * (Q05[i] + Q05[i + 1]);
+          final double vM = QM / A05[i - 1]; // Wert fuer v links von Q[i]
+          final double vP = QP / A05[i]; // Wert fuer v rechts von Q[i]
+          final double rhy = 0.5 * (A05[i] + A05[i - 1]) / (3. * kB);
+
+          // Wasserspiegelgefaelle mit Schiff:
+          final double gradH = ((A1[i] + A_schiff_cell[i]) / kB
+              - (A1[i - 1] + A_schiff_cell[i - 1]) / kB) / dx;
+          // Wasserspiegelgefaelle ohne Schiff:
+          // double gradH=( A1[i]/KB -A1[i-1]/KB)/dx;
+
+          Q1[i] = Q0[i]
+              - dt * (1. - upwind) * (beta[i] * QP * vP - beta[i - 1] * QM * vM)
+                  / dx
+              - dt * GRAVITY * 0.5 * (A05[i] + A05[i - 1]) * gradH
+              - dt * GRAVITY * 0.5 * (A05[i] + A05[i - 1])
+                  * (0.5 * Math.abs(vM + vP)) * (0.5 * (vM + vP)) / kSt / kSt
+                  * Math.pow(rhy, -4. / 3.)
+              - dt * (vM + vP) * 0.0; // Kuenstliche Daempfung
+          // - dt*Q0[i]*0.002; // Kuenstliche Daempfung
+
+          // Upwind
+          if (upwind > 0.) {
+            if (Q0[i] >= 0.) {
+              Q1[i] += -dt * upwind
+                  * (beta[i] * Q05[i] * vP - beta[i - 1] * Q05[i - 1] * vM)
+                  / dx;
+            } else {
+              Q1[i] += -dt * upwind
+                  * (beta[i] * Q05[i + 1] * vP - beta[i - 1] * Q05[i] * vM)
+                  / dx;
+            }
           }
         }
+        // Q fuer RB-Knoten
+        // Q1[0] = 0.; // Impulsfreies Einleiten
+        Q1[0] = 1. * zufluss[0]; // Einleiten mit Impuls am Knoten 0 mit
+        // Faktor fuer die Richtung
+        Q1[nx] = 0.;
+        // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+
+        // Neues Q05 mit variabler Zeitwichtung ermitteln:
+        for (int i = 0; i < nx + 1; i++) {
+          Q05[i] = (1. - theta) * Q0[i] + theta * Q1[i];
+        }
       }
-      // Q fuer RB-Knoten
-      // Q1[0] = 0.; // Impulsfreies Einleiten
-      Q1[0] = 1. * zufluss[0]; // Einleiten mit Impuls am Knoten 0 mit
-      // Faktor fuer die Richtung
-      Q1[nx] = 0.;
-      // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
-      // Neues Q05 mit variabler Zeitwichtung ermitteln:
-      for (int i = 0; i < nx + 1; i++) {
-        Q05[i] = (1. - theta) * Q0[i] + theta * Q1[i];
+      // Übertragen auf h und v: Nur fuer Postprocessing!
+      for (int i = 0; i < nx; i++) {
+        h1[i] = (A1[i] + A_schiff_cell[i]) / kB;
       }
-    }
 
-    // Übertragen auf h und v: Nur fuer Postprocessing!
-    for (int i = 0; i < nx; i++) {
-      h1[i] = (A1[i] + A_schiff_cell[i]) / kB;
-    }
+      for (int i = 1; i < nx; i++) {
+        v1[i] = Q1[i] / (0.5 * (A1[i - 1] + A1[i]));
+      }
 
-    for (int i = 1; i < nx; i++) {
-      v1[i] = Q1[i] / (0.5 * (A1[i - 1] + A1[i]));
-    }
+      v1[0] = Q1[0] / kB / h1[0];
+      v1[nx] = Q1[nx] / kB / h1[nx - 1];
 
-    v1[0] = Q1[0] / kB / h1[0];
-    v1[nx] = Q1[nx] / kB / h1[nx - 1];
+      // Gefaelle ausrechnen: Nur fuer Postprocessing!
+      I[step] = (-h1[0] + h1[nx - 2]) / (kL - dx);
 
-    // Gefaelle ausrechnen: Nur fuer Postprocessing!
-    I[step] = (-h1[0] + h1[nx - 2]) / (kL - dx);
+      // Mittleren Wasserstand ausrechnen: Nur fuer Postprocessing!
+      hMean[step] = 0.;
+      for (int i = 0; i < nx; i++) {
+        hMean[step] += h1[i] / nx;
+      }
 
-    // Mittleren Wasserstand ausrechnen: Nur fuer Postprocessing!
-    hMean[step] = 0.;
-    for (int i = 0; i < nx; i++) {
-      hMean[step] += h1[i] / nx;
-    }
+      // Volumenbilanz
+      vol += dt * zufluss[0];
 
-    // Volumenbilanz
-    vol += dt * zufluss[0];
+      // Kraft auf Schiff [kN]
+      for (int i = 0; i < nx - 1; i++) {
 
-    // Kraft auf Schiff [kN]
-    for (int i = 0; i < nx - 1; i++) {
+        final double AA = A_schiff_node[i + 1];
+        final double AB = A_schiff_node[i];
 
-      final double AA = A_schiff_node[i + 1];
-      final double AB = A_schiff_node[i];
+        // Massenkraft des Schiffes:
+        F0[step] += 1000. * GRAVITY * AA * dx;
+        // Summe:
+        F1[step] += -1000. * GRAVITY * h1[i] * (AA - AB);
+        // Über Flächendifferenzen*Druecke
+        F2[step] += -(h1[i] - h1[i + 1]) / dx * 1000. * GRAVITY * 0.5
+            * (AA + AB) * dx;
+            // F2[it] += -(h1[i] - h1[i + 1]) / dx * 1000. * 9.81 * 0.5 * (AA +
+            // AB) * dx / 1000.;// lokales
+            // Gefaelle
+            // *
+            // lokale
+            // Masse
+            // F2[it] = 1000;
 
-      // Massenkraft des Schiffes:
-      F0[step] += 1000. * GRAVITY * AA * dx;
-      // Summe:
-      F1[step] += -1000. * GRAVITY * h1[i] * (AA - AB);
-      // Über Flächendifferenzen*Druecke
-      F2[step] += -(h1[i] - h1[i + 1]) / dx * 1000. * GRAVITY * 0.5 * (AA + AB)
-          * dx;
-          // F2[it] += -(h1[i] - h1[i + 1]) / dx * 1000. * 9.81 * 0.5 * (AA +
-          // AB) * dx / 1000.;// lokales
-          // Gefaelle
-          // *
-          // lokale
-          // Masse
-          // F2[it] = 1000;
+        // System.out.println(i*dx+" "+AA+" "+AB+" "+F[it]+" "+F2[it]);
+      }
+      // System.out.println("Massenkraft: "+F0[it]/1.e6 +" MN");
 
-      // System.out.println(i*dx+" "+AA+" "+AB+" "+F[it]+" "+F2[it]);
-    }
-    // System.out.println("Massenkraft: "+F0[it]/1.e6 +" MN");
+      // Hangabtriebskraft des Schiffes:
+      F0[step] *= -(h1[0] - h1[nx - 1]) / ((nx - 1) * dx) / 1000.;
 
-    // Hangabtriebskraft des Schiffes:
-    F0[step] *= -(h1[0] - h1[nx - 1]) / ((nx - 1) * dx) / 1000.;
+      // DEBUG!
+      // if (it%100==0) {System.out.println("Time:"+at); for (int i = 0; i
+      // < nx ; i ++) {System.out.println(i+" "+A1[i]+" "+Q1[i]+"
+      // "+h1[i]+" "+A_schiff_cell[i]);}}
 
-    // DEBUG!
-    // if (it%100==0) {System.out.println("Time:"+at); for (int i = 0; i
-    // < nx ; i ++) {System.out.println(i+" "+A1[i]+" "+Q1[i]+"
-    // "+h1[i]+" "+A_schiff_cell[i]);}}
-
+    } while ((step < maxStep) && (hMean[step] < ow - ow_uw));    
+    
+    runtime = System.nanoTime() - runtime;
   }
 
   private Results postprocess() {
@@ -429,22 +445,22 @@ public class OneDimensionalModel implements Model {
       schiff += data.getShipArea(dx * i) * dx;
     }
     
-    System.out.println("*******************************************************");
-    System.out.printf("Zeitschritte: %d \n", step);
-    System.out.printf("Füllzeit: %f s \n", time);
-    System.out.printf("Füllvolumen: %f m³/s \n", vol);
-    System.out.printf("Schiffsvolumen: %f m³/s \n", schiff);
-    System.out.printf("Qmax: %f m³/s \n", Qmax);
-    System.out.printf("Fx_min: %f kN  Fx_max: %f kN \n", Fmin, Fmax);
-    System.out.printf("Fx/G: %f  \n",
+    System.out.println("*******************************************************"); //$NON-NLS-1$
+    System.out.printf("Zeitschritte: %d \n", step); //$NON-NLS-1$
+    System.out.printf("Füllzeit: %f s \n", time); //$NON-NLS-1$
+    System.out.printf("Füllvolumen: %f m³/s \n", vol); //$NON-NLS-1$
+    System.out.printf("Schiffsvolumen: %f m³/s \n", schiff); //$NON-NLS-1$
+    System.out.printf("Qmax: %f m³/s \n", Qmax); //$NON-NLS-1$
+    System.out.printf("Fx_min: %f kN  Fx_max: %f kN \n", Fmin, Fmax); //$NON-NLS-1$
+    System.out.printf("Fx/G: %f  \n", //$NON-NLS-1$
         Math.max(Fmax, Math.abs(Fmin)) / schiff / GRAVITY * 1000.);
-    System.out.printf("Imin: %f ‰  Imax: %f ‰ \n",
+    System.out.printf("Imin: %f ‰  Imax: %f ‰ \n", //$NON-NLS-1$
         Imin * 1000., Imax * 1000.);
-    System.out.printf("dQ/dt_min: %f m³/s²  dQ/dt_max: %f m³/s² \n",
+    System.out.printf("dQ/dt_min: %f m³/s²  dQ/dt_max: %f m³/s² \n", //$NON-NLS-1$
             dQ_dt_min, dQ_dt_max);
-    System.out.println("*******************************************************");
-    System.out.printf("Gesamtlaufzeit: %f s \n",
-        (System.nanoTime() - startTime) * 1.e-9);
+    System.out.println("*******************************************************"); //$NON-NLS-1$
+    System.out.printf(Messages.getString("resultTotalRuntime"), //$NON-NLS-1$
+        runtime * 1.e-9);
 
     return new Results() {
 
@@ -493,17 +509,7 @@ public class OneDimensionalModel implements Model {
     // Zeitschleife
     // *************************************************************************
 
-    // Laufzeitmessung
-    startTime = System.nanoTime();
-
-    // Ende der Füllung: min_dh
-    final double ow_uw = data.getDeltaWaterDepthStop();
-
-    do {
-
-      step();
-
-    } while ((step < maxStep) && (hMean[step] < ow - ow_uw));
+    compute();
 
     // *************************************************************************
     // Postprozessing
