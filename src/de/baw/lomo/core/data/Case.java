@@ -44,10 +44,6 @@ public class Case {
 
   private double upwind = 1.;
 
-  private double jetCoefficient = 0.1;
-
-  private double jetExponent = 0.5;
-
   public Case() {
 
     if (shipAreaLookup.isEmpty()) {
@@ -167,23 +163,6 @@ public class Case {
 
   public void setUpwind(double upwind) {
     this.upwind = upwind;
-  }
-
-
-  public double getJetCoefficient() {
-    return jetCoefficient;
-  }
-
-  public void setJetCoefficient(double jetCoeffcient) {
-    this.jetCoefficient = jetCoeffcient;
-  }
-
-  public double getJetExponent() {
-    return jetExponent;
-  }
-
-  public void setJetExponent(double jetExponent) {
-    this.jetExponent = jetExponent;
   }
 
   public double getShipArea(double x) {

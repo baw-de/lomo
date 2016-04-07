@@ -12,7 +12,7 @@ public class SluiceGateFillingTypeBeanInfo extends SimpleBeanInfo {
   @Override
   public PropertyDescriptor[] getPropertyDescriptors() {
         
-    PropertyDescriptor[] properties = new PropertyDescriptor[6];
+    PropertyDescriptor[] properties = new PropertyDescriptor[8];
     
     try {
       
@@ -47,10 +47,24 @@ public class SluiceGateFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[4].setPropertyEditorClass(MyPropertyEditor.class);
       
       properties[5] = new PropertyDescriptor("submergenceStart", SluiceGateFillingType.class); //$NON-NLS-1$
-      properties[5].setValue("order", 7); //$NON-NLS-1$
+      properties[5].setValue("order", 6); //$NON-NLS-1$
       properties[5].setDisplayName(Messages.getString("nameSubmergenceStart")); //$NON-NLS-1$
       properties[5].setShortDescription(Messages.getString("descrSubmergenceStart")); //$NON-NLS-1$
-      properties[5].setPropertyEditorClass(MyPropertyEditor.class); 
+      properties[5].setPropertyEditorClass(MyPropertyEditor.class);       
+      
+      properties[6] = new PropertyDescriptor("jetCoefficient", SluiceGateFillingType.class); //$NON-NLS-1$
+      properties[6].setValue("order", 7); //$NON-NLS-1$
+      properties[6].setDisplayName(Messages.getString("nameJetCoefficient")); //$NON-NLS-1$
+      properties[6].setShortDescription(Messages.getString("descrJetCoefficient")); //$NON-NLS-1$
+      properties[6].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[6].setExpert(true); 
+                  
+      properties[7] = new PropertyDescriptor("jetExponent", SluiceGateFillingType.class); //$NON-NLS-1$
+      properties[7].setValue("order", 8); //$NON-NLS-1$
+      properties[7].setDisplayName(Messages.getString("nameJetExponent")); //$NON-NLS-1$
+      properties[7].setShortDescription(Messages.getString("descrJetExponent")); //$NON-NLS-1$
+      properties[7].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[7].setExpert(true);  
 
       
     } catch (IntrospectionException e) {

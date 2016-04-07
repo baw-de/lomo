@@ -126,6 +126,12 @@ public class SluiceGateFillingType extends GateFillingType {
   }
 
   @Override
+  public double getGateOpening(double time) {
+    
+    return getSluiceGateHeight(time);
+  }
+
+  @Override
   public String toString() {
     return Messages.getString("fillingTypeSluiceGate");
   }

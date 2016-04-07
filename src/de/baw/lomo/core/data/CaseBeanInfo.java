@@ -12,7 +12,7 @@ public class CaseBeanInfo extends SimpleBeanInfo {
 	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
 	  		
-		PropertyDescriptor[] properties = new PropertyDescriptor[16];
+		PropertyDescriptor[] properties = new PropertyDescriptor[14];
 		
 		try {
 		  
@@ -91,33 +91,19 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[11].setDisplayName(Messages.getString("nameUpwind")); //$NON-NLS-1$
       properties[11].setShortDescription(Messages.getString("descrUpwind")); //$NON-NLS-1$
       properties[11].setPropertyEditorClass(MyPropertyEditor.class);  
-      properties[11].setExpert(true);          
-            
-      properties[12] = new PropertyDescriptor("jetCoefficient", Case.class); //$NON-NLS-1$
+      properties[11].setExpert(true); 
+      
+      properties[12] = new PropertyDescriptor("author", Case.class); //$NON-NLS-1$
       properties[12].setValue("order", 13); //$NON-NLS-1$
-      properties[12].setDisplayName(Messages.getString("nameJetCoefficient")); //$NON-NLS-1$
-      properties[12].setShortDescription(Messages.getString("descrJetCoefficient")); //$NON-NLS-1$
-      properties[12].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[12].setDisplayName(Messages.getString("nameAuthor")); //$NON-NLS-1$
+      properties[12].setShortDescription(Messages.getString("descrAuthor")); //$NON-NLS-1$
       properties[12].setExpert(true); 
-                  
-      properties[13] = new PropertyDescriptor("jetExponent", Case.class); //$NON-NLS-1$
+      
+      properties[13] = new PropertyDescriptor("description", Case.class); //$NON-NLS-1$
       properties[13].setValue("order", 14); //$NON-NLS-1$
-      properties[13].setDisplayName(Messages.getString("nameJetExponent")); //$NON-NLS-1$
-      properties[13].setShortDescription(Messages.getString("descrJetExponent")); //$NON-NLS-1$
-      properties[13].setPropertyEditorClass(MyPropertyEditor.class);  
-      properties[13].setExpert(true);   
-      
-      properties[14] = new PropertyDescriptor("author", Case.class); //$NON-NLS-1$
-      properties[14].setValue("order", 15); //$NON-NLS-1$
-      properties[14].setDisplayName(Messages.getString("nameAuthor")); //$NON-NLS-1$
-      properties[14].setShortDescription(Messages.getString("descrAuthor")); //$NON-NLS-1$
-      properties[14].setExpert(true); 
-      
-      properties[15] = new PropertyDescriptor("description", Case.class); //$NON-NLS-1$
-      properties[15].setValue("order", 16); //$NON-NLS-1$
-      properties[15].setDisplayName(Messages.getString("nameDescription")); //$NON-NLS-1$
-      properties[15].setShortDescription(Messages.getString("descrDescription")); //$NON-NLS-1$
-      properties[15].setExpert(true); 
+      properties[13].setDisplayName(Messages.getString("nameDescription")); //$NON-NLS-1$
+      properties[13].setShortDescription(Messages.getString("descrDescription")); //$NON-NLS-1$
+      properties[13].setExpert(true); 
       
 		} catch (IntrospectionException e) {
 			e.printStackTrace();

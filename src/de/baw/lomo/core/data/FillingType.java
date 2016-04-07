@@ -12,5 +12,9 @@ public abstract class FillingType {
       new SluiceGateFillingType(),
       new SegmentGateFillingType()
   }; 
+  
+  
+  public abstract double[] getSource(double position, double time, double h, 
+      double v, Case data);
 
 }

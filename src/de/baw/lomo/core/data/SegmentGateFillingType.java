@@ -117,9 +117,14 @@ public class SegmentGateFillingType extends GateFillingType {
   }
 
   @Override
+  public double getGateOpening(double time) {
+    
+    return getSegmentGateAngle(time);
+  }
+
+  @Override
   public String toString() {
     return Messages.getString("fillingTypeSegmentGate");
   }
-
 
 }
