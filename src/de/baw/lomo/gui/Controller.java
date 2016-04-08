@@ -249,10 +249,7 @@ public class Controller implements Initializable {
   @FXML
   public void processButton(ActionEvent event) {
 
-    if (event.getSource() == btnCalc) {
-      
-      progress.visibleProperty().set(true);
-      System.out.println(Messages.getString("promptStartCalc")); //$NON-NLS-1$      
+    if (event.getSource() == btnCalc) {      
       
       final Task<Results> task = new Task<Results>() {
 
@@ -314,13 +311,26 @@ public class Controller implements Initializable {
           seriesO.setData(FXCollections.observableList(dataO));
 
           lastResults = results;
-          
-          progress.visibleProperty().set(false);
         }        
       };
       
+      task.runningProperty().addListener((observable, oldValue, newValue) ->  {
+        if(newValue) {
+          System.out.println(Messages.getString("promptStartCalc")); //$NON-NLS-1$      
+          progress.visibleProperty().set(true);
+        } else {
+          progress.visibleProperty().set(false);
+        }
+      });
+      
+      task.exceptionProperty().addListener((observable, oldValue, newValue) ->  {
+        if(newValue != null) {
+          Exception ex = (Exception) newValue;
+          ex.printStackTrace();
+        }
+      });
+      
       new Thread(task).start();
-
     } 
   }
 
