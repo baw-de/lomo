@@ -27,6 +27,7 @@ import org.controlsfx.property.BeanPropertyUtils;
 import de.baw.lomo.core.Model;
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.FillingType;
+import de.baw.lomo.core.data.GateFillingType;
 import de.baw.lomo.core.data.Results;
 import de.baw.lomo.core.data.SluiceGateFillingType;
 import de.baw.lomo.io.IOUtils;
@@ -309,6 +310,10 @@ public class Controller implements Initializable {
           seriesF.setData(FXCollections.observableList(dataF));
           seriesH.setData(FXCollections.observableList(dataH));
           seriesO.setData(FXCollections.observableList(dataO));
+          
+          if (!(data.getFillingType() instanceof GateFillingType)) {
+            seriesO.getData().clear();
+          }
 
           lastResults = results;
         }        
