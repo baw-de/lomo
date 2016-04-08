@@ -24,7 +24,7 @@ public class FilePropertyEditor implements PropertyEditor<String> {
   public FilePropertyEditor(PropertySheet.Item item) {
     this.item = item;
 
-    btnEditor = new Button(". . .");
+    btnEditor = new Button(". . ."); //$NON-NLS-1$
 
     btnEditor.setPrefWidth(177.);
     btnEditor.setMaxWidth(177.);
@@ -38,7 +38,7 @@ public class FilePropertyEditor implements PropertyEditor<String> {
   private void displayPopupEditor() {
 
     final FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle(item.getDescription()); // $NON-NLS-1$
+    fileChooser.setTitle(item.getName()); // $NON-NLS-1$
     fileChooser.getExtensionFilters().add(
         new ExtensionFilter(Messages.getString("descrCsvFileFilter"), "*.csv")); //$NON-NLS-1$ //$NON-NLS-2$
 
