@@ -344,6 +344,7 @@ public class Controller implements Initializable {
     data = new Case();
     clearFigure();
     initPropertSheet();
+    initFillingTypeMenu();
     model.setCaseData(data);
   }
 
