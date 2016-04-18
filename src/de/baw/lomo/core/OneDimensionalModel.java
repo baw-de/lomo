@@ -59,7 +59,7 @@ public class OneDimensionalModel implements Model {
   /** Aktuelle Schuetzoeffnungshoehe **/
   private double[] valveOpening;
   /** Zeitabhaengige Ergebnisse protokollieren **/
-  private double[] inflow, hMean, I, F0, F1, F2;
+  private double[] inflow, h1Mean, I, F0, F1, F2;
   /** Strickler Wert **/
   private double kSt = 100; // Fest verdrahtet
   private double[] momentumSource;
@@ -129,7 +129,7 @@ public class OneDimensionalModel implements Model {
 
     // Zeitabhaengige Ergebnisse protokollieren
     inflow = new double[maxStep + 1];
-    hMean = new double[maxStep + 1];
+    h1Mean = new double[maxStep + 1];
     I = new double[maxStep + 1];
     F0 = new double[maxStep + 1];
     F1 = new double[maxStep + 1];
@@ -166,7 +166,7 @@ public class OneDimensionalModel implements Model {
 
     // Ergebnisse ueber die Zeit loeschen
     for (int i = 0; i < maxStep; i++) {
-      hMean[i] = uw;
+      h1Mean[i] = uw;
       inflow[i] = 0;
       I[i] = (h1[0] - h1[nx - 2]) / (kL - dx);
       F0[i] = 0;
@@ -328,12 +328,21 @@ public class OneDimensionalModel implements Model {
         }
       }
 
-      // Übertragen auf h und v: Nur fuer Postprocessing!
+      // ***********************************************************************
+      // Postprocessing:
+      // ***********************************************************************
+      
+      h1Mean[step] = 0.;
+      
       for (int i = 0; i < nx; i++) {
+        // Übertragen auf h:
         h1[i] = (A1[i] + aShipCell[i]) / kB;
+        // Mittleren Wasserstand ausrechnen:
+        h1Mean[step] += h1[i] / nx;        
       }
 
       for (int i = 1; i < nx; i++) {
+        // Übertragen auf v:
         v1[i] = Q1[i] / (0.5 * (A1[i - 1] + A1[i]));
       }
 
@@ -342,12 +351,6 @@ public class OneDimensionalModel implements Model {
 
       // Gefaelle ausrechnen: Nur fuer Postprocessing!
       I[step] = (-h1[0] + h1[nx - 2]) / (kL - dx);
-
-      // Mittleren Wasserstand ausrechnen: Nur fuer Postprocessing!
-      hMean[step] = 0.;
-      for (int i = 0; i < nx; i++) {
-        hMean[step] += h1[i] / nx;
-      }
 
       // Volumenbilanz
       chamberVol += dt * inflow[step];
@@ -379,13 +382,8 @@ public class OneDimensionalModel implements Model {
 
       // Hangabtriebskraft des Schiffes:
       F0[step] *= -(h1[0] - h1[nx - 1]) / ((nx - 1) * dx) / 1000.;
-
-      // DEBUG!
-      // if (it%100==0) {System.out.println("Time:"+at); for (int i = 0; i
-      // < nx ; i ++) {System.out.println(i+" "+A1[i]+" "+Q1[i]+"
-      // "+h1[i]+" "+A_schiff_cell[i]);}}
-
-    } while ((step < maxStep) && (hMean[step] < ow - ow_uw));
+      
+    } while ((step < maxStep) && (h1Mean[step] < ow - ow_uw));
 
     runtime = System.nanoTime() - runtime;
   }
@@ -424,7 +422,7 @@ public class OneDimensionalModel implements Model {
     System.out.printf("Füllvolumen: %f m³/s \n", chamberVol); //$NON-NLS-1$
     System.out.printf("Schiffsvolumen: %f m³/s \n", shipVol); //$NON-NLS-1$
     System.out.printf("Qmax: %f m³/s \n", Qmax); //$NON-NLS-1$
-    System.out.printf("Fx_min: %f kN  Fx_max: %f kN \n", Fmin, Fmax); //$NON-NLS-1$
+    System.out.printf("Fx_min: %f kN  Fx_max: %f kN \n", Fmin * 1.e-3, Fmax * 1.e-3); //$NON-NLS-1$
     System.out.printf("Fx/G: %f  \n", //$NON-NLS-1$
         Math.max(Fmax, Math.abs(Fmin)) / shipVol / GRAVITY * 1000.);
     System.out.printf("Imin: %f ‰  Imax: %f ‰ \n", //$NON-NLS-1$
@@ -455,7 +453,7 @@ public class OneDimensionalModel implements Model {
 
       @Override
       public double[] getChamberWaterDepthOverTime() {
-        return hMean;
+        return h1Mean;
       }
 
       @Override
