@@ -5,13 +5,14 @@ import java.beans.PropertyDescriptor;
 import java.beans.SimpleBeanInfo;
 
 import de.baw.lomo.gui.FilePropertyEditor;
+import de.baw.lomo.gui.PopOverKeyValueListPropertyEditor;
 
 public class PrescribedInflowFillingTypeBeanInfo extends SimpleBeanInfo {
   
   @Override
   public PropertyDescriptor[] getPropertyDescriptors() {
         
-    PropertyDescriptor[] properties = new PropertyDescriptor[1];
+    PropertyDescriptor[] properties = new PropertyDescriptor[3];
     
     try {
       
@@ -20,6 +21,18 @@ public class PrescribedInflowFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[0].setDisplayName(Messages.getString("namePrescribedInflowFile")); //$NON-NLS-1$
       properties[0].setShortDescription(Messages.getString("descrPrescribedInflowFile")); //$NON-NLS-1$
       properties[0].setPropertyEditorClass(FilePropertyEditor.class);
+      
+      properties[1] = new PropertyDescriptor("positionLookup", PrescribedInflowFillingType.class); //$NON-NLS-1$
+      properties[1].setValue("order", 2); //$NON-NLS-1$
+      properties[1].setDisplayName(Messages.getString("namePrescribedInflowPositionLookup")); //$NON-NLS-1$
+      properties[1].setShortDescription(Messages.getString("descrPrescribedInflowPositionLookup")); //$NON-NLS-1$
+      properties[1].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);
+      
+      properties[2] = new PropertyDescriptor("lengthOfInfluenceLookup", PrescribedInflowFillingType.class); //$NON-NLS-1$
+      properties[2].setValue("order", 3); //$NON-NLS-1$
+      properties[2].setDisplayName(Messages.getString("namePrescribedInflowLengthOfInfluenceLookup")); //$NON-NLS-1$
+      properties[2].setShortDescription(Messages.getString("descrPrescribedInflowLengthOfInfluenceLookup")); //$NON-NLS-1$
+      properties[2].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);
       
     } catch (IntrospectionException e) {
       e.printStackTrace();
