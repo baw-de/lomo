@@ -41,7 +41,6 @@ public abstract class GateFillingType extends FillingType {
   // ***************************************************************************
 
   private static final double GRAVITY = 9.81;  
-  private final double[] nullInflow = new double[] {0.0,0.0};
   
   public double getJetCrossSection(double position, double time) {
 
@@ -53,33 +52,33 @@ public abstract class GateFillingType extends FillingType {
   }
 
   @Override
-  public double[] getSource(double position, double time, double h, double v,
-      Case data) {    
+  public double[][] getSource(double time, double[] positions, double[] h,
+      double[] v, Case data) {
     
-    if (position == 0) {
+    final double[][] source = new double[2][positions.length];
+    
+    final double aMue = getAreaTimesLoss(time);
+    final double ow = data.getUpstreamWaterDepth();
+    final double maxDh = getSubmergenceStart();
+    final double zetaKanal = getCulvertLoss();
+    final double aKanal = getCulvertCrossSection();
 
-      final double aMue = getAreaTimesLoss(time);
-      final double ow = data.getUpstreamWaterDepth();
-      final double maxDh = getSubmergenceStart();
-      final double zetaKanal = getCulvertLoss();
-      final double aKanal = getCulvertCrossSection();
-  
-      // Effektive Fallhöhe: Entweder OW bis Schütz oder OW bis UW
-      final double dh = Math.min(ow - h, maxDh);
-  
-      double inflow = aMue * Math.sqrt(2. * GRAVITY * Math.abs(dh)
-          / (1. + zetaKanal / aKanal / aKanal * aMue * aMue));
-  
-      // TODO: Warum eigentlich?
-      // Negative Qs abfangen
-      if (dh < 0.) {
-        inflow = 0.;
-      }
-      
-      return new double[] { inflow, inflow * 1. };
+    // Effektive Fallhöhe: Entweder OW bis Schütz oder OW bis UW
+    final double dh = Math.min(ow - h[0], maxDh);
+
+    double inflow = aMue * Math.sqrt(2. * GRAVITY * Math.abs(dh)
+        / (1. + zetaKanal / aKanal / aKanal * aMue * aMue));
+
+    // TODO: Warum eigentlich?
+    // Negative Qs abfangen
+    if (dh < 0.) {
+      inflow = 0.;
     }    
     
-    return nullInflow;
-  }
+    source[0][0] = inflow;
+    source[1][0] = inflow * 1.;
+    
+    return source;
+  }  
   
 }

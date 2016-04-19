@@ -1,5 +1,7 @@
 package de.baw.lomo.core;
 
+import java.util.stream.DoubleStream;
+
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.FillingType;
 import de.baw.lomo.core.data.GateFillingType;
@@ -42,8 +44,6 @@ public class OneDimensionalModel implements Model {
   private double chamberVol;
   /** Beta-Beiwerte **/
   private double[] beta;
-  /** Zufluss **/
-  private double[] massSource;
   /** Ganz alte Zeitebene **/
   private double[] Q00, A00;
   /** Alte Zeitebene **/
@@ -62,7 +62,8 @@ public class OneDimensionalModel implements Model {
   private double[] inflow, h1Mean, I, F0, F1, F2;
   /** Strickler Wert **/
   private double kSt = 100; // Fest verdrahtet
-  private double[] momentumSource;
+  
+  private double[] positions;
 
   private void init() {
 
@@ -86,8 +87,7 @@ public class OneDimensionalModel implements Model {
     // *************************************************************************
 
     beta = new double[nx];
-    massSource = new double[nx];
-    momentumSource = new double[nx];
+    positions = new double[nx];
 
     Q00 = new double[nx + 1];
     A00 = new double[nx];
@@ -148,9 +148,8 @@ public class OneDimensionalModel implements Model {
       A1[i] = A0[i];
 
       beta[i] = 1.;
-      massSource[i] = 0.;
-      momentumSource[i] = 0;
       h1[i] = 0.;
+      positions[i] = i * dx;
     }
 
     // Knotenwerte
@@ -193,18 +192,13 @@ public class OneDimensionalModel implements Model {
 
       if (filling instanceof GateFillingType) {
         valveOpening[step] = ((GateFillingType) filling).getGateOpening(time);
-      }
-
-      for (int i = 0; i < nx; i++) {
-
-        final double[] source = filling.getSource(i * dx, time, h1[i], v1[i],
-            data);
-
-        massSource[i] = source[0];
-        momentumSource[i] = source[1];
-
-        inflow[step] += massSource[i];
-      }
+      }      
+      
+      final double[][] source = filling.getSource(time, positions, h1, v1, data);
+      final double[] massSource = source[0];
+      final double[] momentumSource = source[1];
+      
+      inflow[step] = DoubleStream.of(massSource).sum();
 
       // Alte Zeitebene wird ganz alte Zeitebene, neue Zeitebene wird alte
       // Zeitebene:

@@ -15,8 +15,7 @@ public abstract class FillingType {
       new PrescribedInflowFillingType()
   }; 
   
-  
-  public abstract double[] getSource(double position, double time, double h, 
-      double v, Case data);
+  public abstract double[][] getSource(double time, double[] positions, double[] h, 
+      double[] v, Case data);
 
 }
