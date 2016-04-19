@@ -26,8 +26,8 @@ public class PrescribedInflowFillingType extends FillingType {
   }
 
   public void setFile(String file) {
-    this.file = file;
-    hasFileChanged = true;
+    this.file = file;    
+    readFile();
   }
 
   public List<KeyValueEntry> getPositionLookup() {
@@ -49,8 +49,6 @@ public class PrescribedInflowFillingType extends FillingType {
 
   // ***************************************************************************
   
-  private boolean hasFileChanged = true;
-
   private final List<Double> timeList = new ArrayList<>();
   private final List<double[]> valuesList = new ArrayList<>();
 
@@ -58,16 +56,10 @@ public class PrescribedInflowFillingType extends FillingType {
   public double[][] getSource(double time, double[] positions, double[] h,
       double[] v, Case data) {
 
-    if (hasFileChanged) {
-
-      readFile();
-
-      hasFileChanged = false;
-    }
-
     // error handling
     if (positionLookup.size() == 0 || lengthOfInfluenceLookup.size() == 0
-        || valuesList.size() == 0
+        || valuesList.size() == 0 || Double.isNaN(positionLookup.get(0).getValue())
+        || Double.isNaN(lengthOfInfluenceLookup.get(0).getValue())
         || (positionLookup.size() != lengthOfInfluenceLookup.size())
         || positionLookup.size() != valuesList.get(0).length) {
       throw new IllegalArgumentException(
@@ -116,6 +108,15 @@ public class PrescribedInflowFillingType extends FillingType {
         }
   
         valuesList.add(values);
+      }
+      
+      if (positionLookup.size() == 0 && lengthOfInfluenceLookup.size() == 0) {
+        
+        for (int i = 0; i < valuesList.get(0).length; i++) {
+          positionLookup.add(new KeyValueEntry(i, Double.NaN));
+          lengthOfInfluenceLookup.add(new KeyValueEntry(i, Double.NaN));
+        }
+        
       }
   
     } catch (final IOException e) {
