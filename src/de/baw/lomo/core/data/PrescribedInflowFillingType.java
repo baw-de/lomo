@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name = "prescribedInflowFillingType")
 public class PrescribedInflowFillingType extends FillingType {
@@ -28,12 +27,9 @@ public class PrescribedInflowFillingType extends FillingType {
 
   public void setFile(String file) {
     this.file = file;
-//    hasFileChanged = true;
-
-     readFile();
+    hasFileChanged = true;
   }
 
-  @XmlTransient
   public List<KeyValueEntry> getPositionLookup() {
     return positionLookup;
   }
@@ -42,7 +38,6 @@ public class PrescribedInflowFillingType extends FillingType {
     this.positionLookup = positionLookup;
   }
 
-  @XmlTransient
   public List<KeyValueEntry> getLengthOfInfluenceLookup() {
     return lengthOfInfluenceLookup;
   }
@@ -53,6 +48,8 @@ public class PrescribedInflowFillingType extends FillingType {
   }
 
   // ***************************************************************************
+  
+  private boolean hasFileChanged = true;
 
   private final List<Double> timeList = new ArrayList<>();
   private final List<double[]> valuesList = new ArrayList<>();
@@ -61,6 +58,76 @@ public class PrescribedInflowFillingType extends FillingType {
   public double[][] getSource(double time, double[] positions, double[] h,
       double[] v, Case data) {
 
+    if (hasFileChanged) {
+
+      readFile();
+
+      hasFileChanged = false;
+    }
+
+    // error handling
+    if (positionLookup.size() == 0 || lengthOfInfluenceLookup.size() == 0
+        || valuesList.size() == 0
+        || (positionLookup.size() != lengthOfInfluenceLookup.size())
+        || positionLookup.size() != valuesList.get(0).length) {
+      throw new IllegalArgumentException(
+          "Not enough data is given to compute source.");
+    }
+
+    return computeSource(time, positions, h, v, data);
+  }
+
+  private void readFile() {
+    if (file.isEmpty()) {
+      throw new IllegalArgumentException("No file given!");
+    }
+  
+    final File f = new File(file);
+  
+    if (!f.isFile()) {
+      throw new IllegalArgumentException("File does not exist: " + f);
+    }
+  
+    try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
+  
+      final NumberFormat format = NumberFormat.getNumberInstance(Locale.GERMAN);
+  
+      timeList.clear();
+      valuesList.clear();
+  
+      String line;
+  
+      while ((line = reader.readLine()) != null) {
+  
+        final String[] lineData = line.replaceAll("[\uFEFF-\uFFFF]", "")
+            .split("\\s+");
+  
+        if (lineData.length == 0) {
+          break;
+        }
+  
+        timeList.add(format.parse(lineData[0]).doubleValue());
+  
+        final double[] values = new double[(int) (lineData.length * 0.5)];
+  
+        for (int i = 0, j = 1; i < values.length; i++, j = j + 2) {
+          values[i] = format.parse(lineData[j]).doubleValue();
+  
+        }
+  
+        valuesList.add(values);
+      }
+  
+    } catch (final IOException e) {
+      e.printStackTrace();
+    } catch (final ParseException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private double[][] computeSource(double time, double[] positions, double[] h,
+      double[] v, Case data) {
+    
     final double[][] source = new double[2][positions.length];
 
     double[] values = new double[positionLookup.size()];
@@ -122,75 +189,6 @@ public class PrescribedInflowFillingType extends FillingType {
       }
     }
     return source;
-  }
-
-  private void readFile() {
-    if (file.isEmpty()) {
-      throw new IllegalArgumentException("No file given!");
-    }
-
-    final File f = new File(file);
-
-    if (!f.isFile()) {
-      throw new IllegalArgumentException("File does not exist: " + f);
-    }
-
-    try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
-
-      positionLookup.clear();
-      lengthOfInfluenceLookup.clear();
-
-      final NumberFormat format = NumberFormat.getNumberInstance(Locale.GERMAN);
-
-      final String[] positionsStr = reader.readLine()
-          .replaceAll("[\uFEFF-\uFFFF]", "").split("\\s+");
-
-      for (int i = 0; i < positionsStr.length; i++) {
-        positionLookup.add(
-            new KeyValueEntry(i, format.parse(positionsStr[i]).doubleValue()));
-      }
-
-      final String[] influence = reader.readLine()
-          .replaceAll("[\uFEFF-\uFFFF]", "").split("\\s+");
-
-      for (int i = 0; i < influence.length; i++) {
-        lengthOfInfluenceLookup.add(
-            new KeyValueEntry(i, format.parse(influence[i]).doubleValue()));
-      }
-
-      final int valveCount = positionLookup.size();
-
-      timeList.clear();
-      valuesList.clear();
-
-      String line;
-
-      while ((line = reader.readLine()) != null) {
-
-        final String[] lineData = line.replaceAll("[\uFEFF-\uFFFF]", "")
-            .split("\\s+");
-
-        if (lineData.length == 0) {
-          break;
-        }
-
-        timeList.add(format.parse(lineData[0]).doubleValue());
-
-        final double[] values = new double[valveCount];
-
-        for (int i = 0, j = 1; i < valveCount; i++, j = j + 2) {
-          values[i] = format.parse(lineData[j]).doubleValue();
-
-        }
-
-        valuesList.add(values);
-      }
-
-    } catch (final IOException e) {
-      e.printStackTrace();
-    } catch (final ParseException e) {
-      e.printStackTrace();
-    }
   }
 
   @Override
