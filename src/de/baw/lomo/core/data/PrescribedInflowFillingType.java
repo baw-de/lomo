@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "prescribedInflowFillingType")
@@ -20,6 +22,8 @@ public class PrescribedInflowFillingType extends FillingType {
   private List<KeyValueEntry> positionLookup = new ArrayList<>();
 
   private List<KeyValueEntry> lengthOfInfluenceLookup = new ArrayList<>();
+  
+  private List<KeyValueEntry> momentumFactorLookup = new ArrayList<>();
 
   public String getFile() {
     return file;
@@ -30,6 +34,8 @@ public class PrescribedInflowFillingType extends FillingType {
     readFile();
   }
 
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
   public List<KeyValueEntry> getPositionLookup() {
     return positionLookup;
   }
@@ -38,6 +44,8 @@ public class PrescribedInflowFillingType extends FillingType {
     this.positionLookup = positionLookup;
   }
 
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
   public List<KeyValueEntry> getLengthOfInfluenceLookup() {
     return lengthOfInfluenceLookup;
   }
@@ -46,9 +54,19 @@ public class PrescribedInflowFillingType extends FillingType {
       List<KeyValueEntry> lengthOfInfluenceLookup) {
     this.lengthOfInfluenceLookup = lengthOfInfluenceLookup;
   }
-
-  // ***************************************************************************
   
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
+  public List<KeyValueEntry> getMomentumFactorLookup() {
+    return momentumFactorLookup;
+  }
+
+  public void setMomentumFactorLookup(List<KeyValueEntry> momentumFactorLookup) {
+    this.momentumFactorLookup = momentumFactorLookup;
+  }
+  
+  //***************************************************************************
+
   private final List<Double> timeList = new ArrayList<>();
   private final List<double[]> valuesList = new ArrayList<>();
 
@@ -110,11 +128,13 @@ public class PrescribedInflowFillingType extends FillingType {
         valuesList.add(values);
       }
       
-      if (positionLookup.size() == 0 && lengthOfInfluenceLookup.size() == 0) {
+      if (positionLookup.size() == 0 && lengthOfInfluenceLookup.size() == 0 &&
+          momentumFactorLookup.size() == 0) {
         
         for (int i = 0; i < valuesList.get(0).length; i++) {
           positionLookup.add(new KeyValueEntry(i, Double.NaN));
           lengthOfInfluenceLookup.add(new KeyValueEntry(i, Double.NaN));
+          momentumFactorLookup.add(new KeyValueEntry(i, 0.0));
         }
         
       }
@@ -162,7 +182,6 @@ public class PrescribedInflowFillingType extends FillingType {
           for (int j = 0; j < values.length; j++) {
 
             values[j] = yi[j] + (yii[j] - yi[j]) / (xii - xi) * (time - xi);
-
           }
 
           break;
@@ -184,9 +203,10 @@ public class PrescribedInflowFillingType extends FillingType {
           influencedNodes.add(i);
         }
       }
-
+      
       for (final int node : influencedNodes) {
         source[0][node] = values[f] / influencedNodes.size();
+        source[1][node] = source[0][node] * momentumFactorLookup.get(f).getValue();
       }
     }
     return source;

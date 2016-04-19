@@ -195,10 +195,10 @@ public class OneDimensionalModel implements Model {
       }      
       
       final double[][] source = filling.getSource(time, positions, h1, v1, data);
-      final double[] massSource = source[0];
+      final double[] volumeSource = source[0];
       final double[] momentumSource = source[1];
       
-      inflow[step] = DoubleStream.of(massSource).sum();
+      inflow[step] = DoubleStream.of(volumeSource).sum();
 
       // Alte Zeitebene wird ganz alte Zeitebene, neue Zeitebene wird alte
       // Zeitebene:
@@ -255,7 +255,7 @@ public class OneDimensionalModel implements Model {
 
         // Quellterme fuer jedes Volumen
         for (int i = 0; i < nx; i++) {
-          A1[i] += dt * massSource[i] / dx;
+          A1[i] += dt * volumeSource[i] / dx;
         }
 
         // Neues A05 mit variabler Zeitwichtung ermitteln

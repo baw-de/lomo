@@ -12,7 +12,7 @@ public class PrescribedInflowFillingTypeBeanInfo extends SimpleBeanInfo {
   @Override
   public PropertyDescriptor[] getPropertyDescriptors() {
         
-    PropertyDescriptor[] properties = new PropertyDescriptor[3];
+    PropertyDescriptor[] properties = new PropertyDescriptor[4];
     
     try {
       
@@ -33,6 +33,12 @@ public class PrescribedInflowFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[2].setDisplayName(Messages.getString("namePrescribedInflowLengthOfInfluenceLookup")); //$NON-NLS-1$
       properties[2].setShortDescription(Messages.getString("descrPrescribedInflowLengthOfInfluenceLookup")); //$NON-NLS-1$
       properties[2].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);
+      
+      properties[3] = new PropertyDescriptor("momentumFactorLookup", PrescribedInflowFillingType.class); //$NON-NLS-1$
+      properties[3].setValue("order", 4); //$NON-NLS-1$
+      properties[3].setDisplayName(Messages.getString("namePrescribedInflowMomentumFactorLookup")); //$NON-NLS-1$
+      properties[3].setShortDescription(Messages.getString("descrPrescribedInflowMomentumFactorLookup")); //$NON-NLS-1$
+      properties[3].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);
       
     } catch (IntrospectionException e) {
       e.printStackTrace();
