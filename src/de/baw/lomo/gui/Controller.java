@@ -102,6 +102,7 @@ public class Controller implements Initializable {
       10, 25, 50, 100, 500, 1000, 2000 };
   private double bgYmax = Double.NaN;
   private double bgYmin = Double.NaN;
+  private boolean isComputing = false;
 
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
@@ -250,13 +251,14 @@ public class Controller implements Initializable {
   @FXML
   public void processButton(ActionEvent event) {
 
-    if (event.getSource() == btnCalc) {      
+    if (event.getSource() == btnCalc && !isComputing) {      
       
       final Task<Results> task = new Task<Results>() {
 
         @Override
         protected Results call() throws Exception {
-       
+          isComputing = true;
+          
           return model.run();
         }
 
@@ -316,6 +318,7 @@ public class Controller implements Initializable {
           }
 
           lastResults = results;
+          isComputing = false;
         }        
       };
       
