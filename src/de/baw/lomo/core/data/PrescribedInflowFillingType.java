@@ -2,8 +2,10 @@ package de.baw.lomo.core.data;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -98,7 +100,8 @@ public class PrescribedInflowFillingType extends FillingType {
       throw new IllegalArgumentException("File does not exist: " + f);
     }
   
-    try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+        new FileInputStream(f),StandardCharsets.UTF_8))) {
   
       final NumberFormat format = NumberFormat.getNumberInstance(Locale.GERMAN);
   
