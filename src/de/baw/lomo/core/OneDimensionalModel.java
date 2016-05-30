@@ -1,7 +1,5 @@
 package de.baw.lomo.core;
 
-import java.util.stream.DoubleStream;
-
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.FillingType;
 import de.baw.lomo.core.data.GateFillingType;
@@ -198,8 +196,6 @@ public class OneDimensionalModel implements Model {
       final double[] volumeSource = source[0];
       final double[] momentumSource = source[1];
       
-      inflow[step] = DoubleStream.of(volumeSource).sum();
-
       // Alte Zeitebene wird ganz alte Zeitebene, neue Zeitebene wird alte
       // Zeitebene:
       for (int i = 0; i < nx; i++) {
@@ -256,6 +252,7 @@ public class OneDimensionalModel implements Model {
         // Quellterme fuer jedes Volumen
         for (int i = 0; i < nx; i++) {
           A1[i] += dt * volumeSource[i] / dx;
+          inflow[step] += volumeSource[i]; 
         }
 
         // Neues A05 mit variabler Zeitwichtung ermitteln
@@ -408,25 +405,28 @@ public class OneDimensionalModel implements Model {
     for (int i = 0; i < nx; i++) {
       shipVol += data.getShipArea(dx * i) * dx;
     }
-
-    System.out
-        .println("*******************************************************"); //$NON-NLS-1$
-    System.out.printf("Zeitschritte: %d \n", step); //$NON-NLS-1$
-    System.out.printf("Füllzeit: %f s \n", time); //$NON-NLS-1$
-    System.out.printf("Füllvolumen: %f m³/s \n", chamberVol); //$NON-NLS-1$
-    System.out.printf("Schiffsvolumen: %f m³/s \n", shipVol); //$NON-NLS-1$
-    System.out.printf("Qmax: %f m³/s \n", Qmax); //$NON-NLS-1$
-    System.out.printf("Fx_min: %f kN  Fx_max: %f kN \n", Fmin * 1.e-3, Fmax * 1.e-3); //$NON-NLS-1$
-    System.out.printf("Fx/G: %f  \n", //$NON-NLS-1$
-        Math.max(Fmax, Math.abs(Fmin)) / shipVol / GRAVITY * 1000.);
-    System.out.printf("Imin: %f ‰  Imax: %f ‰ \n", //$NON-NLS-1$
-        Imin * 1000., Imax * 1000.);
-    System.out.printf("dQ/dt_min: %f m³/s²  dQ/dt_max: %f m³/s² \n", //$NON-NLS-1$
-        dQ_dt_min, dQ_dt_max);
-    System.out
-        .println("*******************************************************"); //$NON-NLS-1$
-    System.out.printf(Messages.getString("resultTotalRuntime"), //$NON-NLS-1$
-        runtime * 1.e-9);
+    
+    final StringBuffer bf = new StringBuffer();
+    
+    bf.append("*******************************************************\n"); //$NON-NLS-1$
+    bf.append(String.format("Zeitschritte: %d \n", step)); //$NON-NLS-1$
+    bf.append(String.format("Füllzeit: %f s \n", time)); //$NON-NLS-1$
+    bf.append(String.format("Füllvolumen: %f m³/s \n", chamberVol)); //$NON-NLS-1$
+    bf.append(String.format("Schiffsvolumen: %f m³/s \n", shipVol)); //$NON-NLS-1$
+    bf.append(String.format("Qmax: %f m³/s \n", Qmax)); //$NON-NLS-1$
+    bf.append(String.format("Fx_min: %f kN  Fx_max: %f kN \n", Fmin * 1.e-3, //$NON-NLS-1$
+        Fmax * 1.e-3));
+    bf.append(String.format("Fx/G: %f  \n", //$NON-NLS-1$
+        Math.max(Fmax, Math.abs(Fmin)) / shipVol / GRAVITY * 1000.));
+    bf.append(String.format("Imin: %f ‰  Imax: %f ‰ \n", //$NON-NLS-1$
+        Imin * 1000., Imax * 1000.));
+    bf.append(String.format("dQ/dt_min: %f m³/s²  dQ/dt_max: %f m³/s² \n", //$NON-NLS-1$
+        dQ_dt_min, dQ_dt_max));
+    bf.append("*******************************************************\n"); //$NON-NLS-1$
+    bf.append(String.format(Messages.getString("resultTotalRuntime"), //$NON-NLS-1$
+        runtime * 1.e-9));
+    
+    System.out.println(bf);
 
     return new Results() {
 
