@@ -241,7 +241,7 @@ public class OneDimensionalModel implements Model {
         // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         // A und Q sind "staggered", darum A nur bis nx-1! A[0] liegt
         // zwischen Q[0] und Q[1].
-        for (int i = 0; i < nx - 1; i++) {
+        for (int i = 1; i < nx - 1; i++) {
           A1[i] = A0[i] - dt * (Q05[i + 1] - Q05[i]) / dx;
         }
 
@@ -306,11 +306,9 @@ public class OneDimensionalModel implements Model {
           Q1[i] += momentumSource[i];
         }
         // Q fuer RB-Knoten
-        // Q1[0] = 0.; // Impulsfreies Einleiten
-
-        // Q1[0] = 1. * zufluss[0]; // Einleiten mit Impuls am Knoten 0 mit
-        // // Faktor fuer die Richtung
-        // Q1[nx] = 0.;
+        Q1[0] = momentumSource[0];        
+        Q1[nx] = 0.0; // Impuls am letzten Knoten ist immer Null       
+        
         // QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
         // Neues Q05 mit variabler Zeitwichtung ermitteln:
