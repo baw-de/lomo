@@ -203,6 +203,7 @@ public class OneDimensionalModel implements Model {
         A0[i] = A1[i];
         // Schaetzung der Werte fuer A05 mit Adams-Bashforth:
         A05[i] = 1.5 * A0[i] - 0.5 * A00[i];
+        inflow[step] += volumeSource[i];
       }
       for (int i = 0; i < nx + 1; i++) {
         Q00[i] = Q0[i];
@@ -251,8 +252,7 @@ public class OneDimensionalModel implements Model {
 
         // Quellterme fuer jedes Volumen
         for (int i = 0; i < nx; i++) {
-          A1[i] += dt * volumeSource[i] / dx;
-          inflow[step] += volumeSource[i]; 
+          A1[i] += dt * volumeSource[i] / dx;           
         }
 
         // Neues A05 mit variabler Zeitwichtung ermitteln
