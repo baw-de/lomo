@@ -249,9 +249,9 @@ public class Controller implements Initializable {
   }
 
   @FXML
-  public void processButton(ActionEvent event) {
+  public void processButtonCalc(ActionEvent event) {
 
-    if (event.getSource() == btnCalc && !isComputing) {      
+    if (!isComputing) {      
       
       final Task<Results> task = new Task<Results>() {
 
