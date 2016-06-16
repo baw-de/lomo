@@ -32,6 +32,8 @@ import de.baw.lomo.core.data.Results;
 import de.baw.lomo.core.data.SluiceGateFillingType;
 import de.baw.lomo.io.IOUtils;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -48,6 +50,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioMenuItem;
@@ -87,6 +90,10 @@ public class Controller implements Initializable {
   private Menu menuFillingType;
   @FXML
   private ProgressIndicator progress;
+  @FXML
+  private CheckMenuItem menuShowPropCharts;
+  
+  public static BooleanProperty SHOW_PROP_CHARTS = new SimpleBooleanProperty(true);
 
   private Model model;
   private Case data;
@@ -172,6 +179,8 @@ public class Controller implements Initializable {
       }
 
     });
+    
+    SHOW_PROP_CHARTS.bind(menuShowPropCharts.selectedProperty());
 
 //    initConsole();    
     
