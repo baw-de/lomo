@@ -30,7 +30,7 @@ public class SluiceGateFillingType extends GateFillingType {
       sluiceGateHeightLookup.add(new KeyValueEntry(0., 0.));
       sluiceGateHeightLookup.add(new KeyValueEntry(20., 0.));
       sluiceGateHeightLookup.add(new KeyValueEntry(248., 1.3));
-      sluiceGateHeightLookup.add(new KeyValueEntry(1.e99, 1.3));
+      sluiceGateHeightLookup.add(new KeyValueEntry(1000., 1.3));
     }
 
     if (sluiceGateWidthLookup.isEmpty()) {
