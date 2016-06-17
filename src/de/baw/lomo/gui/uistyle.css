@@ -12,11 +12,12 @@
 
 #fgchart .chart-legend {
    -fx-background-color: transparent;
-   -fx-padding: 6px 0px 6px 160px;
+   -fx-padding: 6px 0px 6px 230px;
 }
 
 #bgchart .chart-legend {
-   -fx-padding: 6px 170px 6px 20px;   
+   -fx-background-color: transparent;
+   -fx-padding: 6px 130px 6px 0px;   
 }
 
 #fgchart .default-color0.chart-series-line { -fx-stroke: #f9d900; }
