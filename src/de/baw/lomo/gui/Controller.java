@@ -93,6 +93,8 @@ public class Controller implements Initializable {
   @FXML
   private CheckMenuItem menuShowPropCharts;
   
+  private File lastUsedDir = null;
+  
   public static BooleanProperty SHOW_PROP_CHARTS = new SimpleBooleanProperty(true);
 
   private Model model;
@@ -368,12 +370,18 @@ public class Controller implements Initializable {
     fileChooser.getExtensionFilters().add(new ExtensionFilter(
         Messages.getString("descrXmlCaseFileFilter"), "*.xml")); //$NON-NLS-1$ //$NON-NLS-2$
 
+    if (lastUsedDir != null) {
+      fileChooser.setInitialDirectory(lastUsedDir);
+    }    
+    
     final File selectedFile = fileChooser
         .showOpenDialog(rootPane.getScene().getWindow());
 
     if (selectedFile == null) {
       return;
     }
+    
+    lastUsedDir = selectedFile.getParentFile();
 
     data = IOUtils.readCaseFromXml(selectedFile);
     clearFigure();
@@ -390,12 +398,18 @@ public class Controller implements Initializable {
     fileChooser.getExtensionFilters().add(new ExtensionFilter(
         Messages.getString("descrXmlCaseFileFilter"), "*.xml")); //$NON-NLS-1$ //$NON-NLS-2$
 
+    if (lastUsedDir != null) {
+      fileChooser.setInitialDirectory(lastUsedDir);
+    }   
+    
     final File selectedFile = fileChooser
         .showSaveDialog(rootPane.getScene().getWindow());
 
     if (selectedFile == null) {
       return;
     }
+    
+    lastUsedDir = selectedFile.getParentFile();
 
     IOUtils.writeCaseToXml(data, selectedFile);
   }
@@ -408,12 +422,18 @@ public class Controller implements Initializable {
     fileChooser.getExtensionFilters().add(
         new ExtensionFilter(Messages.getString("descrPngFileFilter"), "*.png")); //$NON-NLS-1$ //$NON-NLS-2$
 
+    if (lastUsedDir != null) {
+      fileChooser.setInitialDirectory(lastUsedDir);
+    }   
+    
     final File selectedFile = fileChooser
         .showSaveDialog(rootPane.getScene().getWindow());
 
     if (selectedFile == null) {
       return;
     }
+    
+    lastUsedDir = selectedFile.getParentFile();
 
     final WritableImage snapshot = plotPane.snapshot(new SnapshotParameters(),
         null);
@@ -434,12 +454,18 @@ public class Controller implements Initializable {
     fileChooser.getExtensionFilters().add(
         new ExtensionFilter(Messages.getString("descrDatFileFilter"), "*.dat")); //$NON-NLS-1$ //$NON-NLS-2$
 
+    if (lastUsedDir != null) {
+      fileChooser.setInitialDirectory(lastUsedDir);
+    }  
+    
     final File selectedFile = fileChooser
         .showSaveDialog(rootPane.getScene().getWindow());
 
     if (selectedFile == null) {
       return;
     }
+    
+    lastUsedDir = selectedFile.getParentFile();
 
     IOUtils.writeResultsToText(lastResults, selectedFile);
   }
