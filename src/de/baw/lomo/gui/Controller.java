@@ -330,7 +330,19 @@ public class Controller implements Initializable {
 
           lastResults = results;
           isComputing = false;
-        }        
+        }
+
+        @Override
+        protected void failed() {
+          super.failed();          
+          isComputing = false;
+        }
+        
+        @Override
+        protected void cancelled() {
+          super.cancelled();          
+          isComputing = false;
+        }
       };
       
       task.runningProperty().addListener((observable, oldValue, newValue) ->  {
