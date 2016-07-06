@@ -408,17 +408,17 @@ public class OneDimensionalModel implements Model {
     
     bf.append("*******************************************************\n"); //$NON-NLS-1$
     bf.append(String.format("Zeitschritte: %d \n", step)); //$NON-NLS-1$
-    bf.append(String.format("Füllzeit: %f s \n", time)); //$NON-NLS-1$
-    bf.append(String.format("Füllvolumen: %f m³/s \n", chamberVol)); //$NON-NLS-1$
-    bf.append(String.format("Schiffsvolumen: %f m³/s \n", shipVol)); //$NON-NLS-1$
-    bf.append(String.format("Qmax: %f m³/s \n", Qmax)); //$NON-NLS-1$
-    bf.append(String.format("Fx_min: %f kN  Fx_max: %f kN \n", Fmin * 1.e-3, //$NON-NLS-1$
+    bf.append(String.format("Füllzeit: %.0f s \n", time)); //$NON-NLS-1$
+    bf.append(String.format("Füllvolumen: %.0f m³ \n", chamberVol)); //$NON-NLS-1$
+    bf.append(String.format("Schiffsvolumen: %.0f m³ \n", shipVol)); //$NON-NLS-1$
+    bf.append(String.format("Qmax: %.0f m³/s \n", Qmax)); //$NON-NLS-1$
+    bf.append(String.format("Fx_min: %.1f kN  Fx_max: %.1f kN \n", Fmin * 1.e-3, //$NON-NLS-1$
         Fmax * 1.e-3));
-    bf.append(String.format("Fx/G: %f  \n", //$NON-NLS-1$
+    bf.append(String.format("Fx/G: %.1f  \n", //$NON-NLS-1$
         Math.max(Fmax, Math.abs(Fmin)) / shipVol / GRAVITY * 1000.));
-    bf.append(String.format("Imin: %f ‰  Imax: %f ‰ \n", //$NON-NLS-1$
+    bf.append(String.format("Imin: %.1f ‰  Imax: %.1f ‰ \n", //$NON-NLS-1$
         Imin * 1000., Imax * 1000.));
-    bf.append(String.format("dQ/dt_min: %f m³/s²  dQ/dt_max: %f m³/s² \n", //$NON-NLS-1$
+    bf.append(String.format("dQ/dt_min: %.2f m³/s²  dQ/dt_max: %.2f m³/s² \n", //$NON-NLS-1$
         dQ_dt_min, dQ_dt_max));
     bf.append("*******************************************************\n"); //$NON-NLS-1$
     bf.append(String.format(Messages.getString("resultTotalRuntime"), //$NON-NLS-1$
