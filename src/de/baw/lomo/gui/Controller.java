@@ -176,8 +176,6 @@ public class Controller implements Initializable {
             return;
           }
         }
-
-        throw new RuntimeException("Could not fit axis.");
       }
 
     });
