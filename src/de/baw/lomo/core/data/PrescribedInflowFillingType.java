@@ -78,8 +78,7 @@ public class PrescribedInflowFillingType extends FillingType {
 
     // error handling
     if (positionLookup.size() == 0 || lengthOfInfluenceLookup.size() == 0
-        || valuesList.size() == 0 || Double.isNaN(positionLookup.get(0).getValue())
-        || Double.isNaN(lengthOfInfluenceLookup.get(0).getValue())
+        || valuesList.size() == 0 
         || (positionLookup.size() != lengthOfInfluenceLookup.size())
         || positionLookup.size() != valuesList.get(0).length) {
       throw new IllegalArgumentException(
@@ -135,8 +134,8 @@ public class PrescribedInflowFillingType extends FillingType {
           momentumFactorLookup.size() == 0) {
         
         for (int i = 0; i < valuesList.get(0).length; i++) {
-          positionLookup.add(new KeyValueEntry(i, Double.NaN));
-          lengthOfInfluenceLookup.add(new KeyValueEntry(i, Double.NaN));
+          positionLookup.add(new KeyValueEntry(i, 0.0));
+          lengthOfInfluenceLookup.add(new KeyValueEntry(i, 0.0));
           momentumFactorLookup.add(new KeyValueEntry(i, 0.0));
         }
         

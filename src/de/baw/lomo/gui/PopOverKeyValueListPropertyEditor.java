@@ -76,6 +76,9 @@ public class PopOverKeyValueListPropertyEditor
       tbColValue = colHeader[2];
     }
 
+    final ObservableList<KeyValueEntry> data = FXCollections
+        .observableList(value.get());
+
     final ObservableList<XYChart.Data<Number, Number>> visualData = FXCollections
         .observableArrayList();
 
@@ -92,7 +95,18 @@ public class PopOverKeyValueListPropertyEditor
     keyCol.setPrefWidth(99);
     keyCol.setCellValueFactory(new PropertyValueFactory<>("key"));
     keyCol.setCellFactory(TextFieldTableCell
-        .<KeyValueEntry, Double> forTableColumn(new DoubleStringConverter()));
+        .<KeyValueEntry, Double> forTableColumn(new DoubleStringConverter() {
+
+          @Override
+          public Double fromString(String value) {
+
+            value = value.replace(",", ".");
+            value = value.replaceAll("[^0-9.]+", "");
+
+            return super.fromString(value);
+          }
+
+        }));
 
     keyCol.setOnEditCommit((CellEditEvent<KeyValueEntry, Double> t) -> {
       t.getTableView().getItems().get(t.getTablePosition().getRow())
@@ -105,8 +119,23 @@ public class PopOverKeyValueListPropertyEditor
     valueCol.setPrefWidth(99);
     valueCol.setCellValueFactory(new PropertyValueFactory<>("value"));
     valueCol.setCellFactory(TextFieldTableCell
-        .<KeyValueEntry, Double> forTableColumn(new DoubleStringConverter()));
+        .<KeyValueEntry, Double> forTableColumn(new DoubleStringConverter() {
+
+          @Override
+          public Double fromString(String value) {
+
+            value = value.replace(",", ".");
+            value = value.replaceAll("[^0-9.]+", "");
+
+            return super.fromString(value);
+          }
+
+        }));
+
     valueCol.setOnEditCommit((CellEditEvent<KeyValueEntry, Double> t) -> {
+
+      syncVisualData(data, visualData);
+
       t.getTableView().getItems().get(t.getTablePosition().getRow())
           .setValue(t.getNewValue());
       visualData.get(t.getTablePosition().getRow()).setYValue(t.getNewValue());
@@ -114,13 +143,13 @@ public class PopOverKeyValueListPropertyEditor
 
     table.getColumns().addAll(keyCol, valueCol);
 
-    final ObservableList<KeyValueEntry> data = FXCollections
-        .observableList(value.get());
-
     table.setItems(data);
 
     final Button addButton = new Button(Messages.getString("btnTbAdd"));
     addButton.setOnAction((ActionEvent e) -> {
+
+      syncVisualData(data, visualData);
+
       data.add(new KeyValueEntry());
       visualData.add(new XYChart.Data<Number, Number>(0., 0.));
     });
@@ -128,6 +157,9 @@ public class PopOverKeyValueListPropertyEditor
     final Button delButton = new Button(Messages.getString("btnTbDelete"));
     delButton.setOnAction((ActionEvent e) -> {
       if (table.getSelectionModel().getSelectedIndex() >= 0) {
+
+        syncVisualData(data, visualData);
+
         data.remove(table.getSelectionModel().getSelectedIndex());
         visualData.remove(table.getSelectionModel().getSelectedIndex());
       }
@@ -164,6 +196,19 @@ public class PopOverKeyValueListPropertyEditor
     GridPane.setHgrow(vbox, Priority.ALWAYS);
 
     popOver.setContentNode(pane);
+  }
+
+  private void syncVisualData(ObservableList<KeyValueEntry> data,
+      ObservableList<XYChart.Data<Number, Number>> visualData) {
+
+    if (visualData.size() != data.size()) {
+
+      visualData.clear();
+
+      for (final KeyValueEntry entry : value.get()) {
+        visualData.add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+      }
+    }
   }
 
   @Override
