@@ -109,6 +109,16 @@ public class PopOverKeyValueListPropertyEditor
         }));
 
     keyCol.setOnEditCommit((CellEditEvent<KeyValueEntry, Double> t) -> {
+      
+      if (t.getNewValue() == null) {
+        
+        t.getTableView().getColumns().get(0).setVisible(false);
+        t.getTableView().getColumns().get(0).setVisible(true);
+        return;
+      }
+
+      syncVisualData(data, visualData);
+      
       t.getTableView().getItems().get(t.getTablePosition().getRow())
           .setKey(t.getNewValue());
       visualData.get(t.getTablePosition().getRow()).setXValue(t.getNewValue());
@@ -133,6 +143,13 @@ public class PopOverKeyValueListPropertyEditor
         }));
 
     valueCol.setOnEditCommit((CellEditEvent<KeyValueEntry, Double> t) -> {
+      
+      if (t.getNewValue() == null) {
+        
+        t.getTableView().getColumns().get(0).setVisible(false);
+        t.getTableView().getColumns().get(0).setVisible(true);
+        return;
+      }
 
       syncVisualData(data, visualData);
 
@@ -157,6 +174,11 @@ public class PopOverKeyValueListPropertyEditor
     final Button delButton = new Button(Messages.getString("btnTbDelete"));
     delButton.setOnAction((ActionEvent e) -> {
       if (table.getSelectionModel().getSelectedIndex() >= 0) {
+        
+        if (table.getItems().size() <= 1) {
+          table.getSelectionModel().clearSelection();
+          return;
+        }
 
         syncVisualData(data, visualData);
 
