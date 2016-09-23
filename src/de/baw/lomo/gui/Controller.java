@@ -54,11 +54,17 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
@@ -190,7 +196,7 @@ public class Controller implements Initializable {
 
     try {
 
-      PrintStream out = new PrintStream(new MyOutputStream(), true, "UTF-8");
+      PrintStream out = new PrintStream(new MyOutputStream(), true, "UTF-8"); //$NON-NLS-1$
 
       System.setOut(out);
       System.setErr(out);
@@ -207,7 +213,7 @@ public class Controller implements Initializable {
 
     public MyOutputStream() throws IOException {
       PipedInputStream in = new PipedInputStream(out);
-      reader = new InputStreamReader(in, "UTF-8");
+      reader = new InputStreamReader(in, "UTF-8"); //$NON-NLS-1$
     }
 
     public void write(int i) throws IOException {
@@ -496,6 +502,73 @@ public class Controller implements Initializable {
     dlg.getDialogPane().setContentText(Messages.getString("dlgMessageAbout") //$NON-NLS-1$
         + Messages.getString("dlgMessageAboutVersion")); //$NON-NLS-1$
     dlg.showAndWait();
+  }
+  
+  @FXML
+  public void processMenuParameterHelp(ActionEvent event) {
+
+    final Alert alert = new Alert(AlertType.INFORMATION);
+    alert.initOwner(rootPane.getScene().getWindow());
+    alert.initModality(Modality.NONE);
+    alert.setTitle(Messages.getString("dlgParameterHelpTitle")); //$NON-NLS-1$
+    alert.setHeaderText(Messages.getString("dlgParameterHelpIntro")); //$NON-NLS-1$
+
+    final ScrollPane pane = new ScrollPane();
+    pane.setFitToWidth(true);
+    pane.setStyle("-fx-background-color: #FFFFFF;"); //$NON-NLS-1$
+    pane.setPrefWidth(500);
+    pane.setPrefHeight(400);
+
+    final TextFlow textFlow = new TextFlow();
+    textFlow.setStyle("-fx-background-color: #FFFFFF;"); //$NON-NLS-1$
+
+    ObservableList<Item> liste = BeanPropertyUtils.getProperties(data);
+
+    final Text headingGeneral = new Text(
+        String.format("%s\n\r", Messages.getString("dlgParameterHelpGeneralParameters"))); //$NON-NLS-1$ //$NON-NLS-2$
+    final Font defaultFont = headingGeneral.getFont();
+    headingGeneral.setFont(Font.font(defaultFont.getFamily(), 18));
+    textFlow.getChildren().add(headingGeneral);
+
+    writePropertyHelpDescription(textFlow, liste);
+
+    for (FillingType fillingType : FillingType.LIST) {
+
+      final Text headingFillingType = new Text(
+          String.format("\n%s\n\r", fillingType.toString())); //$NON-NLS-1$
+      headingFillingType.setFont(Font.font(defaultFont.getFamily(), 18));
+      textFlow.getChildren().add(headingFillingType);
+
+      liste = BeanPropertyUtils.getProperties(fillingType);
+      writePropertyHelpDescription(textFlow, liste);
+    }
+
+    pane.setContent(textFlow);
+    alert.getDialogPane().setContent(pane);
+    alert.showAndWait();
+  }
+
+  private void writePropertyHelpDescription(TextFlow textFlow,
+      ObservableList<Item> liste) {
+    Collections.sort(liste, propertyComparator);
+    for (Item i : liste) {
+
+      final PropertyDescriptor p = ((BeanProperty) i).getPropertyDescriptor();
+
+      final Text displayName = new Text(p.getDisplayName());
+      Font def = displayName.getFont();
+      displayName
+          .setFont(Font.font(def.getFamily(), FontWeight.BOLD, def.getSize()));
+      final Text xmlName = new Text(String.format(" | %s\n", p.getName())); //$NON-NLS-1$
+      xmlName.setFill(Color.GRAY);
+      final Text description = new Text(
+          String.format("%s\n", p.getShortDescription().replace(";", "\n"))); //$NON-NLS-1$
+      final Text dataType = new Text(String.format("%s: %s\n\r", Messages.getString("dlgParameterHelpDataType"), //$NON-NLS-1$ //$NON-NLS-2$
+          p.getPropertyType().getSimpleName()));
+      dataType.setFill(Color.GRAY);
+      textFlow.getChildren().addAll(displayName, xmlName, description,
+          dataType);
+    }
   }
 
   private void initFillingTypeMenu() {
