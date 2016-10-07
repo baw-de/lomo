@@ -407,21 +407,37 @@ public class OneDimensionalModel implements Model {
     final StringBuffer bf = new StringBuffer();
     
     bf.append("*******************************************************\n"); //$NON-NLS-1$
-    bf.append(String.format("Zeitschritte: %d \n", step)); //$NON-NLS-1$
-    bf.append(String.format("Füllzeit: %.0f s \n", time)); //$NON-NLS-1$
-    bf.append(String.format("Füllvolumen: %.0f m³ \n", chamberVol)); //$NON-NLS-1$
-    bf.append(String.format("Schiffsvolumen: %.0f m³ \n", shipVol)); //$NON-NLS-1$
-    bf.append(String.format("Qmax: %.0f m³/s \n", Qmax)); //$NON-NLS-1$
-    bf.append(String.format("Fx_min: %.1f kN  Fx_max: %.1f kN \n", Fmin * 1.e-3, //$NON-NLS-1$
-        Fmax * 1.e-3));
-    bf.append(String.format("Fx/G: %.1f  \n", //$NON-NLS-1$
-        Math.max(Fmax, Math.abs(Fmin)) / shipVol / GRAVITY * 1000.));
-    bf.append(String.format("Imin: %.1f ‰  Imax: %.1f ‰ \n", //$NON-NLS-1$
+    
+    bf.append(String.format(Messages.getString("resultTimeSteps") + " \n",  //$NON-NLS-1$ //$NON-NLS-2$
+        step));
+    
+    bf.append(String.format(Messages.getString("resultFillingTime") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+        time)); 
+    
+    bf.append(String.format(Messages.getString("resultFillingVolume") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+        chamberVol)); 
+    
+    bf.append(String.format(Messages.getString("resultShipVolume") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+        shipVol)); 
+    
+    bf.append(String.format(Messages.getString("resultMaxFlowRate") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+        Qmax)); 
+    
+    bf.append(String.format(Messages.getString("resultMinMaxLongitudinalForces") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+        Fmin * 1.e-3, Fmax * 1.e-3));
+    
+    bf.append(String.format(Messages.getString("resultMinMaxLongitudinalForceToGravityForce") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+        Math.abs(Fmin) / shipVol / GRAVITY, Math.abs(Fmax) / shipVol / GRAVITY));
+    
+    bf.append(String.format(Messages.getString("resultMinMaxSlope") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
         Imin * 1000., Imax * 1000.));
-    bf.append(String.format("dQ/dt_min: %.2f m³/s²  dQ/dt_max: %.2f m³/s² \n", //$NON-NLS-1$
+    
+    bf.append(String.format(Messages.getString("resultMinMaxFlowRateChange") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
         dQ_dt_min, dQ_dt_max));
+    
     bf.append("*******************************************************\n"); //$NON-NLS-1$
-    bf.append(String.format(Messages.getString("resultTotalRuntime"), //$NON-NLS-1$
+    
+    bf.append(String.format(Messages.getString("resultTotalRuntime") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
         runtime * 1.e-9));
     
     System.out.println(bf);
