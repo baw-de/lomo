@@ -16,7 +16,7 @@ public class SegmentGateFillingType extends GateFillingType {
 
   private List<KeyValueEntry> segmentGateLossLookup = new ArrayList<>();
   
-  private double culvertCrossSection = 12.*666;
+  private double culvertCrossSection = 999999.;
   
   private double culvertLoss = 0.;
   
