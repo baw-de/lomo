@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -88,6 +89,11 @@
 												<NumberAxis fx:id="fgYaxis" animated="false" autoRanging="true" forceZeroInRange="true" label="y2" maxWidth="60.0" prefWidth="60.0" side="RIGHT" />
 											</yAxis>
 										</LineChart>
+										<Text id="chartExportTag" fx:id="chartExportTag" text="de.baw.lomo" visible="false" StackPane.alignment="BOTTOM_LEFT">
+                                 <StackPane.margin>
+                                    <Insets bottom="1.0" left="2.0" />
+                                 </StackPane.margin>
+                              </Text>
 									</children>
 									<padding>
 										<Insets right="60.0" />

@@ -11,9 +11,11 @@ import java.io.PipedOutputStream;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -98,6 +100,8 @@ public class Controller implements Initializable {
   private ProgressIndicator progress;
   @FXML
   private CheckMenuItem menuShowPropCharts;
+  @FXML
+  private Text chartExportTag;
   
   private File lastUsedDir = null;
   
@@ -450,6 +454,9 @@ public class Controller implements Initializable {
     }
     
     lastUsedDir = selectedFile.getParentFile();
+    
+    chartExportTag.textProperty().set(getExportTag());
+    chartExportTag.visibleProperty().set(true);
 
     final WritableImage snapshot = plotPane.snapshot(new SnapshotParameters(),
         null);
@@ -460,6 +467,8 @@ public class Controller implements Initializable {
 
       throw new RuntimeException(Messages.getString("errExportImageFailed"), e); //$NON-NLS-1$
     }
+    
+    chartExportTag.visibleProperty().set(false);
   }
 
   @FXML
@@ -483,7 +492,7 @@ public class Controller implements Initializable {
     
     lastUsedDir = selectedFile.getParentFile();
 
-    IOUtils.writeResultsToText(lastResults, selectedFile);
+    IOUtils.writeResultsToText(lastResults, selectedFile, getExportTag());
   }
 
   @FXML
@@ -628,6 +637,32 @@ public class Controller implements Initializable {
     seriesH.setData(FXCollections.observableList(dataH));
     seriesQ.setData(FXCollections.observableList(dataQ));
     seriesF.setData(FXCollections.observableList(dataI));
+  }
+  
+  private String getExportTag() {
+    
+    final StringBuffer bf = new StringBuffer();
+    
+    bf.append(String.format("%s, %s %s", 
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),
+        Messages.getString("appTitle"),
+        Messages.getString("dlgMessageAboutVersion")));
+    
+    if (data.getAuthor().length() > 0) {
+      bf.append(": ").append(data.getAuthor());
+    }
+    
+    if (data.getDescription().length() > 0) {
+      if (data.getAuthor().length() > 0) {
+        bf.append(", ");
+      } else {
+        bf.append(": ");
+      }
+      
+      bf.append(data.getDescription());
+    }
+    
+    return bf.toString();
   }
 
   private static Comparator<Item> propertyComparator = new Comparator<Item>() {

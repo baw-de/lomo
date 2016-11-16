@@ -54,8 +54,12 @@ public class IOUtils {
       throw new RuntimeException("There was an error when writing XML case file.", e);
     }
   }
-
+  
   public static void writeResultsToText(Results results, File file) {
+    writeResultsToText(results, file, null);
+  }
+
+  public static void writeResultsToText(Results results, File file, String comment) {
 
     final double[] t = results.getTimeline();
     final double[] o = results.getValveOpeningOverTime();
@@ -72,6 +76,11 @@ public class IOUtils {
 
     try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
         new FileOutputStream(file), StandardCharsets.UTF_8))) {
+      
+      if (comment != null) {
+        bw.write(comment);
+        bw.newLine();
+      }
       
       bw.write("t[s] s[m] H[m] Q[m^3/s] I[-] Fl[N]");
       bw.newLine();
