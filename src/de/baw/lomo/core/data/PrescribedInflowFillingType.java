@@ -165,10 +165,6 @@ public class PrescribedInflowFillingType extends FillingType {
 
       for (int i = 0; i < timeList.size(); i++) {
 
-        if (i + 1 == 801) {
-          System.out.println("HEre");
-        }
-
         if (timeList.get(i + 1) < timeList.get(i)) {
           throw new IllegalArgumentException("x values are not monotonic.");
         }
