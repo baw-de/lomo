@@ -34,7 +34,7 @@ public abstract class GateFillingType extends FillingType {
 
   public abstract void setCulvertLoss(double culvertLoss);
 
-  public abstract double getAreaTimesLoss(double time);
+  public abstract double getAreaTimesDischargeCoefficient(double time);
 
   public abstract double getGateOpening(double time);
   
@@ -57,8 +57,8 @@ public abstract class GateFillingType extends FillingType {
     
     final double[][] source = new double[2][positions.length];
     
-    final double aMue = getAreaTimesLoss(time);
-    final double ow = data.getUpstreamWaterDepth();
+    final double aMue = getAreaTimesDischargeCoefficient(time);
+    final double ow = data.getUpstreamWaterLevel();
     final double maxDh = getSubmergenceStart();
     final double zetaKanal = getCulvertLoss();
     final double aKanal = getCulvertCrossSection();

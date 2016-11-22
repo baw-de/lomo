@@ -63,7 +63,7 @@ public class IOUtils {
 
     final double[] t = results.getTimeline();
     final double[] o = results.getValveOpeningOverTime();
-    final double[] h = results.getChamberWaterDepthOverTime();
+    final double[] h = results.getChamberWaterLevelOverTime();
     final double[] q = results.getDischargeOverTime();
     final double[] s = results.getSlopeOverTime();   
     final double[] lf = results.getLongitudinalForceOverTime();  

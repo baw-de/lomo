@@ -28,16 +28,16 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[1].setShortDescription(Messages.getString("descrChamberWidth")); //$NON-NLS-1$
       properties[1].setPropertyEditorClass(MyPropertyEditor.class);
 		  
-		  properties[2] = new PropertyDescriptor("upstreamWaterDepth", Case.class); //$NON-NLS-1$
+		  properties[2] = new PropertyDescriptor("upstreamWaterLevel", Case.class); //$NON-NLS-1$
       properties[2].setValue("order", 3); //$NON-NLS-1$
-      properties[2].setDisplayName(Messages.getString("nameUpstreamWaterDepth")); //$NON-NLS-1$
-      properties[2].setShortDescription(Messages.getString("descrUpstreamWaterDepth")); //$NON-NLS-1$
+      properties[2].setDisplayName(Messages.getString("nameUpstreamWaterLevel")); //$NON-NLS-1$
+      properties[2].setShortDescription(Messages.getString("descrUpstreamWaterLevel")); //$NON-NLS-1$
       properties[2].setPropertyEditorClass(MyPropertyEditor.class);
       
-      properties[3] = new PropertyDescriptor("downstreamWaterDepth", Case.class); //$NON-NLS-1$
+      properties[3] = new PropertyDescriptor("downstreamWaterLevel", Case.class); //$NON-NLS-1$
       properties[3].setValue("order", 4); //$NON-NLS-1$
-      properties[3].setDisplayName(Messages.getString("nameDownstreamWaterDepth")); //$NON-NLS-1$
-      properties[3].setShortDescription(Messages.getString("descrDownstreamWaterDepth")); //$NON-NLS-1$
+      properties[3].setDisplayName(Messages.getString("nameDownstreamWaterLevel")); //$NON-NLS-1$
+      properties[3].setShortDescription(Messages.getString("descrDownstreamWaterLevel")); //$NON-NLS-1$
       properties[3].setPropertyEditorClass(MyPropertyEditor.class);
       
       properties[4] = new PropertyDescriptor("fillingType", Case.class); //$NON-NLS-1$

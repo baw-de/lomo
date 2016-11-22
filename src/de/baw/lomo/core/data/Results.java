@@ -16,7 +16,7 @@ public interface Results {
   double[] getSlopeOverTime();
   
   @XmlList
-  double[] getChamberWaterDepthOverTime();
+  double[] getChamberWaterLevelOverTime();
 
   @XmlList
   double[] getLongitudinalForceOverTime();

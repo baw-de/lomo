@@ -72,8 +72,8 @@ public class OneDimensionalModel implements Model {
     theta = data.getTheta();
     upwind = data.getUpwind();
     nx = data.getNumberOfNodes();
-    ow = data.getUpstreamWaterDepth();
-    uw = data.getDownstreamWaterDepth();
+    ow = data.getUpstreamWaterLevel();
+    uw = data.getDownstreamWaterLevel();
 
     kL = data.getChamberLength();
     kB = data.getChamberWidth();
@@ -460,7 +460,7 @@ public class OneDimensionalModel implements Model {
       }
 
       @Override
-      public double[] getChamberWaterDepthOverTime() {
+      public double[] getChamberWaterLevelOverTime() {
         return h1Mean;
       }
 

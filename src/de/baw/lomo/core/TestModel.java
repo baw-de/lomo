@@ -32,9 +32,9 @@ public class TestModel implements Model {
     double dx;
 
     // Oberwasserstand
-    double OW = data.getUpstreamWaterDepth();
+    double OW = data.getUpstreamWaterLevel();
     // Unterwasserstand
-    double UW = data.getDownstreamWaterDepth();
+    double UW = data.getDownstreamWaterLevel();
     // Ende der Fuellung
     double OW_UW = data.getDeltaWaterDepthStop();
 
@@ -164,7 +164,7 @@ public class TestModel implements Model {
       A_schuetz = s_s[it] * fillingType.getSluiceGateWidth(s_s[it]);
 
       // mue-Beiwert fuer Schuetz
-      mue_schuetz = fillingType.getSluiceGateLoss(s_s[it]);
+      mue_schuetz = fillingType.getSluiceGateDischargeCoefficient(s_s[it]);
       mueA = A_schuetz * mue_schuetz;
 
       // Vorkopffuellung: Wirksame Fallhoehe am Knoten 0
@@ -299,7 +299,7 @@ public class TestModel implements Model {
       }
       
       @Override
-      public double[] getChamberWaterDepthOverTime() {
+      public double[] getChamberWaterLevelOverTime() {
         return h_mean;
       }
 

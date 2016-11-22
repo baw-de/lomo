@@ -24,9 +24,9 @@ public class Case {
 
   private double chamberWidth = 45.;
 
-  private double upstreamWaterDepth = 14.;
+  private double upstreamWaterLevel = 14.;
 
-  private double downstreamWaterDepth = 12.5;
+  private double downstreamWaterLevel = 12.5;
 
   private FillingType fillingType = new SluiceGateFillingType();
 
@@ -82,20 +82,20 @@ public class Case {
     this.chamberWidth = chamberWidth;
   }
 
-  public double getUpstreamWaterDepth() {
-    return upstreamWaterDepth;
+  public double getUpstreamWaterLevel() {
+    return upstreamWaterLevel;
   }
 
-  public void setUpstreamWaterDepth(double upstreamWaterDepth) {
-    this.upstreamWaterDepth = upstreamWaterDepth;
+  public void setUpstreamWaterLevel(double upstreamWaterLevel) {
+    this.upstreamWaterLevel = upstreamWaterLevel;
   }
 
-  public double getDownstreamWaterDepth() {
-    return downstreamWaterDepth;
+  public double getDownstreamWaterLevel() {
+    return downstreamWaterLevel;
   }
 
-  public void setDownstreamWaterDepth(double downstreamWaterDepth) {
-    this.downstreamWaterDepth = downstreamWaterDepth;
+  public void setDownstreamWaterLevel(double downstreamWaterLevel) {
+    this.downstreamWaterLevel = downstreamWaterLevel;
   }
 
   @XmlElementRef

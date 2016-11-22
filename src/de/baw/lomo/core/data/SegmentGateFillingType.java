@@ -14,7 +14,7 @@ public class SegmentGateFillingType extends GateFillingType {
   
   private List<KeyValueEntry> segmentGateAngleLookup = new ArrayList<>();
 
-  private List<KeyValueEntry> segmentGateLossLookup = new ArrayList<>();
+  private List<KeyValueEntry> segmentGateAMueLookup = new ArrayList<>();
   
   private double culvertCrossSection = 999999.;
   
@@ -30,28 +30,28 @@ public class SegmentGateFillingType extends GateFillingType {
       segmentGateAngleLookup.add(new KeyValueEntry(800., 20.));
     }
     
-    if (segmentGateLossLookup.isEmpty()) {
-      segmentGateLossLookup.add(new KeyValueEntry(0., 0.));
-      segmentGateLossLookup.add(new KeyValueEntry(1., 0.));
-      segmentGateLossLookup.add(new KeyValueEntry(2., 0.08));
-      segmentGateLossLookup.add(new KeyValueEntry(3., 0.2));
-      segmentGateLossLookup.add(new KeyValueEntry(4., 0.4));
-      segmentGateLossLookup.add(new KeyValueEntry(5., 0.7));
-      segmentGateLossLookup.add(new KeyValueEntry(6., 1.));
-      segmentGateLossLookup.add(new KeyValueEntry(7., 1.5));
-      segmentGateLossLookup.add(new KeyValueEntry(8., 2.1));
-      segmentGateLossLookup.add(new KeyValueEntry(9., 2.7));
-      segmentGateLossLookup.add(new KeyValueEntry(10., 3.4));
-      segmentGateLossLookup.add(new KeyValueEntry(11., 4.));
-      segmentGateLossLookup.add(new KeyValueEntry(12., 4.5));
-      segmentGateLossLookup.add(new KeyValueEntry(13., 4.9));
-      segmentGateLossLookup.add(new KeyValueEntry(14., 5.2));
-      segmentGateLossLookup.add(new KeyValueEntry(15., 5.4));
-      segmentGateLossLookup.add(new KeyValueEntry(16., 5.5));
-      segmentGateLossLookup.add(new KeyValueEntry(17., 5.6));
-      segmentGateLossLookup.add(new KeyValueEntry(18., 5.5));
-      segmentGateLossLookup.add(new KeyValueEntry(19., 5.5));
-      segmentGateLossLookup.add(new KeyValueEntry(20., 5.4));
+    if (segmentGateAMueLookup.isEmpty()) {
+      segmentGateAMueLookup.add(new KeyValueEntry(0., 0.));
+      segmentGateAMueLookup.add(new KeyValueEntry(1., 0.));
+      segmentGateAMueLookup.add(new KeyValueEntry(2., 0.08));
+      segmentGateAMueLookup.add(new KeyValueEntry(3., 0.2));
+      segmentGateAMueLookup.add(new KeyValueEntry(4., 0.4));
+      segmentGateAMueLookup.add(new KeyValueEntry(5., 0.7));
+      segmentGateAMueLookup.add(new KeyValueEntry(6., 1.));
+      segmentGateAMueLookup.add(new KeyValueEntry(7., 1.5));
+      segmentGateAMueLookup.add(new KeyValueEntry(8., 2.1));
+      segmentGateAMueLookup.add(new KeyValueEntry(9., 2.7));
+      segmentGateAMueLookup.add(new KeyValueEntry(10., 3.4));
+      segmentGateAMueLookup.add(new KeyValueEntry(11., 4.));
+      segmentGateAMueLookup.add(new KeyValueEntry(12., 4.5));
+      segmentGateAMueLookup.add(new KeyValueEntry(13., 4.9));
+      segmentGateAMueLookup.add(new KeyValueEntry(14., 5.2));
+      segmentGateAMueLookup.add(new KeyValueEntry(15., 5.4));
+      segmentGateAMueLookup.add(new KeyValueEntry(16., 5.5));
+      segmentGateAMueLookup.add(new KeyValueEntry(17., 5.6));
+      segmentGateAMueLookup.add(new KeyValueEntry(18., 5.5));
+      segmentGateAMueLookup.add(new KeyValueEntry(19., 5.5));
+      segmentGateAMueLookup.add(new KeyValueEntry(20., 5.4));
     }
     
   }  
@@ -68,20 +68,20 @@ public class SegmentGateFillingType extends GateFillingType {
 
   @XmlElementWrapper
   @XmlElement(name = "entry")
-  public List<KeyValueEntry> getSegmentGateLossLookup() {
-    return segmentGateLossLookup;
+  public List<KeyValueEntry> getSegmentGateAMueLookup() {
+    return segmentGateAMueLookup;
   }
 
-  public void setSegmentGateLossLookup(List<KeyValueEntry> segmentGateLossLookup) {
-    this.segmentGateLossLookup = segmentGateLossLookup;
+  public void setSegmentGateAMueLookup(List<KeyValueEntry> segmentGateAMueLookup) {
+    this.segmentGateAMueLookup = segmentGateAMueLookup;
   }
   
   public double getSegmentGateAngle(double time) {
     return Utils.linearInterpolate(segmentGateAngleLookup, time);
   }
 
-  public double getSegmentGateLoss(double angle) {
-    return Utils.linearInterpolate(segmentGateLossLookup, angle);
+  public double getSegmentGateAMue(double angle) {
+    return Utils.linearInterpolate(segmentGateAMueLookup, angle);
   }
   
   public double getCulvertCrossSection() {
@@ -109,11 +109,11 @@ public class SegmentGateFillingType extends GateFillingType {
   }
 
   @Override
-  public double getAreaTimesLoss(double time) {
+  public double getAreaTimesDischargeCoefficient(double time) {
 
     final double angle = getSegmentGateAngle(time);
     
-    return getSegmentGateLoss(angle);
+    return getSegmentGateAMue(angle);
   }
 
   @Override

@@ -16,7 +16,7 @@ public class SluiceGateFillingType extends GateFillingType {
 
   private List<KeyValueEntry> sluiceGateWidthLookup = new ArrayList<>();
 
-  private List<KeyValueEntry> sluiceGateLossLookup = new ArrayList<>();
+  private List<KeyValueEntry> sluiceGateDischargeCoefficientLookup = new ArrayList<>();
 
   private double culvertCrossSection = 1.3 * 16.2 * 0.6;
 
@@ -39,12 +39,12 @@ public class SluiceGateFillingType extends GateFillingType {
       sluiceGateWidthLookup.add(new KeyValueEntry(1.0, 16.2));
     }
 
-    if (sluiceGateLossLookup.isEmpty()) {
-      sluiceGateLossLookup.add(new KeyValueEntry(0., 0.65));
-      sluiceGateLossLookup.add(new KeyValueEntry(0.5, 0.8));
-      sluiceGateLossLookup.add(new KeyValueEntry(0.8, 0.95));
-      sluiceGateLossLookup.add(new KeyValueEntry(1., 0.95));
-      sluiceGateLossLookup.add(new KeyValueEntry(1.3, 0.8));
+    if (sluiceGateDischargeCoefficientLookup.isEmpty()) {
+      sluiceGateDischargeCoefficientLookup.add(new KeyValueEntry(0., 0.65));
+      sluiceGateDischargeCoefficientLookup.add(new KeyValueEntry(0.5, 0.8));
+      sluiceGateDischargeCoefficientLookup.add(new KeyValueEntry(0.8, 0.95));
+      sluiceGateDischargeCoefficientLookup.add(new KeyValueEntry(1., 0.95));
+      sluiceGateDischargeCoefficientLookup.add(new KeyValueEntry(1.3, 0.8));
     }
     
   }
@@ -71,12 +71,12 @@ public class SluiceGateFillingType extends GateFillingType {
 
   @XmlElementWrapper
   @XmlElement(name = "entry")
-  public List<KeyValueEntry> getSluiceGateLossLookup() {
-    return sluiceGateLossLookup;
+  public List<KeyValueEntry> getSluiceGateDischargeCoefficientLookup() {
+    return sluiceGateDischargeCoefficientLookup;
   }
 
-  public void setSluiceGateLossLookup(List<KeyValueEntry> sluiceGateLossLookup) {
-    this.sluiceGateLossLookup = sluiceGateLossLookup;
+  public void setSluiceGateDischargeCoefficientLookup(List<KeyValueEntry> sluiceGateDischargeCoeffcientLookup) {
+    this.sluiceGateDischargeCoefficientLookup = sluiceGateDischargeCoeffcientLookup;
   }
   
   public double getSluiceGateHeight(double time) {
@@ -87,8 +87,8 @@ public class SluiceGateFillingType extends GateFillingType {
     return Utils.linearInterpolate(sluiceGateWidthLookup, height);
   }
 
-  public double getSluiceGateLoss(double height) {
-    return Utils.linearInterpolate(sluiceGateLossLookup, height);
+  public double getSluiceGateDischargeCoefficient(double height) {
+    return Utils.linearInterpolate(sluiceGateDischargeCoefficientLookup, height);
   }
   
   public double getCulvertCrossSection() {
@@ -116,11 +116,11 @@ public class SluiceGateFillingType extends GateFillingType {
   }
 
   @Override
-  public double getAreaTimesLoss(double time) {    
+  public double getAreaTimesDischargeCoefficient(double time) {    
     
     final double height = getSluiceGateHeight(time);
     final double width = getSluiceGateWidth(height);
-    final double loss = getSluiceGateLoss(height);
+    final double loss = getSluiceGateDischargeCoefficient(height);
     
     return height * width * loss;
   }

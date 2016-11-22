@@ -290,7 +290,7 @@ public class Controller implements Initializable {
           final double[] t = results.getTimeline();
           final double[] q = results.getDischargeOverTime();
           final double[] lf = results.getLongitudinalForceOverTime();
-          final double[] h = results.getChamberWaterDepthOverTime();
+          final double[] h = results.getChamberWaterLevelOverTime();
           final double[] o = results.getValveOpeningOverTime();
 
           final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(

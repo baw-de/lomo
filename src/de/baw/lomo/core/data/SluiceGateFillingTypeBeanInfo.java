@@ -28,10 +28,10 @@ public class SluiceGateFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[1].setShortDescription(Messages.getString("descrSluiceGateWidthLookup")); //$NON-NLS-1$
       properties[1].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);
       
-      properties[2] = new PropertyDescriptor("sluiceGateLossLookup", SluiceGateFillingType.class); //$NON-NLS-1$
+      properties[2] = new PropertyDescriptor("sluiceGateDischargeCoefficientLookup", SluiceGateFillingType.class); //$NON-NLS-1$
       properties[2].setValue("order", 3); //$NON-NLS-1$
-      properties[2].setDisplayName(Messages.getString("nameSluiceGateLossLookup")); //$NON-NLS-1$
-      properties[2].setShortDescription(Messages.getString("descrSluiceGateLossLookup")); //$NON-NLS-1$
+      properties[2].setDisplayName(Messages.getString("nameSluiceGateDischargeCoefficientLookup")); //$NON-NLS-1$
+      properties[2].setShortDescription(Messages.getString("descrSluiceGateDischargeCoefficientLookup")); //$NON-NLS-1$
       properties[2].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);
             
       properties[3] = new PropertyDescriptor("culvertCrossSection", SluiceGateFillingType.class); //$NON-NLS-1$

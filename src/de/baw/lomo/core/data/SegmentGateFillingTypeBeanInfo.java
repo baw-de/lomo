@@ -22,10 +22,10 @@ public class SegmentGateFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[0].setShortDescription(Messages.getString("descrSegmentGateAngleLookup")); //$NON-NLS-1$
       properties[0].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);      
 
-      properties[1] = new PropertyDescriptor("segmentGateLossLookup", SegmentGateFillingType.class); //$NON-NLS-1$
+      properties[1] = new PropertyDescriptor("segmentGateAMueLookup", SegmentGateFillingType.class); //$NON-NLS-1$
       properties[1].setValue("order", 2); //$NON-NLS-1$
-      properties[1].setDisplayName(Messages.getString("nameSegmentGateLossLookup")); //$NON-NLS-1$
-      properties[1].setShortDescription(Messages.getString("descrSegmentGateLossLookup")); //$NON-NLS-1$
+      properties[1].setDisplayName(Messages.getString("nameSegmentGateAMueLookup")); //$NON-NLS-1$
+      properties[1].setShortDescription(Messages.getString("descrSegmentGateAMueLookup")); //$NON-NLS-1$
       properties[1].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);
 
       //Fabian neu:
