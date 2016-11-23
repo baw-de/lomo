@@ -22,9 +22,9 @@ public abstract class GateFillingType extends FillingType {
     this.jetExponent = jetExponent;
   }
 
-  public abstract double getSubmergenceStart();
+  public abstract double getMaximumPressureHead();
 
-  public abstract void setSubmergenceStart(double submergenceStart);
+  public abstract void setMaximumPressureHead(double maximumPressureHead);
 
   public abstract double getCulvertCrossSection();
 
@@ -59,24 +59,24 @@ public abstract class GateFillingType extends FillingType {
     
     final double aMue = getAreaTimesDischargeCoefficient(time);
     final double ow = data.getUpstreamWaterLevel();
-    final double maxDh = getSubmergenceStart();
+    final double maxDh = getMaximumPressureHead();
     final double zetaKanal = getCulvertLoss();
     final double aKanal = getCulvertCrossSection();
 
     // Effektive Fallhöhe: Entweder OW bis Schütz oder OW bis UW
     final double dh = Math.min(ow - h[0], maxDh);
 
-    double inflow = aMue * Math.sqrt(2. * GRAVITY * Math.abs(dh)
+    double flowRate = aMue * Math.sqrt(2. * GRAVITY * Math.abs(dh)
         / (1. + zetaKanal / aKanal / aKanal * aMue * aMue));
 
     // TODO: Warum eigentlich?
     // Negative Qs abfangen
     if (dh < 0.) {
-      inflow = 0.;
+      flowRate = 0.;
     }    
     
-    source[0][0] = inflow;
-    source[1][0] = inflow * 1.;
+    source[0][0] = flowRate;
+    source[1][0] = flowRate * 1.;
     
     return source;
   }  

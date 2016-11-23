@@ -20,7 +20,7 @@ public class SegmentGateFillingType extends GateFillingType {
   
   private double culvertLoss = 0.;
   
-  private double submergenceStart = 4.5;
+  private double maximumPressureHead = 4.5;
   
   public SegmentGateFillingType() {
     
@@ -100,12 +100,12 @@ public class SegmentGateFillingType extends GateFillingType {
     this.culvertLoss = culvertLoss;
   }
 
-  public double getSubmergenceStart() {
-    return submergenceStart;
+  public double getMaximumPressureHead() {
+    return maximumPressureHead;
   }
 
-  public void setSubmergenceStart(double submergenceStart) {
-    this.submergenceStart = submergenceStart;
+  public void setMaximumPressureHead(double maximumPressureHead) {
+    this.maximumPressureHead = maximumPressureHead;
   }
 
   @Override
