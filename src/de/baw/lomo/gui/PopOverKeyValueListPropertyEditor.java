@@ -165,10 +165,8 @@ public class PopOverKeyValueListPropertyEditor
     final Button addButton = new Button(Messages.getString("btnTbAdd"));
     addButton.setOnAction((ActionEvent e) -> {
 
-      syncVisualData(data, visualData);
-
       data.add(new KeyValueEntry());
-      visualData.add(new XYChart.Data<Number, Number>(0., 0.));
+      syncVisualData(data, visualData);
     });
 
     final Button delButton = new Button(Messages.getString("btnTbDelete"));
@@ -179,11 +177,9 @@ public class PopOverKeyValueListPropertyEditor
           table.getSelectionModel().clearSelection();
           return;
         }
-
-        syncVisualData(data, visualData);
-
+        
         data.remove(table.getSelectionModel().getSelectedIndex());
-        visualData.remove(table.getSelectionModel().getSelectedIndex());
+        syncVisualData(data, visualData);
       }
     });
 
