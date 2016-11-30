@@ -36,8 +36,6 @@ import de.baw.lomo.io.IOUtils;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -58,7 +56,6 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
@@ -149,46 +146,41 @@ public class Controller implements Initializable {
     seriesO.setName(Messages.getString("lblSeriesO")); //$NON-NLS-1$
     bgChart.getData().add(seriesO);
 
-    fgYaxis.needsLayoutProperty().addListener(new ChangeListener<Boolean>() {
+    fgYaxis.needsLayoutProperty()
+        .addListener((observable, oldValue, newValue) -> {
 
-      @Override
-      public void changed(ObservableValue<? extends Boolean> observable,
-          Boolean oldValue, Boolean newValue) {
-
-        if (Double.isNaN(bgYmax)) {
-          return;
-        }
-
-        final double fgYUpper = fgYaxis.getUpperBound();
-        final double fgYLower = fgYaxis.getLowerBound();
-        final double fgYDelta = fgYaxis.getTickUnit();
-        
-        if ((fgYLower == 0 && fgYUpper == 0) || fgYDelta == 0) {
-          return;
-        }
-
-        final double fgYNegativeDeltaCount = fgYLower / fgYDelta;
-        final double fgYPositiveDeltaCount = fgYUpper / fgYDelta;
-
-        for (final double m : multiples) {
-
-          final double bgYLower = fgYNegativeDeltaCount * m;
-          final double bgYUpper = fgYPositiveDeltaCount * m;
-
-          if (bgYLower <= bgYmin && bgYUpper >= bgYmax) {
-
-            bgYaxis.setUpperBound(bgYUpper);
-            bgYaxis.setLowerBound(bgYLower);
-            bgYaxis.setTickUnit(m);
-
-            bgChart.layout();
-
+          if (Double.isNaN(bgYmax)) {
             return;
           }
-        }
-      }
 
-    });
+          final double fgYUpper = fgYaxis.getUpperBound();
+          final double fgYLower = fgYaxis.getLowerBound();
+          final double fgYDelta = fgYaxis.getTickUnit();
+
+          if ((fgYLower == 0 && fgYUpper == 0) || fgYDelta == 0) {
+            return;
+          }
+
+          final double fgYNegativeDeltaCount = fgYLower / fgYDelta;
+          final double fgYPositiveDeltaCount = fgYUpper / fgYDelta;
+
+          for (final double m : multiples) {
+
+            final double bgYLower = fgYNegativeDeltaCount * m;
+            final double bgYUpper = fgYPositiveDeltaCount * m;
+
+            if (bgYLower <= bgYmin && bgYUpper >= bgYmax) {
+
+              bgYaxis.setUpperBound(bgYUpper);
+              bgYaxis.setLowerBound(bgYLower);
+              bgYaxis.setTickUnit(m);
+
+              bgChart.layout();
+
+              return;
+            }
+          }
+        });
     
     SHOW_PROP_CHARTS.bind(menuShowPropCharts.selectedProperty());
 
@@ -229,27 +221,25 @@ public class Controller implements Initializable {
     }
 
     public void flush() throws IOException {
-      Platform.runLater(new Runnable() {
-        public void run() {
-          try {
-            
-            if (reader.ready()) {
-              char[] chars = new char[1024];
-              int n = reader.read(chars);
+      Platform.runLater(() -> {
+        try {
 
-              console.appendText(new String(chars, 0, n));
+          if (reader.ready()) {
+            char[] chars = new char[1024];
+            int n = reader.read(chars);
 
-              // limit text length
-              if (console.getText().length() > 10000) {
-                console.deleteText(0, 5000);
-              }
-              // set cursor to end for scroll down
-              console.positionCaret(console.getText().length() - 1);
+            console.appendText(new String(chars, 0, n));
+
+            // limit text length
+            if (console.getText().length() > 10000) {
+              console.deleteText(0, 5000);
             }
-            
-          } catch (IOException e) {
-            e.printStackTrace();
+            // set cursor to end for scroll down
+            console.positionCaret(console.getText().length() - 1);
           }
+
+        } catch (IOException e) {
+          e.printStackTrace();
         }
       });
 
@@ -602,20 +592,16 @@ public class Controller implements Initializable {
       menuFillingType.getItems().add(item);
     }
     
-    toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-  
-      @Override
-      public void changed(ObservableValue<? extends Toggle> observable,
-          Toggle oldValue, Toggle newValue) {
-  
-        if(newValue != null) {
-          FillingType fillingType = (FillingType) newValue.getUserData();        
-          data.setFillingType(fillingType);
-          initPropertSheet();
-        }        
-      }
-      
-    });
+    toggleGroup.selectedToggleProperty()
+        .addListener((observable, oldValue, newValue) -> {
+
+          if (newValue != null) {
+            FillingType fillingType = (FillingType) newValue.getUserData();
+            data.setFillingType(fillingType);
+            initPropertSheet();
+          }
+
+        });
   }
 
   private void initPropertSheet() {

@@ -28,8 +28,6 @@ package de.baw.lomo.gui;
 
 import java.math.BigInteger;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.binding.NumberExpression;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -55,11 +53,9 @@ class NumericField extends TextField {
     		value = new DoubleValidator(this);
     	}
     	
-        textProperty().addListener(new InvalidationListener() {
-            @Override public void invalidated(Observable arg0) {
-                value.setValue(value.toNumber(getText()));
-            }
-        });
+      textProperty().addListener((observable) -> {
+        value.setValue(value.toNumber(getText()));
+      });
         
     }
     
