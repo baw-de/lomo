@@ -26,6 +26,8 @@ import org.controlsfx.control.PropertySheet.Item;
 import org.controlsfx.property.BeanProperty;
 import org.controlsfx.property.BeanPropertyUtils;
 
+import com.sun.javafx.charts.Legend;
+
 import de.baw.lomo.core.Model;
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.FillingType;
@@ -546,6 +548,105 @@ public class Controller implements Initializable {
     alert.getDialogPane().setContent(pane);
     alert.showAndWait();
   }
+  
+  @FXML
+  public void processMenuLoadComparison(ActionEvent event) {
+
+    final FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle(Messages.getString("dlgTitleLoadComparison")); //$NON-NLS-1$
+    fileChooser.getExtensionFilters().add(
+        new ExtensionFilter(Messages.getString("descrDatFileFilter"), "*.dat")); //$NON-NLS-1$ //$NON-NLS-2$
+
+    if (lastUsedDir != null) {
+      fileChooser.setInitialDirectory(lastUsedDir);
+    }
+
+    final File selectedFile = fileChooser
+        .showOpenDialog(rootPane.getScene().getWindow());
+
+    if (selectedFile == null) {
+      return;
+    }
+
+    lastUsedDir = selectedFile.getParentFile();
+
+    final Results results = IOUtils.readResultsFromFile(selectedFile);
+
+    //
+    
+    final Legend fgLegend = (Legend) fgChart.lookup(".chart-legend"); //$NON-NLS-1$
+    final int fgLegendSize = fgLegend.getChildren().size();
+    
+    final Legend bgLegend = (Legend) bgChart.lookup(".chart-legend"); //$NON-NLS-1$
+    final int bgLegendSize = bgLegend.getChildren().size();
+
+    final double[] t = results.getTimeline();
+    final double[] q = results.getDischargeOverTime();
+    final double[] lf = results.getLongitudinalForceOverTime();
+    final double[] h = results.getChamberWaterLevelOverTime();
+    final double[] o = results.getValveOpeningOverTime();
+
+    final XYChart.Series<Number, Number> seriesFComp = new XYChart.Series<Number, Number>();
+    fgChart.getData().add(seriesFComp);
+    final XYChart.Series<Number, Number> seriesQComp = new XYChart.Series<Number, Number>();
+    fgChart.getData().add(seriesQComp);
+    final XYChart.Series<Number, Number> seriesHComp = new XYChart.Series<Number, Number>();
+    bgChart.getData().add(seriesHComp);
+    final XYChart.Series<Number, Number> seriesOComp = new XYChart.Series<Number, Number>();
+    bgChart.getData().add(seriesOComp);
+
+    final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(t.length);
+    final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(t.length);
+    final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(t.length);
+    final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(t.length);
+
+    for (int i = 0; i < t.length; i++) {
+
+      if (i > 0 && t[i] == 0) {
+        break;
+      }
+
+      if (i < q.length) {
+        dataQ.add(new XYChart.Data<>(t[i], q[i]));
+      }
+      if (i < lf.length) {
+        dataF.add(new XYChart.Data<>(t[i], lf[i] / 1000.));
+      }
+      if (i < h.length) {
+        dataH.add(new XYChart.Data<>(t[i], h[i]));
+      }
+
+      double scale = 1.;
+
+      if (data.getFillingType() instanceof SluiceGateFillingType) {
+        scale = 10.;
+      }
+      if (i < o.length) {
+        dataO.add(new XYChart.Data<>(t[i], o[i] * scale));
+      }
+    }
+
+    seriesQComp.setData(FXCollections.observableList(dataQ));
+    seriesFComp.setData(FXCollections.observableList(dataF));
+    seriesHComp.setData(FXCollections.observableList(dataH));
+    seriesOComp.setData(FXCollections.observableList(dataO));
+
+   
+    fgLegend.getChildren().remove(fgLegendSize,
+        fgLegend.getChildren().size());
+
+    bgLegend.getChildren().remove(bgLegendSize,
+        bgLegend.getChildren().size());
+
+  }
+  
+  @FXML
+  public void processMenuClearComparison(ActionEvent event) {
+    
+    fgChart.getData().remove(2, fgChart.getData().size());
+    bgChart.getData().remove(2, bgChart.getData().size());
+    
+  }
 
   private void writePropertyHelpDescription(TextFlow textFlow,
       ObservableList<Item> liste) {
@@ -561,7 +662,7 @@ public class Controller implements Initializable {
       final Text xmlName = new Text(String.format(" | %s\n", p.getName())); //$NON-NLS-1$
       xmlName.setFill(Color.GRAY);
       final Text description = new Text(
-          String.format("%s\n", p.getShortDescription().replace(";", "\n"))); //$NON-NLS-1$
+          String.format("%s\n", p.getShortDescription().replace(";", "\n"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       final Text dataType = new Text(String.format("%s: %s\n\r", Messages.getString("dlgParameterHelpDataType"), //$NON-NLS-1$ //$NON-NLS-2$
           p.getPropertyType().getSimpleName()));
       dataType.setFill(Color.GRAY);
@@ -629,20 +730,20 @@ public class Controller implements Initializable {
     
     final StringBuffer bf = new StringBuffer();
     
-    bf.append(String.format("%s, %s %s", 
-        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),
-        Messages.getString("appTitle"),
-        Messages.getString("dlgMessageAboutVersion")));
+    bf.append(String.format("%s, %s %s",  //$NON-NLS-1$
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()), //$NON-NLS-1$
+        Messages.getString("appTitle"), //$NON-NLS-1$
+        Messages.getString("dlgMessageAboutVersion"))); //$NON-NLS-1$
     
     if (data.getAuthor().length() > 0) {
-      bf.append(": ").append(data.getAuthor());
+      bf.append(": ").append(data.getAuthor()); //$NON-NLS-1$
     }
     
     if (data.getDescription().length() > 0) {
       if (data.getAuthor().length() > 0) {
-        bf.append(", ");
+        bf.append(", "); //$NON-NLS-1$
       } else {
-        bf.append(": ");
+        bf.append(": "); //$NON-NLS-1$
       }
       
       bf.append(data.getDescription());

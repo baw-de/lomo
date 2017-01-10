@@ -20,6 +20,9 @@
 						<MenuItem mnemonicParsing="false" onAction="#processMenuFileOpen" text="%menuOpen" />
 						<MenuItem mnemonicParsing="false" onAction="#processMenuFileSave" text="%menuSave" />
 						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem mnemonicParsing="false" onAction="#processMenuLoadComparison" text="%menuLoadComparison" />
+						<MenuItem mnemonicParsing="false" onAction="#processMenuClearComparison" text="%menuClearComparison" />
+						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem mnemonicParsing="false" onAction="#processMenuExportImage" text="%menuExportImage" />
 						<MenuItem mnemonicParsing="false" onAction="#processMenuExportResults" text="%menuExportResults" />
 						<SeparatorMenuItem mnemonicParsing="false" />
