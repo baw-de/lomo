@@ -116,12 +116,15 @@ public class PopOverKeyValueListPropertyEditor
         t.getTableView().getColumns().get(0).setVisible(true);
         return;
       }
-
-      syncVisualData(data, visualData);
       
       t.getTableView().getItems().get(t.getTablePosition().getRow())
           .setKey(t.getNewValue());
-      visualData.get(t.getTablePosition().getRow()).setXValue(t.getNewValue());
+            
+      data.sort((KeyValueEntry o1, KeyValueEntry o2) -> {
+        return Double.compare(o1.getKey(), o2.getKey());
+      }); 
+      
+      syncVisualData(data, visualData);
     });
 
     final TableColumn<KeyValueEntry, Double> valueCol = new TableColumn<>(
@@ -151,11 +154,9 @@ public class PopOverKeyValueListPropertyEditor
         return;
       }
 
-      syncVisualData(data, visualData);
-
       t.getTableView().getItems().get(t.getTablePosition().getRow())
           .setValue(t.getNewValue());
-      visualData.get(t.getTablePosition().getRow()).setYValue(t.getNewValue());
+      syncVisualData(data, visualData);
     });
 
     table.getColumns().addAll(keyCol, valueCol);
@@ -165,7 +166,7 @@ public class PopOverKeyValueListPropertyEditor
     final Button addButton = new Button(Messages.getString("btnTbAdd"));
     addButton.setOnAction((ActionEvent e) -> {
 
-      data.add(new KeyValueEntry());
+      data.add(new KeyValueEntry(data.get(data.size()-1).getKey(), 0.0));
       syncVisualData(data, visualData);
     });
 
@@ -219,14 +220,11 @@ public class PopOverKeyValueListPropertyEditor
   private void syncVisualData(ObservableList<KeyValueEntry> data,
       ObservableList<XYChart.Data<Number, Number>> visualData) {
 
-    if (visualData.size() != data.size()) {
-
       visualData.clear();
 
       for (final KeyValueEntry entry : value.get()) {
         visualData.add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
-      }
-    }
+      }    
   }
 
   @Override
