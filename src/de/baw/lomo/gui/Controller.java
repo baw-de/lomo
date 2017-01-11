@@ -577,80 +577,17 @@ public class Controller implements Initializable {
 
     final Results results = IOUtils.readResultsFromFile(selectedFile);
 
-    //
-    
-    final Legend fgLegend = (Legend) fgChart.lookup(".chart-legend"); //$NON-NLS-1$
-    final int fgLegendSize = fgLegend.getChildren().size();
-    
-    final Legend bgLegend = (Legend) bgChart.lookup(".chart-legend"); //$NON-NLS-1$
-    final int bgLegendSize = bgLegend.getChildren().size();
-
-    final double[] t = results.getTimeline();
-    final double[] q = results.getDischargeOverTime();
-    final double[] lf = results.getLongitudinalForceOverTime();
-    final double[] h = results.getChamberWaterLevelOverTime();
-    final double[] o = results.getValveOpeningOverTime();
-
-    final XYChart.Series<Number, Number> seriesFComp = new XYChart.Series<Number, Number>();
-    fgChart.getData().add(seriesFComp);
-    final XYChart.Series<Number, Number> seriesQComp = new XYChart.Series<Number, Number>();
-    fgChart.getData().add(seriesQComp);
-    final XYChart.Series<Number, Number> seriesHComp = new XYChart.Series<Number, Number>();
-    bgChart.getData().add(seriesHComp);
-    final XYChart.Series<Number, Number> seriesOComp = new XYChart.Series<Number, Number>();
-    bgChart.getData().add(seriesOComp);
-
-    final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(t.length);
-    final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(t.length);
-    final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(t.length);
-    final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(t.length);
-
-    for (int i = 0; i < t.length; i++) {
-
-      if (i > 0 && t[i] == 0) {
-        break;
-      }
-
-      if (i < q.length) {
-        dataQ.add(new XYChart.Data<>(t[i], q[i]));
-      }
-      if (i < lf.length) {
-        dataF.add(new XYChart.Data<>(t[i], lf[i] / 1000.));
-      }
-      if (i < h.length) {
-        dataH.add(new XYChart.Data<>(t[i], h[i]));
-      }
-
-      double scale = 1.;
-
-      if (data.getFillingType() instanceof SluiceGateFillingType) {
-        scale = 10.;
-      }
-      if (i < o.length) {
-        dataO.add(new XYChart.Data<>(t[i], o[i] * scale));
-      }
-    }
-
-    seriesQComp.setData(FXCollections.observableList(dataQ));
-    seriesFComp.setData(FXCollections.observableList(dataF));
-    seriesHComp.setData(FXCollections.observableList(dataH));
-    seriesOComp.setData(FXCollections.observableList(dataO));
-
-   
-    fgLegend.getChildren().remove(fgLegendSize,
-        fgLegend.getChildren().size());
-
-    bgLegend.getChildren().remove(bgLegendSize,
-        bgLegend.getChildren().size());
-
+    plotComparison(results);  
   }
   
   @FXML
-  public void processMenuClearComparison(ActionEvent event) {
-    
-    fgChart.getData().remove(2, fgChart.getData().size());
-    bgChart.getData().remove(2, bgChart.getData().size());
-    
+  public void processMenuSnapshotComparison(ActionEvent event) {
+    plotComparison(lastResults);
+  }
+  
+  @FXML
+  public void processMenuClearComparison(ActionEvent event) {    
+    clearComparison();    
   }
 
   private void writePropertyHelpDescription(TextFlow textFlow,
@@ -725,10 +662,17 @@ public class Controller implements Initializable {
     final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>();
     final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>();
     final List<XYChart.Data<Number, Number>> dataI = new ArrayList<>();
+    final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>();
 
     seriesH.setData(FXCollections.observableList(dataH));
     seriesQ.setData(FXCollections.observableList(dataQ));
     seriesF.setData(FXCollections.observableList(dataI));
+    seriesO.setData(FXCollections.observableList(dataO));
+  }
+  
+  private void clearComparison() {
+    fgChart.getData().remove(2, fgChart.getData().size());
+    bgChart.getData().remove(2, bgChart.getData().size());
   }
   
   private String getExportTag() {
@@ -755,6 +699,74 @@ public class Controller implements Initializable {
     }
     
     return bf.toString();
+  }
+  
+  private void plotComparison(Results results) {
+    
+    final Legend fgLegend = (Legend) fgChart.lookup(".chart-legend"); //$NON-NLS-1$
+    final int fgLegendSize = fgLegend.getChildren().size();
+    
+    final Legend bgLegend = (Legend) bgChart.lookup(".chart-legend"); //$NON-NLS-1$
+    final int bgLegendSize = bgLegend.getChildren().size();
+
+    final double[] t = results.getTimeline();
+    final double[] q = results.getDischargeOverTime();
+    final double[] lf = results.getLongitudinalForceOverTime();
+    final double[] h = results.getChamberWaterLevelOverTime();
+    final double[] o = results.getValveOpeningOverTime();
+
+    final XYChart.Series<Number, Number> seriesFComp = new XYChart.Series<Number, Number>();
+    fgChart.getData().add(seriesFComp);
+    final XYChart.Series<Number, Number> seriesQComp = new XYChart.Series<Number, Number>();
+    fgChart.getData().add(seriesQComp);
+    final XYChart.Series<Number, Number> seriesHComp = new XYChart.Series<Number, Number>();
+    bgChart.getData().add(seriesHComp);
+    final XYChart.Series<Number, Number> seriesOComp = new XYChart.Series<Number, Number>();
+    bgChart.getData().add(seriesOComp);
+
+    final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(t.length);
+    final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(t.length);
+    final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(t.length);
+    final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(t.length);
+
+    for (int i = 0; i < t.length; i++) {
+
+      if (i > 0 && t[i] == 0) {
+        break;
+      }
+
+      if (i < q.length) {
+        dataQ.add(new XYChart.Data<>(t[i], q[i]));
+      }
+      if (i < lf.length) {
+        dataF.add(new XYChart.Data<>(t[i], lf[i] / 1000.));
+      }
+      if (i < h.length) {
+        dataH.add(new XYChart.Data<>(t[i], h[i]));
+      }
+
+      double scale = 1.;
+
+      if (data.getFillingType() instanceof SluiceGateFillingType) {
+        scale = 10.;
+      }
+      if (i < o.length) {
+        dataO.add(new XYChart.Data<>(t[i], o[i] * scale));
+      }
+    }
+
+    seriesQComp.setData(FXCollections.observableList(dataQ));
+    seriesFComp.setData(FXCollections.observableList(dataF));
+    seriesHComp.setData(FXCollections.observableList(dataH));
+    seriesOComp.setData(FXCollections.observableList(dataO));
+
+   
+    fgLegend.getChildren().remove(fgLegendSize,
+        fgLegend.getChildren().size());
+
+    bgLegend.getChildren().remove(bgLegendSize,
+        bgLegend.getChildren().size());
+
   }
 
   private static Comparator<Item> propertyComparator = new Comparator<Item>() {
