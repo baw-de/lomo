@@ -39,8 +39,9 @@ public class FilePropertyEditor implements PropertyEditor<String> {
 
     final FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle(item.getName()); // $NON-NLS-1$
-    fileChooser.getExtensionFilters().add(
-        new ExtensionFilter(Messages.getString("descrCsvFileFilter"), "*.txt")); //$NON-NLS-1$ //$NON-NLS-2$
+    fileChooser.getExtensionFilters().addAll(
+        new ExtensionFilter(Messages.getString("descrCsvFileFilter"), "*.txt"), //$NON-NLS-1$ //$NON-NLS-2$
+        new ExtensionFilter(Messages.getString("descrAllFileFilter"), "*.*")); //$NON-NLS-1$ //$NON-NLS-2$
 
     if (!value.get().isEmpty()) {
       fileChooser.setInitialDirectory((new File(value.get())).getParentFile());
