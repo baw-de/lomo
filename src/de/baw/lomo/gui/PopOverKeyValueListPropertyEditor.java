@@ -199,6 +199,7 @@ public class PopOverKeyValueListPropertyEditor
 
     final LineChart<Number, Number> chart = new LineChart<>(xAxis, yAxis);
     chart.setLegendVisible(false);
+    chart.setAnimated(false);
     chart.setPrefSize(table.getPrefWidth() * 1.618, vbox.getHeight());
     final XYChart.Series<Number, Number> series = new XYChart.Series<>();
     series.setData(visualData);
