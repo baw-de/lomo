@@ -379,8 +379,9 @@ public class Controller implements Initializable {
 
     final FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle(Messages.getString("dlgTitleOpenXmlCaseFile")); //$NON-NLS-1$
-    fileChooser.getExtensionFilters().add(new ExtensionFilter(
-        Messages.getString("descrXmlCaseFileFilter"), "*.xml")); //$NON-NLS-1$ //$NON-NLS-2$
+    fileChooser.getExtensionFilters().addAll(
+        new ExtensionFilter(Messages.getString("descrXmlCaseFileFilter"), "*.xml"), //$NON-NLS-1$ //$NON-NLS-2$
+        new ExtensionFilter(Messages.getString("descrAllFileFilter"), "*.*")); //$NON-NLS-1$ //$NON-NLS-2$
 
     if (lastUsedDir != null) {
       fileChooser.setInitialDirectory(lastUsedDir);
@@ -407,8 +408,9 @@ public class Controller implements Initializable {
 
     final FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle(Messages.getString("dlgTitleSaveXmlCaseFile")); //$NON-NLS-1$
-    fileChooser.getExtensionFilters().add(new ExtensionFilter(
-        Messages.getString("descrXmlCaseFileFilter"), "*.xml")); //$NON-NLS-1$ //$NON-NLS-2$
+    fileChooser.getExtensionFilters().addAll(
+        new ExtensionFilter(Messages.getString("descrXmlCaseFileFilter"), "*.xml"), //$NON-NLS-1$ //$NON-NLS-2$
+        new ExtensionFilter(Messages.getString("descrAllFileFilter"), "*.*")); //$NON-NLS-1$ //$NON-NLS-2$
 
     if (lastUsedDir != null) {
       fileChooser.setInitialDirectory(lastUsedDir);
@@ -431,8 +433,9 @@ public class Controller implements Initializable {
 
     final FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle(Messages.getString("dlgTitleExportImage")); //$NON-NLS-1$
-    fileChooser.getExtensionFilters().add(
-        new ExtensionFilter(Messages.getString("descrPngFileFilter"), "*.png")); //$NON-NLS-1$ //$NON-NLS-2$
+    fileChooser.getExtensionFilters().addAll(
+        new ExtensionFilter(Messages.getString("descrPngFileFilter"), "*.png"), //$NON-NLS-1$ //$NON-NLS-2$
+        new ExtensionFilter(Messages.getString("descrAllFileFilter"), "*.*")); //$NON-NLS-1$ //$NON-NLS-2$
 
     if (lastUsedDir != null) {
       fileChooser.setInitialDirectory(lastUsedDir);
@@ -468,8 +471,9 @@ public class Controller implements Initializable {
 
     final FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle(Messages.getString("dlgTitleExportResults")); //$NON-NLS-1$
-    fileChooser.getExtensionFilters().add(
-        new ExtensionFilter(Messages.getString("descrDatFileFilter"), "*.dat")); //$NON-NLS-1$ //$NON-NLS-2$
+    fileChooser.getExtensionFilters().addAll(
+        new ExtensionFilter(Messages.getString("descrDatFileFilter"), "*.dat"), //$NON-NLS-1$ //$NON-NLS-2$
+        new ExtensionFilter(Messages.getString("descrAllFileFilter"), "*.*")); //$NON-NLS-1$ //$NON-NLS-2$
 
     if (lastUsedDir != null) {
       fileChooser.setInitialDirectory(lastUsedDir);
@@ -554,8 +558,9 @@ public class Controller implements Initializable {
 
     final FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle(Messages.getString("dlgTitleLoadComparison")); //$NON-NLS-1$
-    fileChooser.getExtensionFilters().add(
-        new ExtensionFilter(Messages.getString("descrDatFileFilter"), "*.dat")); //$NON-NLS-1$ //$NON-NLS-2$
+    fileChooser.getExtensionFilters().addAll(
+        new ExtensionFilter(Messages.getString("descrDatFileFilter"), "*.dat"), //$NON-NLS-1$ //$NON-NLS-2$
+        new ExtensionFilter(Messages.getString("descrAllFileFilter"), "*.*")); //$NON-NLS-1$ //$NON-NLS-2$
 
     if (lastUsedDir != null) {
       fileChooser.setInitialDirectory(lastUsedDir);
