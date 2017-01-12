@@ -55,6 +55,7 @@ public class PopOverKeyValueListPropertyEditor
         popOver.show(btnEditor);
       } else {
         popOver.hide();
+        popOver.setDetached(false); // Guarantee it's attached again the next time        
       }
     });
   }
@@ -65,6 +66,7 @@ public class PopOverKeyValueListPropertyEditor
 
     popOver.setHeaderAlwaysVisible(true);
     popOver.setTitle(item.getName());
+    popOver.setAutoFix(false); // so we can drag the popover to second screen
 
     String tbColKey = Messages.getString("tbColKey");
     String tbColValue = Messages.getString("tbColValue");
