@@ -11,7 +11,7 @@
 	<property name="main-class" value="de.baw.lomo.GuiStart" />
 
 	<path id="classpath">
-		<pathelement location="lib/controlsfx/controlsfx-8.40.10.jar" />		
+		<pathelement location="lib/controlsfx/controlsfx-8.40.12.jar" />		
 	</path>
 	
 	<path id="run.classpath">

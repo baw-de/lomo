@@ -1,1 +1,1 @@
-java -cp lib/controlsfx/controlsfx-8.40.10.jar;src/ de.baw.lomo.GuiStart
+java -cp lib/controlsfx/controlsfx-8.40.12.jar;src/ de.baw.lomo.GuiStart
