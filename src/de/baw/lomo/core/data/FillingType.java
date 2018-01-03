@@ -5,12 +5,13 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 
 @XmlRootElement(name="fillingType")
 @XmlSeeAlso({SluiceGateFillingType.class, SegmentGateFillingType.class, 
-  PrescribedInflowFillingType.class})
+  SegmentGateVelocityFillingType.class, PrescribedInflowFillingType.class})
 public abstract class FillingType {
   
   public final static FillingType[] LIST = new FillingType[] { 
       
       new SluiceGateFillingType(),
+      new SegmentGateVelocityFillingType(),
       new SegmentGateFillingType(),
       new PrescribedInflowFillingType()
   }; 

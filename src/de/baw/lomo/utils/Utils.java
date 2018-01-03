@@ -41,5 +41,38 @@ public class Utils {
     }
     return Double.NaN;
   }
+  
+  public static double linearIntegrate(List<KeyValueEntry> source, double x) {
 
+    double integral = 0.0;
+
+    if (x <= source.get(0).getKey()) {
+      return integral;
+    }
+
+    final int tbSize = source.size();
+
+    for (int i = 1; i < tbSize; i++) {
+
+      if (source.get(i).getKey() <= x) {
+
+        integral += 0.5
+            * (source.get(i).getValue() + source.get(i - 1).getValue())
+            * (source.get(i).getKey() - source.get(i - 1).getKey());
+
+      } else {
+
+        integral += (0.5
+            * (source.get(i).getValue() - source.get(i - 1).getValue())
+            / (source.get(i).getKey() - source.get(i - 1).getKey())
+            * (x - source.get(i - 1).getKey()) + source.get(i - 1).getValue())
+            * (x - source.get(i - 1).getKey());
+        break;
+
+      }
+    }
+
+    return integral;
+  }
+ 
 }

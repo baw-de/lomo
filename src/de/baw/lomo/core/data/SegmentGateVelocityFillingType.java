@@ -9,17 +9,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import de.baw.lomo.utils.Utils;
 
-@XmlRootElement(name="segmentGateFillingType")
-public class SegmentGateFillingType extends AbstractSegmentGateFillingType {
+@XmlRootElement(name="segmentGateVelocityFillingType")
+public class SegmentGateVelocityFillingType extends AbstractSegmentGateFillingType {
   
-  private List<KeyValueEntry> segmentGateAngleLookup = new ArrayList<>();
+  private List<KeyValueEntry> segmentGateVelocityLookup = new ArrayList<>();
 
-  public SegmentGateFillingType() {
+  public SegmentGateVelocityFillingType() {
     
     
-    if (segmentGateAngleLookup.isEmpty()) {
-      segmentGateAngleLookup.add(new KeyValueEntry(0., 0.));
-      segmentGateAngleLookup.add(new KeyValueEntry(800., 20.));
+    if (segmentGateVelocityLookup.isEmpty()) {
+      segmentGateVelocityLookup.add(new KeyValueEntry(0., 0.025));
+      segmentGateVelocityLookup.add(new KeyValueEntry(800., 0.025));
     }
     
     if (segmentGateAMueLookup.isEmpty()) {
@@ -48,23 +48,23 @@ public class SegmentGateFillingType extends AbstractSegmentGateFillingType {
     
   }  
   
-  public List<KeyValueEntry> getSegmentGateAngleLookup() {
-    return segmentGateAngleLookup;
+  public List<KeyValueEntry> getSegmentGateVelocityLookup() {
+    return segmentGateVelocityLookup;
   }
 
   @XmlElementWrapper
   @XmlElement(name = "entry")
-  public void setSegmentGateAngleLookup(List<KeyValueEntry> segmentGateAngleLookup) {
-    this.segmentGateAngleLookup = segmentGateAngleLookup;
+  public void setSegmentGateVelocityLookup(List<KeyValueEntry> segmentGateVelocityLookup) {
+    this.segmentGateVelocityLookup = segmentGateVelocityLookup;
   }
-
-  public double getSegmentGateAngle(double time) {
-    return Utils.linearInterpolate(segmentGateAngleLookup, time);
+  
+  public double getSegmentGateAngle(double time) {    
+    return Utils.linearIntegrate(segmentGateVelocityLookup, time);
   }
 
   @Override
   public String toString() {
-    return Messages.getString("fillingTypeSegmentGate");
+    return Messages.getString("fillingTypeSegmentGateVelocity"); //$NON-NLS-1$
   }
 
 }
