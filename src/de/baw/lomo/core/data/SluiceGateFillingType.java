@@ -130,6 +130,30 @@ public class SluiceGateFillingType extends GateFillingType {
     
     return getSluiceGateHeight(time);
   }
+  
+  /*
+   * (non-Javadoc)
+   * 
+   * @see de.baw.lomo.core.data.GateFillingType#getJetCrossSection(double,
+   * double)
+   * 
+   * Bei extrem langsamen Schuetzoeffnugsgschwindigkeiten ist für die
+   * Strahlausbreitung der Schuetzquerschnitt und nicht der Kanalquerschnitt
+   * relevant.
+   */
+  @Override
+  public double getJetCrossSection(double position, double time) {
+
+    final double aKanal = getCulvertCrossSection();
+    final double sluiceHeight = getSluiceGateHeight(time);
+    final double aSluice = sluiceHeight * getSluiceGateWidth(sluiceHeight);
+    final double jetCoefficient = getJetCoefficient();
+    final double jetExponent = getJetExponent();
+    
+    final double aJet = Math.min(aKanal,aSluice);
+
+    return aJet + Math.pow(aJet, jetExponent) * position * jetCoefficient;
+  }
 
   @Override
   public String toString() {
