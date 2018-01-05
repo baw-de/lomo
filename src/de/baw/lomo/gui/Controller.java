@@ -31,9 +31,10 @@ import com.sun.javafx.charts.Legend;
 import de.baw.lomo.core.Model;
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.FillingType;
+import de.baw.lomo.core.data.FillingTypes;
 import de.baw.lomo.core.data.GateFillingType;
+import de.baw.lomo.core.data.RectangularSluiceGateFillingType;
 import de.baw.lomo.core.data.Results;
-import de.baw.lomo.core.data.SluiceGateFillingType;
 import de.baw.lomo.io.IOUtils;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -309,7 +310,7 @@ public class Controller implements Initializable {
             
             double scale = 1.;
             
-            if (data.getFillingType() instanceof SluiceGateFillingType) {
+            if (data.getFillingType() instanceof RectangularSluiceGateFillingType) {
               scale = 10.;
             }
             
@@ -537,7 +538,7 @@ public class Controller implements Initializable {
 
     writePropertyHelpDescription(textFlow, liste);
 
-    for (FillingType fillingType : FillingType.LIST) {
+    for (FillingType fillingType : FillingTypes.LIST) {
 
       final Text headingFillingType = new Text(
           String.format("\n%s\n\r", fillingType.toString())); //$NON-NLS-1$
@@ -619,7 +620,7 @@ public class Controller implements Initializable {
     
     ToggleGroup toggleGroup = new ToggleGroup();
   
-    for(FillingType fillingType : FillingType.LIST) {
+    for(FillingType fillingType : FillingTypes.LIST) {
       
        RadioMenuItem item = new RadioMenuItem(fillingType.toString());
        item.setToggleGroup(toggleGroup);
@@ -747,7 +748,7 @@ public class Controller implements Initializable {
 
       double scale = 1.;
 
-      if (data.getFillingType() instanceof SluiceGateFillingType) {
+      if (data.getFillingType() instanceof RectangularSluiceGateFillingType) {
         scale = 10.;
       }
       if (i < o.length) {

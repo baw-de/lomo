@@ -14,7 +14,7 @@ import de.baw.lomo.utils.Utils;
 @XmlRootElement(name="BAWLomoCase")
 public class Case {
 
-  private final static String VERSION = "0.5";
+  private final static String VERSION = "0.6";
   
   private String author = "BAW";
   
@@ -28,7 +28,7 @@ public class Case {
 
   private double downstreamWaterLevel = 12.5;
 
-  private FillingType fillingType = new SluiceGateFillingType();
+  private FillingType fillingType = new RectangularSluiceGateFillingType();
 
   private List<KeyValueEntry> shipAreaLookup = new ArrayList<>();
 
