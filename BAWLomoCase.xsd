@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="BAWLomoCase" type="case"/>
+
+  <xs:element name="fillingType" type="fillingType"/>
+
+  <xs:element name="genericSluiceGateFillingType" type="genericSluiceGateFillingType"/>
+
+  <xs:element name="keyValueEntry" type="keyValueEntry"/>
+
+  <xs:element name="prescribedInflowFillingType" type="prescribedInflowFillingType"/>
+
+  <xs:element name="rectangularSluiceGateFillingType" type="rectangularSluiceGateFillingType"/>
+
+  <xs:element name="segmentGateFillingType" type="segmentGateFillingType"/>
+
+  <xs:element name="segmentGateVelocityFillingType" type="segmentGateVelocityFillingType"/>
+
+  <xs:complexType name="case">
+    <xs:sequence>
+      <xs:element name="author" type="xs:string" minOccurs="0"/>
+      <xs:element name="cfl" type="xs:double"/>
+      <xs:element name="chamberLength" type="xs:double"/>
+      <xs:element name="chamberWidth" type="xs:double"/>
+      <xs:element name="deltaWaterDepthStop" type="xs:double"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="downstreamWaterLevel" type="xs:double"/>
+      <xs:choice>
+        <xs:element ref="fillingType"/>
+        <xs:element ref="rectangularSluiceGateFillingType"/>
+        <xs:element ref="genericSluiceGateFillingType"/>
+        <xs:element ref="segmentGateFillingType"/>
+        <xs:element ref="segmentGateVelocityFillingType"/>
+        <xs:element ref="prescribedInflowFillingType"/>
+      </xs:choice>
+      <xs:element name="numberOfNodes" type="xs:int"/>
+      <xs:element name="shipAreaLookup" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="theta" type="xs:double"/>
+      <xs:element name="timeMax" type="xs:double"/>
+      <xs:element name="upstreamWaterLevel" type="xs:double"/>
+      <xs:element name="upwind" type="xs:double"/>
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="fillingType" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="rectangularSluiceGateFillingType">
+    <xs:complexContent>
+      <xs:extension base="abstractSluiceGateFillingType">
+        <xs:sequence>
+          <xs:element name="sluiceGateHeightLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="sluiceGateWidth" type="xs:double"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractSluiceGateFillingType" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="abstractGateFillingType">
+        <xs:sequence>
+          <xs:element name="prescribedJetOutletEnabled" type="xs:boolean"/>
+          <xs:element name="sluiceGateDischargeCoefficientLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractGateFillingType" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="gateFillingType">
+        <xs:sequence>
+          <xs:element name="jetCoefficient" type="xs:double"/>
+          <xs:element name="jetExponent" type="xs:double"/>
+          <xs:element name="jetOutletLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="maximumPressureHead" type="xs:double"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="gateFillingType" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="fillingType">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="keyValueEntry">
+    <xs:simpleContent>
+      <xs:extension base="xs:double">
+        <xs:attribute name="key" type="xs:double" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="genericSluiceGateFillingType">
+    <xs:complexContent>
+      <xs:extension base="abstractSluiceGateFillingType">
+        <xs:sequence>
+          <xs:element name="sluiceGateCrossSectionLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="segmentGateFillingType">
+    <xs:complexContent>
+      <xs:extension base="abstractSegmentGateFillingType">
+        <xs:sequence>
+          <xs:element name="segmentGateAngleLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractSegmentGateFillingType" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="abstractGateFillingType">
+        <xs:sequence>
+          <xs:element name="segmentGateAMueLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="segmentGateVelocityFillingType">
+    <xs:complexContent>
+      <xs:extension base="abstractSegmentGateFillingType">
+        <xs:sequence>
+          <xs:element name="segmentGateVelocityLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="prescribedInflowFillingType">
+    <xs:complexContent>
+      <xs:extension base="fillingType">
+        <xs:sequence>
+          <xs:element name="file" type="xs:string" minOccurs="0"/>
+          <xs:element name="lengthOfInfluenceLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="momentumFactorLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="positionLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>
+
