@@ -223,20 +223,23 @@ public class OneDimensionalModel implements Model {
         // Strahlbeiwert beta anpassen beta=integral(U*U)dA / (U_mean*Q)
         // = integral(U*U)dA / (integral(U)dA*integral(U)dA / A)
         for (int i = 0; i < nx; i++) {
+          
+          beta[i] = 1.;
 
           if (filling instanceof GateFillingType) {
 
             // Strahlausbreitung
-            double aStrahl = ((GateFillingType) filling)
+            double aJet = ((GateFillingType) filling)
                 .getJetCrossSection(dx * i, time);
-            aStrahl = Math.min(aStrahl, A05[i]);
+            
+            // aJet cannot be larger than actual wet cross section
+            aJet = Math.min(aJet, A05[i]);
 
-            beta[i] = A05[i] / aStrahl;
-
-          } else {
-
-            beta[i] = 1.;
-          }
+            // avoid division by zero
+            if (aJet > 1.e-3) {            
+              beta[i] = A05[i] / aJet;
+            }
+          } 
         }
 
         // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA

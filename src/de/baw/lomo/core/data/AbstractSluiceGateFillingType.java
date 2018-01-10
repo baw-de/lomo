@@ -61,9 +61,8 @@ public abstract class AbstractSluiceGateFillingType
 
     if (prescribedJetOutletEnabled) {
       return super.getJetOutlet(gateOpening);
-    } else {
-      // Zero outlet is not allowed!
-      return Math.max(0.01, getSluiceGateCrossSection(gateOpening));
+    } else {      
+      return getSluiceGateCrossSection(gateOpening);
     }
   }
 
