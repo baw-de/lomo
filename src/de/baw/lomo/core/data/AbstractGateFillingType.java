@@ -70,7 +70,7 @@ public abstract class AbstractGateFillingType extends GateFillingType {
     final double jetCoefficient = getJetCoefficient();
     final double jetExponent = getJetExponent();
 
-    return jetOutlet + Math.pow(jetOutlet, jetExponent) * position * jetCoefficient;
+    return jetOutlet + jetCoefficient * Math.pow(position, jetExponent) * jetOutlet;
   }
 
   @Override
