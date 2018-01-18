@@ -12,9 +12,9 @@ public abstract class AbstractGateFillingType extends GateFillingType {
   
   private static final double GRAVITY = 9.81; 
   
-  private double jetCoefficient = 0.1;
+  private double jetCoefficient = 0.05;
   
-  private double jetExponent = 0.5;
+  private double jetExponent = 1.0;
   
   protected List<KeyValueEntry> jetOutletLookup = new ArrayList<>();
   
