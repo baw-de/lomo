@@ -1,7 +1,7 @@
 # Release 1.0-beta18
 
 ## Core
-* Improved computation of jet cross section for gate filling types. jetOutlet + jetCoefficient * Math.pow(position, jetExponent) * jetOutlet 
+* Improved computation of jet cross section for gate filling types. jetOutlet + jetCoefficient * Math.pow(position, jetExponent) * jetOutlet  
   WARNING: This will change the results of all old cases!
 
 ## GUI
