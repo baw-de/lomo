@@ -6,6 +6,9 @@ import de.baw.lomo.core.data.GateFillingType;
 import de.baw.lomo.core.data.Results;
 
 public class OneDimensionalModel implements Model {
+  
+  public boolean isVerbose = true;
+  
   private static final double GRAVITY = 9.81;
   private Case data;
   /** Für Laufzeitmessung **/
@@ -381,69 +384,78 @@ public class OneDimensionalModel implements Model {
   }
 
   private Results postprocess() {
+    
+    if (isVerbose) {
 
-    double Qmax = 0., Imax = Double.MIN_VALUE, Imin = Double.MAX_VALUE,
-        Fmax = Double.MIN_VALUE, Fmin = Double.MAX_VALUE, shipVol = 0.,
-        dQ_dt_min = Double.MAX_VALUE, dQ_dt_max = Double.MIN_VALUE;
+      double Qmax = 0., Imax = Double.MIN_VALUE, Imin = Double.MAX_VALUE,
+          Fmax = Double.MIN_VALUE, Fmin = Double.MAX_VALUE, shipVol = 0.,
+          dQ_dt_min = Double.MAX_VALUE, dQ_dt_max = Double.MIN_VALUE;
 
-    for (int i = 0; i < step; i++) {
-      Qmax = Math.max(Qmax, inflow[i]);
-      Imax = Math.max(Imax, I[i]);
-      Imin = Math.min(Imin, I[i]);
-      Fmax = Math.max(Fmax, F2[i]);
-      Fmin = Math.min(Fmin, F2[i]);
-      if (i > 0) {
-        if ((inflow[i] - inflow[i - 1]) / dt < dQ_dt_min) {
-          dQ_dt_min = (inflow[i] - inflow[i - 1]) / dt;
-        }
-        if ((inflow[i] - inflow[i - 1]) / dt > dQ_dt_max) {
-          dQ_dt_max = (inflow[i] - inflow[i - 1]) / dt;
+      for (int i = 0; i < step; i++) {
+        Qmax = Math.max(Qmax, inflow[i]);
+        Imax = Math.max(Imax, I[i]);
+        Imin = Math.min(Imin, I[i]);
+        Fmax = Math.max(Fmax, F2[i]);
+        Fmin = Math.min(Fmin, F2[i]);
+        if (i > 0) {
+          if ((inflow[i] - inflow[i - 1]) / dt < dQ_dt_min) {
+            dQ_dt_min = (inflow[i] - inflow[i - 1]) / dt;
+          }
+          if ((inflow[i] - inflow[i - 1]) / dt > dQ_dt_max) {
+            dQ_dt_max = (inflow[i] - inflow[i - 1]) / dt;
+          }
         }
       }
-    }
 
-    // Schiffsverdraengung [m^3]
-    for (int i = 0; i < nx; i++) {
-      shipVol += data.getShipArea(dx * i) * dx;
+      // Schiffsverdraengung [m^3]
+      for (int i = 0; i < nx; i++) {
+        shipVol += data.getShipArea(dx * i) * dx;
+      }
+
+      final StringBuffer bf = new StringBuffer();
+
+      bf.append("*******************************************************\n"); //$NON-NLS-1$
+
+      bf.append(String.format(Messages.getString("resultTimeSteps") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+          step));
+
+      bf.append(String.format(Messages.getString("resultFillingTime") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+          time));
+
+      bf.append(String.format(Messages.getString("resultFillingVolume") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+          chamberVol));
+
+      bf.append(String.format(Messages.getString("resultShipVolume") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+          shipVol));
+
+      bf.append(String.format(Messages.getString("resultMaxFlowRate") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+          Qmax));
+
+      bf.append(String.format(
+          Messages.getString("resultMinMaxLongitudinalForces") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+          Fmin * 1.e-3, Fmax * 1.e-3));
+
+      bf.append(String.format(
+          Messages.getString("resultMinMaxLongitudinalForceToGravityForce") //$NON-NLS-1$
+              + " \n", //$NON-NLS-1$
+          Math.abs(Fmin) / shipVol / GRAVITY,
+          Math.abs(Fmax) / shipVol / GRAVITY));
+
+      bf.append(String.format(Messages.getString("resultMinMaxSlope") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+          Imin * 1000., Imax * 1000.));
+
+      bf.append(String.format(
+          Messages.getString("resultMinMaxFlowRateChange") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+          dQ_dt_min, dQ_dt_max));
+
+      bf.append("*******************************************************\n"); //$NON-NLS-1$
+
+      bf.append(String.format(Messages.getString("resultTotalRuntime") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+          runtime * 1.e-9));
+
+      System.out.println(bf);
+
     }
-    
-    final StringBuffer bf = new StringBuffer();
-    
-    bf.append("*******************************************************\n"); //$NON-NLS-1$
-    
-    bf.append(String.format(Messages.getString("resultTimeSteps") + " \n",  //$NON-NLS-1$ //$NON-NLS-2$
-        step));
-    
-    bf.append(String.format(Messages.getString("resultFillingTime") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-        time)); 
-    
-    bf.append(String.format(Messages.getString("resultFillingVolume") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-        chamberVol)); 
-    
-    bf.append(String.format(Messages.getString("resultShipVolume") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-        shipVol)); 
-    
-    bf.append(String.format(Messages.getString("resultMaxFlowRate") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-        Qmax)); 
-    
-    bf.append(String.format(Messages.getString("resultMinMaxLongitudinalForces") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-        Fmin * 1.e-3, Fmax * 1.e-3));
-    
-    bf.append(String.format(Messages.getString("resultMinMaxLongitudinalForceToGravityForce") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-        Math.abs(Fmin) / shipVol / GRAVITY, Math.abs(Fmax) / shipVol / GRAVITY));
-    
-    bf.append(String.format(Messages.getString("resultMinMaxSlope") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-        Imin * 1000., Imax * 1000.));
-    
-    bf.append(String.format(Messages.getString("resultMinMaxFlowRateChange") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-        dQ_dt_min, dQ_dt_max));
-    
-    bf.append("*******************************************************\n"); //$NON-NLS-1$
-    
-    bf.append(String.format(Messages.getString("resultTotalRuntime") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-        runtime * 1.e-9));
-    
-    System.out.println(bf);
 
     return new Results() {
 
