@@ -1,0 +1,10 @@
+*.class
+
+/bin
+/target
+/releases
+
+# Eclipse
+/.classpath
+/.project
+/.settings
