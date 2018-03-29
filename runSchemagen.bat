@@ -1,1 +1,0 @@
-schemagen -cp src/ src/de/baw/lomo/core/data/Case.java
