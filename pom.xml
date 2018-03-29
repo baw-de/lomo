@@ -1,0 +1,119 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.baw</groupId>
+	<artifactId>lomo</artifactId>
+	<version>1.0-beta19-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>lomo</name>
+	<url>https://github.com/baw-de/lomo</url>
+
+	<licenses>
+		<license>
+			<name>GNU General Public License v3.0 or later</name>
+			<url>http://www.spdx.org/licenses/GPL-3.0+</url>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>Bundesanstalt für Wasserbau</name>
+		<url>http://www.baw.de</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>35569749</id>
+			<name>Franz Simons</name>
+			<email>franz.simons@baw.de</email>
+		</developer>
+		<developer>
+			<id>37865937</id>
+			<name>Carsten Thorenz</name>
+			<email>carsten.thorenz@baw.de</email>
+		</developer>
+		<developer>
+			<id>37860631</id>
+			<name>Fabian Belzner</name>
+			<email>fabian.belzner@baw.de</email>
+		</developer>
+	</developers>
+
+	<scm>
+		<url>https://github.com/baw-de/lomo</url>
+		<connection>scm:git:git://github.com/baw-de/lomo.git</connection>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/baw-de/lomo/issues</url>
+	</issueManagement>
+
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>8.40.12</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>make-zip-release</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>de.baw.lomo.GuiStart</mainClass>
+								</manifest>
+							</archive>
+							<descriptors>
+								<descriptor>src/main/assembly/jar-with-dependencies.xml</descriptor>
+								<descriptor>src/main/assembly/zip-release.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.3</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<tagNameFormat>@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<sources>
+						<source>src/main/java/de/baw/lomo/core/data/Case.java</source>
+					</sources>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+	
+</project>
