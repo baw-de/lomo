@@ -4,7 +4,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.beans.SimpleBeanInfo;
 
-import de.baw.lomo.gui.MyPropertyEditor;
+import de.baw.lomo.gui.NumberPropertyEditor;
 import de.baw.lomo.gui.PopOverKeyValueListPropertyEditor;
 
 public class RectangularSluiceGateFillingTypeBeanInfo extends SimpleBeanInfo {
@@ -26,7 +26,7 @@ public class RectangularSluiceGateFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[1].setValue("order", 2); //$NON-NLS-1$
       properties[1].setDisplayName(Messages.getString("nameSluiceGateWidth")); //$NON-NLS-1$
       properties[1].setShortDescription(Messages.getString("descrSluiceGateWidth")); //$NON-NLS-1$
-      properties[1].setPropertyEditorClass(MyPropertyEditor.class);
+      properties[1].setPropertyEditorClass(NumberPropertyEditor.class);
       
       properties[2] = new PropertyDescriptor("sluiceGateDischargeCoefficientLookup", RectangularSluiceGateFillingType.class); //$NON-NLS-1$
       properties[2].setValue("order", 3); //$NON-NLS-1$
@@ -38,7 +38,7 @@ public class RectangularSluiceGateFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[3].setValue("order", 4); //$NON-NLS-1$
       properties[3].setDisplayName(Messages.getString("nameMaximumPressureHead")); //$NON-NLS-1$
       properties[3].setShortDescription(Messages.getString("descrMaximumPressureHead")); //$NON-NLS-1$
-      properties[3].setPropertyEditorClass(MyPropertyEditor.class);
+      properties[3].setPropertyEditorClass(NumberPropertyEditor.class);
       
       properties[4] = new PropertyDescriptor("prescribedJetOutletEnabled", RectangularSluiceGateFillingType.class); //$NON-NLS-1$
       properties[4].setValue("order", 5); //$NON-NLS-1$
@@ -57,14 +57,14 @@ public class RectangularSluiceGateFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[6].setValue("order", 7); //$NON-NLS-1$
       properties[6].setDisplayName(Messages.getString("nameJetCoefficient")); //$NON-NLS-1$
       properties[6].setShortDescription(Messages.getString("descrJetCoefficient")); //$NON-NLS-1$
-      properties[6].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[6].setPropertyEditorClass(NumberPropertyEditor.class);  
       properties[6].setExpert(true); 
                   
       properties[7] = new PropertyDescriptor("jetExponent", RectangularSluiceGateFillingType.class); //$NON-NLS-1$
       properties[7].setValue("order", 8); //$NON-NLS-1$
       properties[7].setDisplayName(Messages.getString("nameJetExponent")); //$NON-NLS-1$
       properties[7].setShortDescription(Messages.getString("descrJetExponent")); //$NON-NLS-1$
-      properties[7].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[7].setPropertyEditorClass(NumberPropertyEditor.class);  
       properties[7].setExpert(true);  
 
       

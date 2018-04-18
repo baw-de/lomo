@@ -9,11 +9,13 @@ import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextInputControl;
 
-public class MyPropertyEditor extends AbstractPropertyEditor<Number, NumericField> {
+public class NumberPropertyEditor extends AbstractPropertyEditor<Number, NumericField> {
 
   private Class<? extends Number> sourceClass; // Double.class;
 
-  public MyPropertyEditor(Item property) {
+  // If used correctly, the property type is always of type <? extends Number>
+  @SuppressWarnings("unchecked")
+  public NumberPropertyEditor(Item property) {
     super(property, new NumericField((Class<? extends Number>) property.getType()));
     this.sourceClass = (Class<? extends Number>) property.getType();
   }

@@ -4,7 +4,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.beans.SimpleBeanInfo;
 
-import de.baw.lomo.gui.MyPropertyEditor;
+import de.baw.lomo.gui.NumberPropertyEditor;
 import de.baw.lomo.gui.PopOverKeyValueListPropertyEditor;
 
 public class SegmentGateVelocityFillingTypeBeanInfo extends SimpleBeanInfo {
@@ -32,7 +32,7 @@ public class SegmentGateVelocityFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[2].setValue("order", 3); //$NON-NLS-1$
       properties[2].setDisplayName(Messages.getString("nameMaximumPressureHead")); //$NON-NLS-1$
       properties[2].setShortDescription(Messages.getString("descrMaximumPressureHead")); //$NON-NLS-1$
-      properties[2].setPropertyEditorClass(MyPropertyEditor.class);
+      properties[2].setPropertyEditorClass(NumberPropertyEditor.class);
       
       properties[3] = new PropertyDescriptor("jetOutletLookup", RectangularSluiceGateFillingType.class); //$NON-NLS-1$
       properties[3].setValue("order", 4); //$NON-NLS-1$
@@ -45,14 +45,14 @@ public class SegmentGateVelocityFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[4].setValue("order", 5); //$NON-NLS-1$
       properties[4].setDisplayName(Messages.getString("nameJetCoefficient")); //$NON-NLS-1$
       properties[4].setShortDescription(Messages.getString("descrJetCoefficient")); //$NON-NLS-1$
-      properties[4].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[4].setPropertyEditorClass(NumberPropertyEditor.class);  
       properties[4].setExpert(true); 
                   
       properties[5] = new PropertyDescriptor("jetExponent", SegmentGateVelocityFillingType.class); //$NON-NLS-1$
       properties[5].setValue("order", 6); //$NON-NLS-1$
       properties[5].setDisplayName(Messages.getString("nameJetExponent")); //$NON-NLS-1$
       properties[5].setShortDescription(Messages.getString("descrJetExponent")); //$NON-NLS-1$
-      properties[5].setPropertyEditorClass(MyPropertyEditor.class);  
+      properties[5].setPropertyEditorClass(NumberPropertyEditor.class);  
       properties[5].setExpert(true);  
       
     } catch (IntrospectionException e) {
