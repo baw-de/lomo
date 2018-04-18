@@ -38,6 +38,8 @@ public class PopOverKeyValueListPropertyEditor
   private final ObjectProperty<List<KeyValueEntry>> value = new SimpleObjectProperty<>();
   private PopOver popOver;
 
+  // If used correctly the value is always of type List<KeyValueEntry>
+  @SuppressWarnings("unchecked")
   public PopOverKeyValueListPropertyEditor(PropertySheet.Item item) {
     this.item = item;
     if (item.getValue() != null) {
@@ -60,6 +62,8 @@ public class PopOverKeyValueListPropertyEditor
     });
   }
 
+  // If used correctly, we are always dealing with KeyValueEntry here
+  @SuppressWarnings("unchecked")
   private void initPopupEditor() {
 
     popOver = new PopOver();
