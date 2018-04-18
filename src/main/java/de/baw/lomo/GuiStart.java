@@ -2,7 +2,6 @@ package de.baw.lomo;
 
 import de.baw.lomo.core.OneDimensionalModel;
 import de.baw.lomo.gui.Controller;
-import de.baw.lomo.gui.Messages;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +16,7 @@ public class GuiStart extends Application {
 //    Locale.setDefault(Locale.ENGLISH);
       
     FXMLLoader loader = new FXMLLoader(Controller.class.getResource("ui.fxml"), 
-        Messages.RESOURCE_BUNDLE);
+        de.baw.lomo.gui.Messages.RESOURCE_BUNDLE);
     loader.load();  
       
     Controller c = loader.getController();    
@@ -26,9 +25,9 @@ public class GuiStart extends Application {
     Parent root = loader.getRoot();    
     Scene scene = new Scene(root);
     scene.getStylesheets().add(
-        Controller.class.getResource("uistyle.css").toExternalForm());
+        Controller.class.getResource("ui.css").toExternalForm());
     primaryStage.setScene(scene);
-    primaryStage.setTitle(Messages.getString("appTitle"));
+    primaryStage.setTitle(Messages.getString("lomo.name"));
     primaryStage.show();
     c.initConsole();
   }

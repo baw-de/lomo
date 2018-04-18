@@ -54,6 +54,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioMenuItem;
@@ -61,7 +62,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -503,10 +506,42 @@ public class Controller implements Initializable {
 
     final Alert dlg = new Alert(AlertType.INFORMATION);
     dlg.initModality(Modality.APPLICATION_MODAL);
+    dlg.getDialogPane().setPrefWidth(500);
+    dlg.setResizable(true);
     dlg.initOwner(rootPane.getScene().getWindow());
-    dlg.setTitle(Messages.getString("dlgTitleAbout")); //$NON-NLS-1$
-    dlg.getDialogPane().setContentText(Messages.getString("dlgMessageAbout") //$NON-NLS-1$
-        + Messages.getString("dlgMessageAboutVersion")); //$NON-NLS-1$
+    dlg.setTitle(Messages.getString("dlgAbout.title")); //$NON-NLS-1$
+    dlg.setHeaderText(de.baw.lomo.Messages.getString("lomo.name")); //$NON-NLS-1$
+    
+    final StringBuffer aboutString = new StringBuffer();
+    aboutString.append(de.baw.lomo.Messages.getString("lomo.copyright")); //$NON-NLS-1$
+    aboutString.append("\n"); //$NON-NLS-1$
+    aboutString.append(Messages.getString("dlgAbout.web_baw")); //$NON-NLS-1$
+    aboutString.append("\n\n"); //$NON-NLS-1$
+    aboutString.append(de.baw.lomo.Messages.getString("lomo.version")); //$NON-NLS-1$
+    aboutString.append("\n"); //$NON-NLS-1$
+    aboutString.append(Messages.getString("dlgAbout.web_lomo")); //$NON-NLS-1$
+    aboutString.append("\n"); //$NON-NLS-1$
+    dlg.getDialogPane().setContentText(aboutString.toString());
+        
+    final StringBuffer licenseString = new StringBuffer();
+    licenseString.append(Messages.getString("dlgAbout.license_lomo")); //$NON-NLS-1$
+    licenseString.append("\n\n"); //$NON-NLS-1$
+    licenseString.append(Messages.getString("dlgAbout.license_3rdParty")); //$NON-NLS-1$
+    
+    TextArea license = new TextArea(licenseString.toString()); 
+    
+    license.setEditable(false);
+    license.setWrapText(true);
+    license.setPrefHeight(180);
+    
+    GridPane.setVgrow(license, Priority.ALWAYS);
+    GridPane.setHgrow(license, Priority.ALWAYS);
+    
+    GridPane expContent = new GridPane();
+    expContent.add(new Label(Messages.getString("dlgAbout.license")), 0, 0); //$NON-NLS-1$
+    expContent.add(license, 0, 1);
+    
+    dlg.getDialogPane().setExpandableContent(expContent);
     dlg.showAndWait();
   }
   
@@ -682,7 +717,7 @@ public class Controller implements Initializable {
     
     bf.append(String.format("%s, %s %s",  //$NON-NLS-1$
         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()), //$NON-NLS-1$
-        Messages.getString("appTitle"), //$NON-NLS-1$
+        de.baw.lomo.Messages.getString("lomo.name"), //$NON-NLS-1$
         Messages.getString("dlgMessageAboutVersion"))); //$NON-NLS-1$
     
     if (data.getAuthor().length() > 0) {
