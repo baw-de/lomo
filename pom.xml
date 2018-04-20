@@ -42,7 +42,7 @@
 
 	<scm>
 		<url>https://github.com/baw-de/lomo</url>
-		<connection>scm:git:git://github.com/baw-de/lomo.git</connection>
+		<connection>scm:git:https://github.com/baw-de/lomo.git</connection>
 	</scm>
 
 	<issueManagement>
