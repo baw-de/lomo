@@ -29,7 +29,7 @@ public class GenericSluiceGateFillingTypeBeanInfo extends SimpleBeanInfo {
   @Override
   public PropertyDescriptor[] getPropertyDescriptors() {
         
-    PropertyDescriptor[] properties = new PropertyDescriptor[7];
+    PropertyDescriptor[] properties = new PropertyDescriptor[9];
     
     try {
       
@@ -64,19 +64,33 @@ public class GenericSluiceGateFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[4].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);     
       properties[4].setExpert(true);  
                 
-      properties[5] = new PropertyDescriptor("jetCoefficient", GenericSluiceGateFillingType.class); //$NON-NLS-1$
+      properties[5] = new PropertyDescriptor("jetCoefficientC0", GenericSluiceGateFillingType.class); //$NON-NLS-1$
       properties[5].setValue("order", 6); //$NON-NLS-1$
-      properties[5].setDisplayName(Messages.getString("nameJetCoefficient")); //$NON-NLS-1$
-      properties[5].setShortDescription(Messages.getString("descrJetCoefficient")); //$NON-NLS-1$
+      properties[5].setDisplayName(Messages.getString("nameJetCoefficientC0")); //$NON-NLS-1$
+      properties[5].setShortDescription(Messages.getString("descrJetCoefficientC0")); //$NON-NLS-1$
       properties[5].setPropertyEditorClass(NumberPropertyEditor.class);  
       properties[5].setExpert(true); 
                   
-      properties[6] = new PropertyDescriptor("jetExponent", GenericSluiceGateFillingType.class); //$NON-NLS-1$
+      properties[6] = new PropertyDescriptor("jetCoefficientC1", GenericSluiceGateFillingType.class); //$NON-NLS-1$
       properties[6].setValue("order", 7); //$NON-NLS-1$
-      properties[6].setDisplayName(Messages.getString("nameJetExponent")); //$NON-NLS-1$
-      properties[6].setShortDescription(Messages.getString("descrJetExponent")); //$NON-NLS-1$
+      properties[6].setDisplayName(Messages.getString("nameJetCoefficientC1")); //$NON-NLS-1$
+      properties[6].setShortDescription(Messages.getString("descrJetCoefficientC1")); //$NON-NLS-1$
       properties[6].setPropertyEditorClass(NumberPropertyEditor.class);  
-      properties[6].setExpert(true);    
+      properties[6].setExpert(true); 
+      
+      properties[7] = new PropertyDescriptor("jetCoefficientC2", GenericSluiceGateFillingType.class); //$NON-NLS-1$
+      properties[7].setValue("order", 8); //$NON-NLS-1$
+      properties[7].setDisplayName(Messages.getString("nameJetCoefficientC2")); //$NON-NLS-1$
+      properties[7].setShortDescription(Messages.getString("descrJetCoefficientC2")); //$NON-NLS-1$
+      properties[7].setPropertyEditorClass(NumberPropertyEditor.class);  
+      properties[7].setExpert(true); 
+      
+      properties[8] = new PropertyDescriptor("jetCoefficientC3", GenericSluiceGateFillingType.class); //$NON-NLS-1$
+      properties[8].setValue("order", 9); //$NON-NLS-1$
+      properties[8].setDisplayName(Messages.getString("nameJetCoefficientC3")); //$NON-NLS-1$
+      properties[8].setShortDescription(Messages.getString("descrJetCoefficientC3")); //$NON-NLS-1$
+      properties[8].setPropertyEditorClass(NumberPropertyEditor.class);  
+      properties[8].setExpert(true);    
 
       
     } catch (IntrospectionException e) {

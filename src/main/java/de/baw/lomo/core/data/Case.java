@@ -31,7 +31,7 @@ import de.baw.lomo.utils.Utils;
 @XmlRootElement(name="BAWLomoCase")
 public class Case {
 
-  private final static String VERSION = "0.6";
+  private final static String VERSION = "0.7";
   
   private String author = "BAW";
   

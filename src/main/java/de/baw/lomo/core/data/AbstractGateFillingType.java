@@ -29,28 +29,48 @@ public abstract class AbstractGateFillingType extends GateFillingType {
   
   private static final double GRAVITY = 9.81; 
   
-  private double jetCoefficient = 0.05;
+  private double jetCoefficientC0 = 0.0;
   
-  private double jetExponent = 1.0;
+  private double jetCoefficientC1 = 1.0;
   
+  private double jetCoefficientC2 = 0.1;
+  
+  private double jetCoefficientC3 = 1.0;
+    
   protected List<KeyValueEntry> jetOutletLookup = new ArrayList<>();
   
   protected double maximumPressureHead;
   
-  public double getJetCoefficient() {
-    return jetCoefficient;
+  public double getJetCoefficientC0() {
+    return jetCoefficientC0;
   }
 
-  public void setJetCoefficient(double jetCoeffcient) {
-    this.jetCoefficient = jetCoeffcient;
+  public void setJetCoefficientC0(double jetCoefficientC0) {
+    this.jetCoefficientC0 = jetCoefficientC0;
   }
 
-  public double getJetExponent() {
-    return jetExponent;
+  public double getJetCoefficientC1() {
+    return jetCoefficientC1;
   }
 
-  public void setJetExponent(double jetExponent) {
-    this.jetExponent = jetExponent;
+  public void setJetCoefficientC1(double jetCoefficientC1) {
+    this.jetCoefficientC1 = jetCoefficientC1;
+  }
+
+  public double getJetCoefficientC2() {
+    return jetCoefficientC2;
+  }
+
+  public void setJetCoefficientC2(double jetCoefficientC2) {
+    this.jetCoefficientC2 = jetCoefficientC2;
+  }
+
+  public double getJetCoefficientC3() {
+    return jetCoefficientC3;
+  }
+
+  public void setJetCoefficientC3(double jetCoefficientC3) {
+    this.jetCoefficientC3 = jetCoefficientC3;
   }
 
   public double getMaximumPressureHead() {
@@ -84,10 +104,12 @@ public abstract class AbstractGateFillingType extends GateFillingType {
   public double getJetCrossSection(double position, double time) {
 
     final double jetOutlet = getJetOutlet(getGateOpening(time));
-    final double jetCoefficient = getJetCoefficient();
-    final double jetExponent = getJetExponent();
-
-    return jetOutlet + jetCoefficient * Math.pow(position, jetExponent) * jetOutlet;
+    final double c0 = getJetCoefficientC0();
+    final double c1 = getJetCoefficientC1();
+    final double c2 = getJetCoefficientC2();
+    final double c3 = getJetCoefficientC3();
+    
+    return c0 + c1 * jetOutlet + c2 * Math.pow(position, c3);
   }
 
   @Override

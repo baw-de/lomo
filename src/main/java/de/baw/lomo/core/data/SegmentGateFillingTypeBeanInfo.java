@@ -29,7 +29,7 @@ public class SegmentGateFillingTypeBeanInfo extends SimpleBeanInfo {
   @Override
   public PropertyDescriptor[] getPropertyDescriptors() {
 
-    PropertyDescriptor[] properties = new PropertyDescriptor[6];
+    PropertyDescriptor[] properties = new PropertyDescriptor[8];
 
     try {
 
@@ -51,26 +51,40 @@ public class SegmentGateFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[2].setShortDescription(Messages.getString("descrMaximumPressureHead")); //$NON-NLS-1$
       properties[2].setPropertyEditorClass(NumberPropertyEditor.class);
       
-      properties[3] = new PropertyDescriptor("jetOutletLookup", RectangularSluiceGateFillingType.class); //$NON-NLS-1$
+      properties[3] = new PropertyDescriptor("jetOutletLookup", SegmentGateFillingType.class); //$NON-NLS-1$
       properties[3].setValue("order", 4); //$NON-NLS-1$
       properties[3].setDisplayName(Messages.getString("nameJetOutletAngleLookup")); //$NON-NLS-1$
       properties[3].setShortDescription(Messages.getString("descrJetOutletAngleLookup")); //$NON-NLS-1$
       properties[3].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);     
       properties[3].setExpert(true);     
       
-      properties[4] = new PropertyDescriptor("jetCoefficient", SegmentGateFillingType.class); //$NON-NLS-1$
+      properties[4] = new PropertyDescriptor("jetCoefficientC0", SegmentGateFillingType.class); //$NON-NLS-1$
       properties[4].setValue("order", 5); //$NON-NLS-1$
-      properties[4].setDisplayName(Messages.getString("nameJetCoefficient")); //$NON-NLS-1$
-      properties[4].setShortDescription(Messages.getString("descrJetCoefficient")); //$NON-NLS-1$
+      properties[4].setDisplayName(Messages.getString("nameJetCoefficientC0")); //$NON-NLS-1$
+      properties[4].setShortDescription(Messages.getString("descrJetCoefficientC0")); //$NON-NLS-1$
       properties[4].setPropertyEditorClass(NumberPropertyEditor.class);  
       properties[4].setExpert(true); 
                   
-      properties[5] = new PropertyDescriptor("jetExponent", SegmentGateFillingType.class); //$NON-NLS-1$
+      properties[5] = new PropertyDescriptor("jetCoefficientC1", SegmentGateFillingType.class); //$NON-NLS-1$
       properties[5].setValue("order", 6); //$NON-NLS-1$
-      properties[5].setDisplayName(Messages.getString("nameJetExponent")); //$NON-NLS-1$
-      properties[5].setShortDescription(Messages.getString("descrJetExponent")); //$NON-NLS-1$
+      properties[5].setDisplayName(Messages.getString("nameJetCoefficientC1")); //$NON-NLS-1$
+      properties[5].setShortDescription(Messages.getString("descrJetCoefficientC1")); //$NON-NLS-1$
       properties[5].setPropertyEditorClass(NumberPropertyEditor.class);  
-      properties[5].setExpert(true);  
+      properties[5].setExpert(true); 
+      
+      properties[6] = new PropertyDescriptor("jetCoefficientC2", SegmentGateFillingType.class); //$NON-NLS-1$
+      properties[6].setValue("order", 7); //$NON-NLS-1$
+      properties[6].setDisplayName(Messages.getString("nameJetCoefficientC2")); //$NON-NLS-1$
+      properties[6].setShortDescription(Messages.getString("descrJetCoefficientC2")); //$NON-NLS-1$
+      properties[6].setPropertyEditorClass(NumberPropertyEditor.class);  
+      properties[6].setExpert(true); 
+      
+      properties[7] = new PropertyDescriptor("jetCoefficientC3", SegmentGateFillingType.class); //$NON-NLS-1$
+      properties[7].setValue("order", 8); //$NON-NLS-1$
+      properties[7].setDisplayName(Messages.getString("nameJetCoefficientC3")); //$NON-NLS-1$
+      properties[7].setShortDescription(Messages.getString("descrJetCoefficientC3")); //$NON-NLS-1$
+      properties[7].setPropertyEditorClass(NumberPropertyEditor.class);  
+      properties[7].setExpert(true);
       
     } catch (IntrospectionException e) {
       e.printStackTrace();
