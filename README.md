@@ -15,7 +15,7 @@ direction are computed.
 
 ## Installation
 
-**LoMo** can be run using our release binaries or building it from source 
+**LoMo** can be run using our [release binaries](https://github.com/baw-de/lomo/releases) or building it from source 
 using [Apache Maven](https://maven.apache.org/).
 
 ```
