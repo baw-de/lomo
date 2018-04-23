@@ -109,8 +109,10 @@
     <xs:complexContent>
       <xs:extension base="gateFillingType">
         <xs:sequence>
-          <xs:element name="jetCoefficient" type="xs:double"/>
-          <xs:element name="jetExponent" type="xs:double"/>
+          <xs:element name="jetCoefficientC0" type="xs:double"/>
+          <xs:element name="jetCoefficientC1" type="xs:double"/>
+          <xs:element name="jetCoefficientC2" type="xs:double"/>
+          <xs:element name="jetCoefficientC3" type="xs:double"/>
           <xs:element name="jetOutletLookup" minOccurs="0">
             <xs:complexType>
               <xs:sequence>
