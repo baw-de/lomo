@@ -1,3 +1,19 @@
+# Release 1.0-beta19
+
+## Core
+* Added possibility to suppress text output of OneDimensionalModel.
+* New jet cross section computation.
+
+## GUI
+* New license section in 'About' dialog
+
+## Other
+* LoMo is now a Maven project
+* Prepared GitHub release
+* RELEASE file is now called CHANGELOG
+* New Case version 0.7.
+
+
 # Release 1.0-beta18
 
 ## Core
