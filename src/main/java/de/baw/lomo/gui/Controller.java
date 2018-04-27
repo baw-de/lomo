@@ -735,7 +735,7 @@ public class Controller implements Initializable {
     bf.append(String.format("%s, %s %s",  //$NON-NLS-1$
         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()), //$NON-NLS-1$
         de.baw.lomo.Messages.getString("lomo.name"), //$NON-NLS-1$
-        Messages.getString("dlgMessageAboutVersion"))); //$NON-NLS-1$
+        de.baw.lomo.Messages.getString("lomo.version"))); //$NON-NLS-1$
     
     if (data.getAuthor().length() > 0) {
       bf.append(": ").append(data.getAuthor()); //$NON-NLS-1$
