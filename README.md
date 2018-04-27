@@ -33,7 +33,7 @@ the software.
 **LoMo** is written in the Java programming language. Developing **LoMo** using 
 the [Eclipse IDE](http://www.eclipse.org/) should work well.
 
-You are welcome to submit issues or pull request on [GitHub](https://github.com/baw-de/lomo/) 
+You are welcome to submit issues or pull requests on [GitHub](https://github.com/baw-de/lomo/) 
 to support the development of **LoMo**.
 
 
