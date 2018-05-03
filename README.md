@@ -8,7 +8,7 @@ direction are computed.
 
 ## System requirements
 
-* Java Runtime Environment Version 8 
+* [Java Runtime Environment 8](https://java.com) 
 * Java SE Development Kit 8 (optional)
 * Apache Maven 3.3+ (optional)
 
