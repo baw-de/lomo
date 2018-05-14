@@ -15,10 +15,13 @@ direction are computed.
 
 ## Installation
 
-**LoMo** can be run using our [release binaries](https://github.com/baw-de/lomo/releases) or building it from source 
-using [Apache Maven](https://maven.apache.org/).
+**LoMo** can be run using our [release binaries](https://github.com/baw-de/lomo/releases).
+Download the ZIP archive and execute the JAR file with a double click.
+
+**LoMo** can be build from source using [Apache Maven](https://maven.apache.org/):
 
 ```
+git clone https://github.com/baw-de/lomo.git
 git checkout -t <TAG>
 mvn clean package
 ```
@@ -40,8 +43,8 @@ to support the development of **LoMo**.
 ## Publications
 
 The numerical core is described in detail in this paper, which we kindly ask you to cite if you are using **LoMo**:  
-Belzner, F., Simons, F. & Thorenz, C. (in press): 'An application-oriented model for lock filling processes',
-Proceedings of the 34th PIANC World Congress 2018, Panama.
+Belzner, F., Simons, F. & Thorenz, C. (2018): 'An application-oriented model for lock filling processes',
+Proceedings of the 34th PIANC World Congress 2018, Panama. [PDF](https://coms.events/pianc-panama/data/full_papers/full_paper_183.pdf)
 
 
 ## Further information
