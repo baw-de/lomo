@@ -17,8 +17,12 @@
  ******************************************************************************/
 package de.baw.lomo;
 
+import java.io.File;
+
 import de.baw.lomo.core.OneDimensionalModel;
+import de.baw.lomo.core.data.Case;
 import de.baw.lomo.gui.Controller;
+import de.baw.lomo.io.IOUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -36,8 +40,16 @@ public class GuiStart extends Application {
         de.baw.lomo.gui.Messages.RESOURCE_BUNDLE);
     loader.load();  
       
-    Controller c = loader.getController();    
-    c.initModel(new OneDimensionalModel());
+    Controller c = loader.getController();  
+    Case data;
+    
+    try {
+      data = IOUtils.readCaseFromXml(new File(getParameters().getRaw().get(0)));
+    } catch (Exception e) {
+      data = null;
+    }    
+    
+    c.initModel(new OneDimensionalModel(),data);
     
     Parent root = loader.getRoot();    
     Scene scene = new Scene(root);

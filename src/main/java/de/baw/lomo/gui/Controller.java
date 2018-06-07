@@ -269,10 +269,15 @@ public class Controller implements Initializable {
     }
   }
 
-  public void initModel(Model model) {
+  public void initModel(Model model, Case data) {
 
     this.model = model;
-    this.data = new Case();
+    
+    if (data == null) {
+      this.data = new Case();
+    } else {
+      this.data = data;
+    }
 
     model.setCaseData(data);
 
