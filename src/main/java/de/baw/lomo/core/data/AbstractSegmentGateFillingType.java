@@ -31,7 +31,7 @@ public abstract class AbstractSegmentGateFillingType extends AbstractGateFilling
     
   public AbstractSegmentGateFillingType() {    
     super();
-    maximumPressureHead = 4.5;
+    maximumPressureHead = 4.1;
     
     if (jetOutletLookup.isEmpty()) {
       jetOutletLookup.add(new KeyValueEntry(0.0, 999999.));

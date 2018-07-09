@@ -40,27 +40,29 @@ public class SegmentGateVelocityFillingType extends AbstractSegmentGateFillingTy
     }
     
     if (segmentGateAMueLookup.isEmpty()) {
-      segmentGateAMueLookup.add(new KeyValueEntry(0., 0.));
-      segmentGateAMueLookup.add(new KeyValueEntry(1., 0.));
-      segmentGateAMueLookup.add(new KeyValueEntry(2., 0.08));
-      segmentGateAMueLookup.add(new KeyValueEntry(3., 0.2));
-      segmentGateAMueLookup.add(new KeyValueEntry(4., 0.4));
-      segmentGateAMueLookup.add(new KeyValueEntry(5., 0.7));
-      segmentGateAMueLookup.add(new KeyValueEntry(6., 1.));
-      segmentGateAMueLookup.add(new KeyValueEntry(7., 1.5));
-      segmentGateAMueLookup.add(new KeyValueEntry(8., 2.1));
-      segmentGateAMueLookup.add(new KeyValueEntry(9., 2.7));
-      segmentGateAMueLookup.add(new KeyValueEntry(10., 3.4));
-      segmentGateAMueLookup.add(new KeyValueEntry(11., 4.));
-      segmentGateAMueLookup.add(new KeyValueEntry(12., 4.5));
-      segmentGateAMueLookup.add(new KeyValueEntry(13., 4.9));
-      segmentGateAMueLookup.add(new KeyValueEntry(14., 5.2));
-      segmentGateAMueLookup.add(new KeyValueEntry(15., 5.4));
-      segmentGateAMueLookup.add(new KeyValueEntry(16., 5.5));
-      segmentGateAMueLookup.add(new KeyValueEntry(17., 5.6));
-      segmentGateAMueLookup.add(new KeyValueEntry(18., 5.5));
-      segmentGateAMueLookup.add(new KeyValueEntry(19., 5.5));
-      segmentGateAMueLookup.add(new KeyValueEntry(20., 5.4));
+      segmentGateAMueLookup.add(new KeyValueEntry(0., 0.0));
+      segmentGateAMueLookup.add(new KeyValueEntry(1., 0.03));
+      segmentGateAMueLookup.add(new KeyValueEntry(2., 0.09));
+      segmentGateAMueLookup.add(new KeyValueEntry(3., 0.16));
+      segmentGateAMueLookup.add(new KeyValueEntry(4., 0.29));
+      segmentGateAMueLookup.add(new KeyValueEntry(5., 0.45));
+      segmentGateAMueLookup.add(new KeyValueEntry(6., 0.69));
+      segmentGateAMueLookup.add(new KeyValueEntry(7., 1.02));
+      segmentGateAMueLookup.add(new KeyValueEntry(8., 1.45));
+      segmentGateAMueLookup.add(new KeyValueEntry(9., 2.06));
+      segmentGateAMueLookup.add(new KeyValueEntry(10., 2.7));
+      segmentGateAMueLookup.add(new KeyValueEntry(11., 3.41));
+      segmentGateAMueLookup.add(new KeyValueEntry(12., 4.15));
+      segmentGateAMueLookup.add(new KeyValueEntry(13., 5.0));
+      segmentGateAMueLookup.add(new KeyValueEntry(14., 5.88));
+      segmentGateAMueLookup.add(new KeyValueEntry(15., 6.5));
+      segmentGateAMueLookup.add(new KeyValueEntry(16., 6.96));
+      segmentGateAMueLookup.add(new KeyValueEntry(17., 7.43));
+      segmentGateAMueLookup.add(new KeyValueEntry(18., 7.6));
+      segmentGateAMueLookup.add(new KeyValueEntry(19., 7.8));
+      segmentGateAMueLookup.add(new KeyValueEntry(20., 8.0));
+      segmentGateAMueLookup.add(new KeyValueEntry(21., 8.23));
+      segmentGateAMueLookup.add(new KeyValueEntry(22., 8.36));
     }
     
   }  
