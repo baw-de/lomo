@@ -67,12 +67,12 @@ public class SegmentGateFillingType extends AbstractSegmentGateFillingType {
     
   }  
   
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
   public List<KeyValueEntry> getSegmentGateAngleLookup() {
     return segmentGateAngleLookup;
   }
 
-  @XmlElementWrapper
-  @XmlElement(name = "entry")
   public void setSegmentGateAngleLookup(List<KeyValueEntry> segmentGateAngleLookup) {
     this.segmentGateAngleLookup = segmentGateAngleLookup;
   }

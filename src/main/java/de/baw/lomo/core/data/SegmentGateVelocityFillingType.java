@@ -67,12 +67,12 @@ public class SegmentGateVelocityFillingType extends AbstractSegmentGateFillingTy
     
   }  
   
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
   public List<KeyValueEntry> getSegmentGateVelocityLookup() {
     return segmentGateVelocityLookup;
   }
 
-  @XmlElementWrapper
-  @XmlElement(name = "entry")
   public void setSegmentGateVelocityLookup(List<KeyValueEntry> segmentGateVelocityLookup) {
     this.segmentGateVelocityLookup = segmentGateVelocityLookup;
   }
