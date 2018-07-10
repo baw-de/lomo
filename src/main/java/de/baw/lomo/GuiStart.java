@@ -46,7 +46,7 @@ public class GuiStart extends Application {
     try {
       data = IOUtils.readCaseFromXml(new File(getParameters().getRaw().get(0)));
     } catch (Exception e) {
-      data = null;
+      data = new Case();
     }    
     
     c.initModel(new OneDimensionalModel(),data);
