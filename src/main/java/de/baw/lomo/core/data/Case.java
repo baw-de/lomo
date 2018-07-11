@@ -37,13 +37,13 @@ public class Case {
   
   private String description = "";
 
-  private double chamberLength = 330.;
+  private double chamberLength = 145.;
 
-  private double chamberWidth = 45.;
+  private double chamberWidth = 12.5;
 
   private double upstreamWaterLevel = 14.;
 
-  private double downstreamWaterLevel = 12.5;
+  private double downstreamWaterLevel = 4.0;
 
   private FillingType fillingType = new SluiceGateFillingType();
 
@@ -65,9 +65,9 @@ public class Case {
 
     if (shipAreaLookup.isEmpty()) {
       shipAreaLookup.add(new KeyValueEntry(5, 0));
-      shipAreaLookup.add(new KeyValueEntry(10, 32.2));
-      shipAreaLookup.add(new KeyValueEntry(135, 32.2));
-      shipAreaLookup.add(new KeyValueEntry(145, 0));
+      shipAreaLookup.add(new KeyValueEntry(7, 32.06));
+      shipAreaLookup.add(new KeyValueEntry(133, 32.06));
+      shipAreaLookup.add(new KeyValueEntry(135, 0));
     }
   }
 
