@@ -68,6 +68,10 @@ public class Utils {
     }
 
     final int tbSize = source.size();
+    
+    if (tbSize == 1) {
+      return x * source.get(0).getValue();      
+    }
 
     for (int i = 1; i < tbSize; i++) {
 

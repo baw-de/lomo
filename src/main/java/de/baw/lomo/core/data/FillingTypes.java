@@ -21,8 +21,8 @@ public final class FillingTypes {
   
   public final static FillingType[] LIST = new FillingType[] {
 
-      new RectangularSluiceGateFillingType(), new GenericSluiceGateFillingType(), 
-      new SegmentGateVelocityFillingType(), new SegmentGateFillingType(), 
+      new SluiceGateFillingType(), new SegmentGateVelocityFillingType(),
+      new SegmentGateFillingType(), new GenericGateFillingType(),
       new PrescribedInflowFillingType() };
 
 }

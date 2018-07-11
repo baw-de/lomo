@@ -26,14 +26,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import de.baw.lomo.utils.Utils;
 
-@XmlRootElement(name="rectangularSluiceGateFillingType")
-public class RectangularSluiceGateFillingType extends AbstractSluiceGateFillingType {
+@XmlRootElement(name="sluiceGateFillingType")
+public class SluiceGateFillingType extends AbstractSluiceGateFillingType {
 
   private List<KeyValueEntry> sluiceGateHeightLookup = new ArrayList<>();
-
-  private double sluiceGateWidth = 16.2;
   
-  public RectangularSluiceGateFillingType() {
+  private List<KeyValueEntry> sluiceGateWidthLookup = new ArrayList<>();
+  
+  public SluiceGateFillingType() {
     
     super();
     
@@ -44,6 +44,10 @@ public class RectangularSluiceGateFillingType extends AbstractSluiceGateFillingT
       sluiceGateHeightLookup.add(new KeyValueEntry(20., 0.));
       sluiceGateHeightLookup.add(new KeyValueEntry(248., 1.3));
       sluiceGateHeightLookup.add(new KeyValueEntry(1000., 1.3));
+    }
+    
+    if (sluiceGateWidthLookup.isEmpty()) {
+      sluiceGateWidthLookup.add(new KeyValueEntry(0., 16.2));
     }
 
     if (sluiceGateDischargeCoefficientLookup.isEmpty()) {
@@ -74,12 +78,18 @@ public class RectangularSluiceGateFillingType extends AbstractSluiceGateFillingT
     return Utils.linearInterpolate(sluiceGateHeightLookup, time);
   }
 
-  public double getSluiceGateWidth() {
-    return sluiceGateWidth;
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
+  public List<KeyValueEntry> getSluiceGateWidthLookup() {
+    return sluiceGateWidthLookup;
   }
 
-  public void setSluiceGateWidth(double sluiceGateWidth) {
-    this.sluiceGateWidth = sluiceGateWidth;
+  public void setSluiceGateWidthLookup(List<KeyValueEntry> sluiceGateWidthLookup) {
+    this.sluiceGateWidthLookup = sluiceGateWidthLookup;
+  }
+  
+  public double getSluiceGateWidth(double height) {
+    return Utils.linearInterpolate(sluiceGateWidthLookup, height);
   }
 
   @Override
@@ -89,7 +99,7 @@ public class RectangularSluiceGateFillingType extends AbstractSluiceGateFillingT
 
   @Override
   public double getSluiceGateCrossSection(double gateOpening) {
-        return gateOpening * getSluiceGateWidth();
+    return Utils.linearIntegrate(sluiceGateWidthLookup, gateOpening);
   }
 
   @Override

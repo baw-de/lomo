@@ -17,9 +17,9 @@
  ******************************************************************************/
 package de.baw.lomo.core;
 
+import de.baw.lomo.core.data.AbstractGateFillingType;
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.FillingType;
-import de.baw.lomo.core.data.GateFillingType;
 import de.baw.lomo.core.data.Results;
 
 public class OneDimensionalModel implements Model {
@@ -208,8 +208,8 @@ public class OneDimensionalModel implements Model {
 
       timeSeries[step] = time;
 
-      if (filling instanceof GateFillingType) {
-        valveOpening[step] = ((GateFillingType) filling).getGateOpening(time);
+      if (filling instanceof AbstractGateFillingType) {
+        valveOpening[step] = ((AbstractGateFillingType) filling).getGateOpening(time);
       }      
       
       final double[][] source = filling.getSource(time, positions, h1, v1, data);
@@ -243,23 +243,24 @@ public class OneDimensionalModel implements Model {
         // Strahlbeiwert beta anpassen beta=integral(U*U)dA / (U_mean*Q)
         // = integral(U*U)dA / (integral(U)dA*integral(U)dA / A)
         for (int i = 0; i < nx; i++) {
-          
+
           beta[i] = 1.;
 
-          if (filling instanceof GateFillingType) {
+          // Strahlausbreitung
+          double aEffective = filling.getEffectiveFlowSection(time, dx * i);
+          
+          if (Double.isNaN(aEffective)) {
+            continue;
+          }
 
-            // Strahlausbreitung
-            double aJet = ((GateFillingType) filling)
-                .getJetCrossSection(dx * i, time);
-            
-            // aJet cannot be larger than actual wet cross section
-            aJet = Math.min(aJet, A05[i]);
+          // aEffective cannot be larger than actual wet cross section
+          aEffective = Math.min(aEffective, A05[i]);
 
-            // avoid division by zero
-            if (aJet > 1.e-3) {            
-              beta[i] = A05[i] / aJet;
-            }
-          } 
+          // avoid division by zero
+          if (aEffective > 1.e-3) {
+            beta[i] = A05[i] / aEffective;
+          }
+
         }
 
         // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA

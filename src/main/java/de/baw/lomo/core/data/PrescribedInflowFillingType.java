@@ -232,4 +232,9 @@ public class PrescribedInflowFillingType extends FillingType {
     return Messages.getString("fillingTypePrescribedInflow"); //$NON-NLS-1$
   }
 
+  @Override
+  public double getEffectiveFlowSection(double time, double position) {
+    return Double.NaN;
+  }
+
 }

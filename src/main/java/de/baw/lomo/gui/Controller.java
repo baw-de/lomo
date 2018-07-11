@@ -46,12 +46,12 @@ import org.controlsfx.property.BeanPropertyUtils;
 import com.sun.javafx.charts.Legend;
 
 import de.baw.lomo.core.Model;
+import de.baw.lomo.core.data.AbstractGateFillingType;
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.FillingType;
 import de.baw.lomo.core.data.FillingTypes;
-import de.baw.lomo.core.data.GateFillingType;
-import de.baw.lomo.core.data.RectangularSluiceGateFillingType;
 import de.baw.lomo.core.data.Results;
+import de.baw.lomo.core.data.SluiceGateFillingType;
 import de.baw.lomo.io.IOUtils;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -335,7 +335,7 @@ public class Controller implements Initializable {
             
             double scale = 1.;
             
-            if (data.getFillingType() instanceof RectangularSluiceGateFillingType) {
+            if (data.getFillingType() instanceof SluiceGateFillingType) {
               scale = 10.;
             }
             
@@ -350,7 +350,7 @@ public class Controller implements Initializable {
           seriesH.setData(FXCollections.observableList(dataH));
           seriesO.setData(FXCollections.observableList(dataO));
           
-          if (!(data.getFillingType() instanceof GateFillingType)) {
+          if (!(data.getFillingType() instanceof AbstractGateFillingType)) {
             seriesO.getData().clear();
           }
 
@@ -805,7 +805,7 @@ public class Controller implements Initializable {
 
       double scale = 1.;
 
-      if (data.getFillingType() instanceof RectangularSluiceGateFillingType) {
+      if (data.getFillingType() instanceof SluiceGateFillingType) {
         scale = 10.;
       }
       if (i < o.length) {

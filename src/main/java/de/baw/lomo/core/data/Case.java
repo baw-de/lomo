@@ -45,7 +45,7 @@ public class Case {
 
   private double downstreamWaterLevel = 12.5;
 
-  private FillingType fillingType = new RectangularSluiceGateFillingType();
+  private FillingType fillingType = new SluiceGateFillingType();
 
   private List<KeyValueEntry> shipAreaLookup = new ArrayList<>();
 

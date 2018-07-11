@@ -25,22 +25,21 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 
 import de.baw.lomo.utils.Utils;
 
-public abstract class AbstractGateFillingType extends GateFillingType {
+public abstract class AbstractGateFillingType extends FillingType {
   
-  private static final double GRAVITY = 9.81; 
+  private static final double GRAVITY = 9.81;
   
   private double jetCoefficientC0 = 0.0;
-  
   private double jetCoefficientC1 = 1.0;
-  
   private double jetCoefficientC2 = 0.1;
-  
   private double jetCoefficientC3 = 1.0;
-    
   protected List<KeyValueEntry> jetOutletLookup = new ArrayList<>();
-  
   protected double maximumPressureHead;
-  
+
+  public abstract double getGateOpening(double time);
+
+  public abstract double getAreaTimesDischargeCoefficient(double time);
+
   public double getJetCoefficientC0() {
     return jetCoefficientC0;
   }
@@ -73,14 +72,6 @@ public abstract class AbstractGateFillingType extends GateFillingType {
     this.jetCoefficientC3 = jetCoefficientC3;
   }
 
-  public double getMaximumPressureHead() {
-    return maximumPressureHead;
-  }
-
-  public void setMaximumPressureHead(double maximumPressureHead) {
-    this.maximumPressureHead = maximumPressureHead;
-  }
-  
   @XmlElementWrapper
   @XmlElement(name = "entry")
   public List<KeyValueEntry> getJetOutletLookup() {
@@ -90,34 +81,27 @@ public abstract class AbstractGateFillingType extends GateFillingType {
   public void setJetOutletLookup(List<KeyValueEntry> jetOutletLookup) {
     this.jetOutletLookup = jetOutletLookup;
   }
-  
-  public double getJetOutlet(double gateOpening) {    
+
+  public double getJetOutlet(double gateOpening) {
     return Utils.linearInterpolate(jetOutletLookup, gateOpening);
   }
 
-  public abstract double getAreaTimesDischargeCoefficient(double time);
-
-  
-  // ***************************************************************************
-  
-  @Override
-  public double getJetCrossSection(double position, double time) {
-
-    final double jetOutlet = getJetOutlet(getGateOpening(time));
-    final double c0 = getJetCoefficientC0();
-    final double c1 = getJetCoefficientC1();
-    final double c2 = getJetCoefficientC2();
-    final double c3 = getJetCoefficientC3();
-    
-    return c0 + c1 * jetOutlet + c2 * Math.pow(position, c3);
+  public double getMaximumPressureHead() {
+    return maximumPressureHead;
   }
+
+  public void setMaximumPressureHead(double maximumPressureHead) {
+    this.maximumPressureHead = maximumPressureHead;
+  }
+
+  // ***************************************************************************
 
   @Override
   public double[][] getSource(double time, double[] positions, double[] h,
       double[] v, Case data) {
-    
+
     final double[][] source = new double[2][positions.length];
-    
+
     final double aMue = getAreaTimesDischargeCoefficient(time);
     final double ow = data.getUpstreamWaterLevel();
     final double maxDh = getMaximumPressureHead();
@@ -131,12 +115,24 @@ public abstract class AbstractGateFillingType extends GateFillingType {
     // Negative Qs abfangen
     if (dh < 0.) {
       flowRate = 0.;
-    }    
-    
+    }
+
     source[0][0] = flowRate;
     source[1][0] = flowRate * 1.;
-    
+
     return source;
-  }  
-  
+  }
+
+  @Override
+  public double getEffectiveFlowSection(double time, double position) {
+
+    final double jetOutlet = getJetOutlet(getGateOpening(time));
+    final double c0 = getJetCoefficientC0();
+    final double c1 = getJetCoefficientC1();
+    final double c2 = getJetCoefficientC2();
+    final double c3 = getJetCoefficientC3();
+
+    return c0 + c1 * jetOutlet + c2 * Math.pow(position, c3);
+  }
+
 }
