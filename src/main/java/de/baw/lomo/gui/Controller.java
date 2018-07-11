@@ -422,11 +422,15 @@ public class Controller implements Initializable {
     
     lastUsedDir = selectedFile.getParentFile();
 
-    data = IOUtils.readCaseFromXml(selectedFile);
-    clearFigure();
-    initPropertSheet();
-    initFillingTypeMenu();
-    model.setCaseData(data);
+    try {
+      data = IOUtils.readCaseFromXml(selectedFile);
+      clearFigure();
+      initPropertSheet();
+      initFillingTypeMenu();
+      model.setCaseData(data);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   @FXML
