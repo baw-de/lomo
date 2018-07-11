@@ -28,32 +28,47 @@ import de.baw.lomo.utils.Utils;
 
 @XmlRootElement(name="genericGateFillingType")
 public class GenericGateFillingType extends AbstractGateFillingType {
+  
+  private List<KeyValueEntry> genericGateOpeningLookup = new ArrayList<>();
 
   private List<KeyValueEntry> genericGateAMueLookup = new ArrayList<>();
   
   public GenericGateFillingType() {
     
-    maximumPressureHead = 9999;
+    maximumPressureHead = 4.0;
     
     if (jetOutletLookup.isEmpty()) {
-      jetOutletLookup.add(new KeyValueEntry(0.0, 12.636));
+      jetOutletLookup.add(new KeyValueEntry(0.0, 0.0));
+      jetOutletLookup.add(new KeyValueEntry(100., 4.8));
+    }
+    
+    if (genericGateOpeningLookup.isEmpty()) {
+      genericGateOpeningLookup.add(new KeyValueEntry(0., 0.));
+      genericGateOpeningLookup.add(new KeyValueEntry(40., 4.));
+      genericGateOpeningLookup.add(new KeyValueEntry(540., 100.));
     }
     
     if (genericGateAMueLookup.isEmpty()) {
       genericGateAMueLookup.add(new KeyValueEntry(0., 0.));
-      genericGateAMueLookup.add(new KeyValueEntry(20., 0.));
-      genericGateAMueLookup.add(new KeyValueEntry(107.7, 6.48));
-      genericGateAMueLookup.add(new KeyValueEntry(160.31, 12.312));
-      genericGateAMueLookup.add(new KeyValueEntry(195.4, 15.39));
-      genericGateAMueLookup.add(new KeyValueEntry(248., 16.848));
-      genericGateAMueLookup.add(new KeyValueEntry(1000., 16.848));
+      genericGateAMueLookup.add(new KeyValueEntry(4., 0.16));
+      genericGateAMueLookup.add(new KeyValueEntry(100., 4.0));
     }
     
   }
 
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
+  public List<KeyValueEntry> getGenericGateOpeningLookup() {
+    return genericGateOpeningLookup;
+  }
+
+  public void setGenericGateOpeningLookup(List<KeyValueEntry> genericGateOpeningLookup) {
+    this.genericGateOpeningLookup = genericGateOpeningLookup;
+  }
+
   @Override
   public double getGateOpening(double time) {
-    return getAreaTimesDischargeCoefficient(time);
+    return  Utils.linearInterpolate(genericGateOpeningLookup, time);
   }
 
   @XmlElementWrapper
@@ -69,7 +84,7 @@ public class GenericGateFillingType extends AbstractGateFillingType {
 
   @Override
   public double getAreaTimesDischargeCoefficient(double time) {
-    return Utils.linearInterpolate(genericGateAMueLookup, time);
+    return Utils.linearInterpolate(genericGateAMueLookup, getGateOpening(time));
   }
 
   @Override
