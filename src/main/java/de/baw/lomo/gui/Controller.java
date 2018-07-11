@@ -206,8 +206,8 @@ public class Controller implements Initializable {
         });
     
     SHOW_PROP_CHARTS.bind(menuShowPropCharts.selectedProperty());
-
-//    initConsole();    
+    // workaround for sorting of categories:
+    propList.setSkin(new PropertySheetSkin(propList));   
     
   }
   
