@@ -22,17 +22,17 @@
 
   <xs:element name="fillingType" type="fillingType"/>
 
-  <xs:element name="genericSluiceGateFillingType" type="genericSluiceGateFillingType"/>
+  <xs:element name="genericGateFillingType" type="genericGateFillingType"/>
 
   <xs:element name="keyValueEntry" type="keyValueEntry"/>
 
   <xs:element name="prescribedInflowFillingType" type="prescribedInflowFillingType"/>
 
-  <xs:element name="rectangularSluiceGateFillingType" type="rectangularSluiceGateFillingType"/>
-
   <xs:element name="segmentGateFillingType" type="segmentGateFillingType"/>
 
   <xs:element name="segmentGateVelocityFillingType" type="segmentGateVelocityFillingType"/>
+
+  <xs:element name="sluiceGateFillingType" type="sluiceGateFillingType"/>
 
   <xs:complexType name="case">
     <xs:sequence>
@@ -45,10 +45,10 @@
       <xs:element name="downstreamWaterLevel" type="xs:double"/>
       <xs:choice>
         <xs:element ref="fillingType"/>
-        <xs:element ref="rectangularSluiceGateFillingType"/>
-        <xs:element ref="genericSluiceGateFillingType"/>
+        <xs:element ref="sluiceGateFillingType"/>
         <xs:element ref="segmentGateFillingType"/>
         <xs:element ref="segmentGateVelocityFillingType"/>
+        <xs:element ref="genericGateFillingType"/>
         <xs:element ref="prescribedInflowFillingType"/>
       </xs:choice>
       <xs:element name="numberOfNodes" type="xs:int"/>
@@ -71,7 +71,7 @@
     <xs:sequence/>
   </xs:complexType>
 
-  <xs:complexType name="rectangularSluiceGateFillingType">
+  <xs:complexType name="sluiceGateFillingType">
     <xs:complexContent>
       <xs:extension base="abstractSluiceGateFillingType">
         <xs:sequence>
@@ -82,7 +82,13 @@
               </xs:sequence>
             </xs:complexType>
           </xs:element>
-          <xs:element name="sluiceGateWidth" type="xs:double"/>
+          <xs:element name="sluiceGateWidthLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -107,7 +113,7 @@
 
   <xs:complexType name="abstractGateFillingType" abstract="true">
     <xs:complexContent>
-      <xs:extension base="gateFillingType">
+      <xs:extension base="fillingType">
         <xs:sequence>
           <xs:element name="jetCoefficientC0" type="xs:double"/>
           <xs:element name="jetCoefficientC1" type="xs:double"/>
@@ -126,36 +132,12 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="gateFillingType" abstract="true">
-    <xs:complexContent>
-      <xs:extension base="fillingType">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
   <xs:complexType name="keyValueEntry">
     <xs:simpleContent>
       <xs:extension base="xs:double">
         <xs:attribute name="key" type="xs:double" use="required"/>
       </xs:extension>
     </xs:simpleContent>
-  </xs:complexType>
-
-  <xs:complexType name="genericSluiceGateFillingType">
-    <xs:complexContent>
-      <xs:extension base="abstractSluiceGateFillingType">
-        <xs:sequence>
-          <xs:element name="sluiceGateCrossSectionLookup" minOccurs="0">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="segmentGateFillingType">
@@ -195,6 +177,22 @@
       <xs:extension base="abstractSegmentGateFillingType">
         <xs:sequence>
           <xs:element name="segmentGateVelocityLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="genericGateFillingType">
+    <xs:complexContent>
+      <xs:extension base="abstractGateFillingType">
+        <xs:sequence>
+          <xs:element name="genericGateAMueLookup" minOccurs="0">
             <xs:complexType>
               <xs:sequence>
                 <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
