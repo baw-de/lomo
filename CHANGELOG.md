@@ -1,3 +1,21 @@
+# Release 1.0-beta20
+
+## Core
+* Removed generic sluice gate.
+* Added generic gate.
+* Width of sluice gate can be defined dependent on opening height.
+* New default values.
+
+## GUI
+* It is now possible to start the GUI with a given case file name.
+* New category names.
+* Improved speed of plotting the results.
+
+## Other
+* New Case version 0.8 (WARNING: destroys backward compatibility!).
+* Fixed spelling bugs.
+
+
 # Release 1.0-beta19
 
 ## Core
