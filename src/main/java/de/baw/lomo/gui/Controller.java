@@ -130,12 +130,7 @@ public class Controller implements Initializable {
   private Model model;
   private Case data;
   private Results lastResults;
-  // private ResourceBundle resources;
-
-  private XYChart.Series<Number, Number> seriesQ;
-  private XYChart.Series<Number, Number> seriesF;
-  private XYChart.Series<Number, Number> seriesH;
-  private XYChart.Series<Number, Number> seriesO;
+  // private ResourceBundle resources;  
 
   private final double[] multiples = new double[] { 0.01, 0.1, 0.25, 1, 2, 5,
       10, 25, 50, 100, 500, 1000, 2000 };
@@ -152,22 +147,7 @@ public class Controller implements Initializable {
     bgYaxis.setLabel(Messages.getString("lblYAxisLeft")); //$NON-NLS-1$
     fgYaxis.setLabel(Messages.getString("lblYAxisRight")); //$NON-NLS-1$
 
-    seriesF = new XYChart.Series<Number, Number>();
-    seriesF.setName(Messages.getString("lblSeriesF")); //$NON-NLS-1$
-    fgChart.getData().add(seriesF);
-
-    seriesQ = new XYChart.Series<Number, Number>();
-    seriesQ.setName(Messages.getString("lblSeriesQ")); //$NON-NLS-1$
-    fgChart.getData().add(seriesQ);
-
-
-    seriesH = new XYChart.Series<Number, Number>();
-    seriesH.setName(Messages.getString("lblSeriesH")); //$NON-NLS-1$
-    bgChart.getData().add(seriesH);
-    
-    seriesO = new XYChart.Series<Number, Number>();
-    seriesO.setName(Messages.getString("lblSeriesO")); //$NON-NLS-1$
-    bgChart.getData().add(seriesO);
+    clearFigure();
 
     fgYaxis.needsLayoutProperty()
         .addListener((observable, oldValue, newValue) -> {
@@ -343,13 +323,30 @@ public class Controller implements Initializable {
 
             bgYmax = Math.max(bgYmax, Math.max(h[i],o[i] * scale));
             bgYmin = Math.min(bgYmin, Math.min(h[i],o[i] * scale));
-          }
-
-          seriesQ.setData(FXCollections.observableList(dataQ));
-          seriesF.setData(FXCollections.observableList(dataF));
-          seriesH.setData(FXCollections.observableList(dataH));
-          seriesO.setData(FXCollections.observableList(dataO));
+          }             
           
+          final XYChart.Series<Number, Number> seriesF = new XYChart.Series<>(
+              FXCollections.observableList(dataF));
+          seriesF.setName(Messages.getString("lblSeriesF")); //$NON-NLS-1$
+          fgChart.getData().set(0, seriesF);
+
+          final XYChart.Series<Number, Number> seriesQ = new XYChart.Series<>(
+              FXCollections.observableList(dataQ));
+          seriesQ.setName(Messages.getString("lblSeriesQ")); //$NON-NLS-1$
+          fgChart.getData().set(1, seriesQ);
+
+          final XYChart.Series<Number, Number> seriesH = new XYChart.Series<>(
+              FXCollections.observableList(dataH));
+          seriesH.setName(Messages.getString("lblSeriesH")); //$NON-NLS-1$
+          bgChart.getData().set(0, seriesH);
+
+          final XYChart.Series<Number, Number> seriesO = new XYChart.Series<>(
+              FXCollections.observableList(dataO));
+          seriesO.setName(Messages.getString("lblSeriesO")); //$NON-NLS-1$
+          bgChart.getData().set(1, seriesO);
+          
+          clearLegend();
+
           if (!(data.getFillingType() instanceof AbstractGateFillingType)) {
             seriesO.getData().clear();
           }
@@ -720,16 +717,26 @@ public class Controller implements Initializable {
   }
 
   private void clearFigure() {
+    
+    fgChart.getData().clear();
+    bgChart.getData().clear();
+    
+    final XYChart.Series<Number, Number> seriesF = new XYChart.Series<>();
+    seriesF.setName(Messages.getString("lblSeriesF")); //$NON-NLS-1$
+    fgChart.getData().add(seriesF);
 
-    final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>();
-    final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>();
-    final List<XYChart.Data<Number, Number>> dataI = new ArrayList<>();
-    final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>();
+    final XYChart.Series<Number, Number> seriesQ = new XYChart.Series<>();
+    seriesQ.setName(Messages.getString("lblSeriesQ")); //$NON-NLS-1$
+    fgChart.getData().add(seriesQ);
 
-    seriesH.setData(FXCollections.observableList(dataH));
-    seriesQ.setData(FXCollections.observableList(dataQ));
-    seriesF.setData(FXCollections.observableList(dataI));
-    seriesO.setData(FXCollections.observableList(dataO));
+    final XYChart.Series<Number, Number> seriesH = new XYChart.Series<>();
+    seriesH.setName(Messages.getString("lblSeriesH")); //$NON-NLS-1$
+    bgChart.getData().add(seriesH);
+
+    final XYChart.Series<Number, Number> seriesO = new XYChart.Series<>();
+    seriesO.setName(Messages.getString("lblSeriesO")); //$NON-NLS-1$
+    bgChart.getData().add(seriesO);
+
   }
   
   private void clearComparison() {
@@ -765,27 +772,12 @@ public class Controller implements Initializable {
   
   private void plotComparison(Results results) {
     
-    final Legend fgLegend = (Legend) fgChart.lookup(".chart-legend"); //$NON-NLS-1$
-    final int fgLegendSize = fgLegend.getChildren().size();
-    
-    final Legend bgLegend = (Legend) bgChart.lookup(".chart-legend"); //$NON-NLS-1$
-    final int bgLegendSize = bgLegend.getChildren().size();
-
     final double[] t = results.getTimeline();
     final double[] q = results.getDischargeOverTime();
     final double[] lf = results.getLongitudinalForceOverTime();
     final double[] h = results.getChamberWaterLevelOverTime();
     final double[] o = results.getValveOpeningOverTime();
-
-    final XYChart.Series<Number, Number> seriesFComp = new XYChart.Series<Number, Number>();
-    fgChart.getData().add(seriesFComp);
-    final XYChart.Series<Number, Number> seriesQComp = new XYChart.Series<Number, Number>();
-    fgChart.getData().add(seriesQComp);
-    final XYChart.Series<Number, Number> seriesHComp = new XYChart.Series<Number, Number>();
-    bgChart.getData().add(seriesHComp);
-    final XYChart.Series<Number, Number> seriesOComp = new XYChart.Series<Number, Number>();
-    bgChart.getData().add(seriesOComp);
-
+   
     final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(t.length);
     final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(t.length);
     final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(t.length);
@@ -816,19 +808,26 @@ public class Controller implements Initializable {
         dataO.add(new XYChart.Data<>(t[i], o[i] * scale));
       }
     }
+    
+    final XYChart.Series<Number, Number> seriesFComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataQ));
+    fgChart.getData().add(seriesFComp);
+    final XYChart.Series<Number, Number> seriesQComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataF));
+    fgChart.getData().add(seriesQComp);
+    final XYChart.Series<Number, Number> seriesHComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataH));
+    bgChart.getData().add(seriesHComp);
+    final XYChart.Series<Number, Number> seriesOComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataO));
+    bgChart.getData().add(seriesOComp);
+    
+    clearLegend();
 
-    seriesQComp.setData(FXCollections.observableList(dataQ));
-    seriesFComp.setData(FXCollections.observableList(dataF));
-    seriesHComp.setData(FXCollections.observableList(dataH));
-    seriesOComp.setData(FXCollections.observableList(dataO));
+  }
 
-   
-    fgLegend.getChildren().remove(fgLegendSize,
-        fgLegend.getChildren().size());
-
-    bgLegend.getChildren().remove(bgLegendSize,
-        bgLegend.getChildren().size());
-
+  private void clearLegend() {
+    final Legend fgLegend = (Legend) fgChart.lookup(".chart-legend"); //$NON-NLS-1$          
+    final Legend bgLegend = (Legend) bgChart.lookup(".chart-legend"); //$NON-NLS-1$
+    
+    fgLegend.getChildren().remove(2, fgLegend.getChildren().size());
+    bgLegend.getChildren().remove(2, bgLegend.getChildren().size());
   }
 
   private static Comparator<Item> propertyComparator = new Comparator<Item>() {
