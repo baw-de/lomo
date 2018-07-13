@@ -3,7 +3,7 @@
 
 	<groupId>de.baw</groupId>
 	<artifactId>lomo</artifactId>
-	<version>1.0-beta20</version>
+	<version>1.0-beta21-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>LoMo</name>
@@ -42,7 +42,7 @@
 	<scm>
 		<url>https://github.com/baw-de/lomo</url>
 		<connection>scm:git:https://github.com/baw-de/lomo.git</connection>
-	  <tag>1.0-beta20</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<issueManagement>
