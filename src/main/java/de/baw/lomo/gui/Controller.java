@@ -809,9 +809,9 @@ public class Controller implements Initializable {
       }
     }
     
-    final XYChart.Series<Number, Number> seriesFComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataQ));
+    final XYChart.Series<Number, Number> seriesFComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataF));
     fgChart.getData().add(seriesFComp);
-    final XYChart.Series<Number, Number> seriesQComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataF));
+    final XYChart.Series<Number, Number> seriesQComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataQ));
     fgChart.getData().add(seriesQComp);
     final XYChart.Series<Number, Number> seriesHComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataH));
     bgChart.getData().add(seriesHComp);
