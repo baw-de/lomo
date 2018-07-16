@@ -14,7 +14,7 @@
 				<include>README.md</include>
 				<include>CHANGELOG.md</include>
 				<include>LICENSE.txt</include>
-				<include>LICENSE-3RD-PARTY.txt</include>
+				<include>3RD-PARTY.txt</include>
 			</includes>
 		</fileSet>
 		<fileSet>
