@@ -1,3 +1,16 @@
+# Release 1.0-beta21
+
+## Core
+* Overlapping sources in prescribed inflow type are now summed up correctly.
+
+## GUI
+* Fixed a bug in the line colors of comparison data.
+
+## Other
+* Added tar.gz archive format for releases.
+* 3rd party licenses were not copied into release file.
+
+
 # Release 1.0-beta20
 
 ## Core
