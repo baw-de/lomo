@@ -16,7 +16,7 @@ direction are computed.
 ## Installation
 
 **LoMo** can be run using our [release binaries](https://github.com/baw-de/lomo/releases).
-Download the ZIP archive and execute the JAR file with a double click.
+Download the ZIP or TAR.GZ archive and execute the JAR file with a double click.
 
 **LoMo** can be build from source using [Apache Maven](https://maven.apache.org/):
 
