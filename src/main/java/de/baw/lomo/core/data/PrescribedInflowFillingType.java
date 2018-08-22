@@ -220,8 +220,8 @@ public class PrescribedInflowFillingType extends FillingType {
       }
       
       for (final int node : influencedNodes) {
-        source[0][node] = values[f] / influencedNodes.size();
-        source[1][node] = source[0][node] * momentumFactorLookup.get(f).getValue();
+        source[0][node] += values[f] / influencedNodes.size();
+        source[1][node] += source[0][node] * momentumFactorLookup.get(f).getValue();
       }
     }
     return source;
