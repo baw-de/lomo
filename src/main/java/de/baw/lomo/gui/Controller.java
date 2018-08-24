@@ -285,33 +285,33 @@ public class Controller implements Initializable {
           
           Results results = getValue();
           
-          final double[] t = results.getTimeline();
-          final double[] q = results.getDischargeOverTime();
-          final double[] lf = results.getLongitudinalForceOverTime();
-          final double[] h = results.getChamberWaterLevelOverTime();
-          final double[] o = results.getValveOpeningOverTime();
+          final double[] timeResults = results.getTimeline();
+          final double[] dischargeResults = results.getDischargeOverTime();
+          final double[] forceResults = results.getLongitudinalForceOverTime();
+          final double[] waterLevelResults = results.getChamberWaterLevelOverTime();
+          final double[] valveOpeningResults = results.getValveOpeningOverTime();
 
           final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(
-              t.length);
+              timeResults.length);
           final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(
-              t.length);
+              timeResults.length);
           final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(
-              t.length);
+              timeResults.length);
           final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(
-              t.length);
+              timeResults.length);
 
           bgYmax = Double.MIN_VALUE;
           bgYmin = Double.MAX_VALUE;
 
-          for (int i = 0; i < t.length; i++) {
+          for (int i = 0; i < timeResults.length; i++) {
 
-            if (i > 0 && t[i] == 0) {
+            if (i > 0 && timeResults[i] == 0) {
               break;
             }
 
-            dataQ.add(new XYChart.Data<>(t[i], q[i]));
-            dataF.add(new XYChart.Data<>(t[i], lf[i] / 1000.));
-            dataH.add(new XYChart.Data<>(t[i], h[i]));
+            dataQ.add(new XYChart.Data<>(timeResults[i], dischargeResults[i]));
+            dataF.add(new XYChart.Data<>(timeResults[i], forceResults[i] / 1000.));
+            dataH.add(new XYChart.Data<>(timeResults[i], waterLevelResults[i]));
             
             double scale = 1.;
             
@@ -319,10 +319,10 @@ public class Controller implements Initializable {
               scale = 10.;
             }
             
-            dataO.add(new XYChart.Data<>(t[i], o[i] * scale));
+            dataO.add(new XYChart.Data<>(timeResults[i], valveOpeningResults[i] * scale));
 
-            bgYmax = Math.max(bgYmax, Math.max(h[i],o[i] * scale));
-            bgYmin = Math.min(bgYmin, Math.min(h[i],o[i] * scale));
+            bgYmax = Math.max(bgYmax, Math.max(waterLevelResults[i],valveOpeningResults[i] * scale));
+            bgYmin = Math.min(bgYmin, Math.min(waterLevelResults[i],valveOpeningResults[i] * scale));
           }             
           
           final XYChart.Series<Number, Number> seriesF = new XYChart.Series<>(
@@ -634,9 +634,12 @@ public class Controller implements Initializable {
 
     lastUsedDir = selectedFile.getParentFile();
 
-    final Results results = IOUtils.readResultsFromFile(selectedFile);
-
-    plotComparison(results);  
+    try {
+      final Results results = IOUtils.readResultsFromFile(selectedFile);
+      plotComparison(results);  
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
   
   @FXML
@@ -772,31 +775,31 @@ public class Controller implements Initializable {
   
   private void plotComparison(Results results) {
     
-    final double[] t = results.getTimeline();
-    final double[] q = results.getDischargeOverTime();
-    final double[] lf = results.getLongitudinalForceOverTime();
-    final double[] h = results.getChamberWaterLevelOverTime();
-    final double[] o = results.getValveOpeningOverTime();
+    final double[] timeResults = results.getTimeline();
+    final double[] dischargeResults = results.getDischargeOverTime();
+    final double[] forceResults = results.getLongitudinalForceOverTime();
+    final double[] waterLevelResults = results.getChamberWaterLevelOverTime();
+    final double[] valveOpeningResults = results.getValveOpeningOverTime();
    
-    final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(t.length);
-    final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(t.length);
-    final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(t.length);
-    final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(t.length);
+    final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(timeResults.length);
+    final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(timeResults.length);
+    final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(timeResults.length);
+    final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(timeResults.length);
 
-    for (int i = 0; i < t.length; i++) {
+    for (int i = 0; i < timeResults.length; i++) {
 
-      if (i > 0 && t[i] == 0) {
+      if (i > 0 && timeResults[i] == 0) {
         break;
       }
 
-      if (i < q.length && !Double.isNaN(q[i])) {
-        dataQ.add(new XYChart.Data<>(t[i], q[i]));
+      if (i < dischargeResults.length && !Double.isNaN(dischargeResults[i])) {
+        dataQ.add(new XYChart.Data<>(timeResults[i], dischargeResults[i]));
       }
-      if (i < lf.length && !Double.isNaN(lf[i])) {
-        dataF.add(new XYChart.Data<>(t[i], lf[i] / 1000.));
+      if (i < forceResults.length && !Double.isNaN(forceResults[i])) {
+        dataF.add(new XYChart.Data<>(timeResults[i], forceResults[i] / 1000.));
       }
-      if (i < h.length && !Double.isNaN(h[i])) {
-        dataH.add(new XYChart.Data<>(t[i], h[i]));
+      if (i < waterLevelResults.length && !Double.isNaN(waterLevelResults[i])) {
+        dataH.add(new XYChart.Data<>(timeResults[i], waterLevelResults[i]));
       }
 
       double scale = 1.;
@@ -804,18 +807,22 @@ public class Controller implements Initializable {
       if (data.getFillingType() instanceof SluiceGateFillingType) {
         scale = 10.;
       }
-      if (i < o.length && !Double.isNaN(o[i])) {
-        dataO.add(new XYChart.Data<>(t[i], o[i] * scale));
+      if (i < valveOpeningResults.length && !Double.isNaN(valveOpeningResults[i])) {
+        dataO.add(new XYChart.Data<>(timeResults[i], valveOpeningResults[i] * scale));
       }
     }
     
-    final XYChart.Series<Number, Number> seriesFComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataF));
+    final XYChart.Series<Number, Number> seriesFComp = 
+        new XYChart.Series<Number, Number>(FXCollections.observableList(dataF));
     fgChart.getData().add(seriesFComp);
-    final XYChart.Series<Number, Number> seriesQComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataQ));
+    final XYChart.Series<Number, Number> seriesQComp = 
+        new XYChart.Series<Number, Number>(FXCollections.observableList(dataQ));
     fgChart.getData().add(seriesQComp);
-    final XYChart.Series<Number, Number> seriesHComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataH));
+    final XYChart.Series<Number, Number> seriesHComp = 
+        new XYChart.Series<Number, Number>(FXCollections.observableList(dataH));
     bgChart.getData().add(seriesHComp);
-    final XYChart.Series<Number, Number> seriesOComp = new XYChart.Series<Number, Number>(FXCollections.observableList(dataO));
+    final XYChart.Series<Number, Number> seriesOComp = 
+        new XYChart.Series<Number, Number>(FXCollections.observableList(dataO));
     bgChart.getData().add(seriesOComp);
     
     clearLegend();

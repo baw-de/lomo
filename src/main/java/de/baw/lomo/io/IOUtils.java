@@ -58,7 +58,7 @@ public class IOUtils {
 
     } catch (JAXBException e) {
 
-      throw new RuntimeException("XML case file is no valid.", e);
+      throw new RuntimeException(Messages.getString("xmlFileInvalid"), e); //$NON-NLS-1$
     }
   }
 
@@ -76,7 +76,7 @@ public class IOUtils {
 
     } catch (JAXBException e) {
 
-      throw new RuntimeException("There was an error when writing XML case file.", e);
+      throw new RuntimeException(Messages.getString("errorWritingXml"), e); //$NON-NLS-1$
     }
   }
   
@@ -86,12 +86,12 @@ public class IOUtils {
 
   public static void writeResultsToText(Results results, File file, String comment) {
 
-    final double[] t = results.getTimeline();
-    final double[] o = results.getValveOpeningOverTime();
-    final double[] h = results.getChamberWaterLevelOverTime();
-    final double[] q = results.getDischargeOverTime();
-    final double[] s = results.getSlopeOverTime();   
-    final double[] lf = results.getLongitudinalForceOverTime();  
+    final double[] timeResults = results.getTimeline();
+    final double[] valeOpeningResults = results.getValveOpeningOverTime();
+    final double[] waterLevelResults = results.getChamberWaterLevelOverTime();
+    final double[] dischargeResults = results.getDischargeOverTime();
+    final double[] slopeResults = results.getSlopeOverTime();   
+    final double[] forceResults = results.getLongitudinalForceOverTime();  
     
     
     DecimalFormatSymbols dSep = new DecimalFormatSymbols();
@@ -107,21 +107,21 @@ public class IOUtils {
         bw.newLine();
       }
       
-      bw.write("t[s] s[m] H[m] Q[m^3/s] I[-] Fl[N]"); //$NON-NLS-1$
+      bw.write("TIME[s] VALVE_OPENING[m,°,%] CHAMBER_WATER_LEVEL[m] INFLOW[m^3/s] SLOPE[-] LONGITUDINAL_FORCE[N]"); //$NON-NLS-1$
       bw.newLine();
 
-      for (int i = 0; i < t.length; i++) {
+      for (int i = 0; i < timeResults.length; i++) {
 
-        if (i > 0 && t[i] == 0) {
+        if (i > 0 && timeResults[i] == 0) {
           break;
         }
 
-        bw.write(df.format(t[i]) + " "); //$NON-NLS-1$
-        bw.write(df.format(o[i]) + " "); //$NON-NLS-1$
-        bw.write(df.format(h[i]) + " "); //$NON-NLS-1$
-        bw.write(df.format(q[i]) + " "); //$NON-NLS-1$
-        bw.write(df.format(s[i]) + " "); //$NON-NLS-1$
-        bw.write(df.format(lf[i]) + ""); //$NON-NLS-1$
+        bw.write(df.format(timeResults[i]) + " "); //$NON-NLS-1$
+        bw.write(df.format(valeOpeningResults[i]) + " "); //$NON-NLS-1$
+        bw.write(df.format(waterLevelResults[i]) + " "); //$NON-NLS-1$
+        bw.write(df.format(dischargeResults[i]) + " "); //$NON-NLS-1$
+        bw.write(df.format(slopeResults[i]) + " "); //$NON-NLS-1$
+        bw.write(df.format(forceResults[i]) + ""); //$NON-NLS-1$
         bw.newLine();
       }
 
@@ -129,7 +129,7 @@ public class IOUtils {
 
     } catch (IOException e) {
       
-      throw new RuntimeException("There was an error when writing results text file.", e);
+      throw new RuntimeException(Messages.getString("errorWritingResults"), e); //$NON-NLS-1$
     }
 
   }
@@ -162,30 +162,28 @@ public class IOUtils {
           break;
         }
         
-        if (lineData[0].toLowerCase().startsWith("t")) { //$NON-NLS-1$
+        if (lineData[0].toLowerCase().startsWith("time")) { //$NON-NLS-1$
           
           for (int i = 0; i < lineData.length; i++) {
             
-            switch(lineData[i].toLowerCase().charAt(0)) {
-            case 't': //$NON-NLS-1$
+            final String columnHeader = lineData[i].toLowerCase();
+
+            if (columnHeader.startsWith("time")) { //$NON-NLS-1$
               listList.add(timeList);
-              break;
-            case 's': //$NON-NLS-1$
+            } else if (columnHeader.startsWith("valve_opening")) { //$NON-NLS-1$
               listList.add(openingList);
-              break;
-            case 'h': //$NON-NLS-1$
+            } else if (columnHeader.startsWith("chamber_water_level")) { //$NON-NLS-1$
               listList.add(waterLevelList);
-              break;
-            case 'q': //$NON-NLS-1$
+            } else if (columnHeader.startsWith("inflow")) { //$NON-NLS-1$
               listList.add(dischargeList);
-              break;
-            case 'i': //$NON-NLS-1$
+            } else if (columnHeader.startsWith("slope")) { //$NON-NLS-1$
               listList.add(slopeList);
-                break;
-            case 'f': //$NON-NLS-1$
+            } else if (columnHeader.startsWith("longitudinal_force")) { //$NON-NLS-1$
               listList.add(forceList);
-              break;
+            } else {
+              throw new RuntimeException(String.format(Messages.getString("errorLoadingResults"), columnHeader)); //$NON-NLS-1$
             }
+     
           }
           
           readData = true;       
