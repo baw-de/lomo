@@ -195,7 +195,11 @@ public class IOUtils {
         if (readData) {
           
           for (int i = 0; i < lineData.length; i++) {
-            listList.get(i).add(format.parse(lineData[i]).doubleValue());
+            try {
+              listList.get(i).add(format.parse(lineData[i]).doubleValue());
+            } catch (ParseException e) {
+              listList.get(i).add(Double.NaN);
+            }
           }          
         }        
       }
@@ -203,10 +207,7 @@ public class IOUtils {
       
     } catch (final IOException e) {
       e.printStackTrace();
-    } catch (final ParseException e) {
-      e.printStackTrace();
-    }
-    
+    }     
     
     return new Results() {
       

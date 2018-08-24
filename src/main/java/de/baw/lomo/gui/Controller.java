@@ -789,13 +789,13 @@ public class Controller implements Initializable {
         break;
       }
 
-      if (i < q.length) {
+      if (i < q.length && !Double.isNaN(q[i])) {
         dataQ.add(new XYChart.Data<>(t[i], q[i]));
       }
-      if (i < lf.length) {
+      if (i < lf.length && !Double.isNaN(lf[i])) {
         dataF.add(new XYChart.Data<>(t[i], lf[i] / 1000.));
       }
-      if (i < h.length) {
+      if (i < h.length && !Double.isNaN(h[i])) {
         dataH.add(new XYChart.Data<>(t[i], h[i]));
       }
 
@@ -804,7 +804,7 @@ public class Controller implements Initializable {
       if (data.getFillingType() instanceof SluiceGateFillingType) {
         scale = 10.;
       }
-      if (i < o.length) {
+      if (i < o.length && !Double.isNaN(o[i])) {
         dataO.add(new XYChart.Data<>(t[i], o[i] * scale));
       }
     }
