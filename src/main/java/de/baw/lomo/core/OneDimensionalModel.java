@@ -74,6 +74,8 @@ public class OneDimensionalModel implements Model {
   private double[] v1, h1;
   /** Schiffsquerschnitte **/
   private double[] aShipNode, aShipCell;
+  /** Durch Schiff verdrängtes Volumen **/
+  private double shipVol;
   /** Aktuelle Schuetzoeffnungshoehe **/
   private double[] valveOpening;
   /** Zeitabhaengige Ergebnisse protokollieren **/
@@ -135,6 +137,7 @@ public class OneDimensionalModel implements Model {
     step = 0;
     time = 0.;
     chamberVol = 0.;
+    shipVol = 0;
 
     // Zeitschrittweite aus Wellengeschwindigkeit und CFL:
     dt = dx / Math.sqrt(GRAVITY * Math.max(ow,uw)) * data.getCfl();
@@ -159,6 +162,7 @@ public class OneDimensionalModel implements Model {
     // Zellwerte
     for (int i = 0; i < nx; i++) {
       aShipCell[i] = data.getShipArea(dx * (i + 0.5));
+      shipVol += data.getShipArea(dx * i) * dx;
 
       A00[i] = uw * kB - aShipCell[i];
       A0[i] = A00[i];
@@ -406,7 +410,7 @@ public class OneDimensionalModel implements Model {
     if (isVerbose) {
 
       double Qmax = 0., Imax = Double.MIN_VALUE, Imin = Double.MAX_VALUE,
-          Fmax = Double.MIN_VALUE, Fmin = Double.MAX_VALUE, shipVol = 0.,
+          Fmax = Double.MIN_VALUE, Fmin = Double.MAX_VALUE,
           dQ_dt_min = Double.MAX_VALUE, dQ_dt_max = Double.MIN_VALUE;
 
       for (int i = 0; i < step; i++) {
@@ -423,11 +427,6 @@ public class OneDimensionalModel implements Model {
             dQ_dt_max = (inflow[i] - inflow[i - 1]) / dt;
           }
         }
-      }
-
-      // Schiffsverdraengung [m^3]
-      for (int i = 0; i < nx; i++) {
-        shipVol += data.getShipArea(dx * i) * dx;
       }
 
       final StringBuffer bf = new StringBuffer();
@@ -456,8 +455,9 @@ public class OneDimensionalModel implements Model {
       bf.append(String.format(
           Messages.getString("resultMinMaxLongitudinalForceToGravityForce") //$NON-NLS-1$
               + " \n", //$NON-NLS-1$
-          Math.abs(Fmin) / shipVol / GRAVITY,
-          Math.abs(Fmax) / shipVol / GRAVITY));
+          // Ratios given in per mille, Fg=shipVol*1000*g:
+          Math.abs(Fmin) / (shipVol * GRAVITY),
+          Math.abs(Fmax) / (shipVol * GRAVITY)));
 
       bf.append(String.format(Messages.getString("resultMinMaxSlope") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
           Imin * 1000., Imax * 1000.));
