@@ -79,7 +79,7 @@ public class OneDimensionalModel implements Model {
   /** Aktuelle Schuetzoeffnungshoehe **/
   private double[] valveOpening;
   /** Zeitabhaengige Ergebnisse protokollieren **/
-  private double[] inflow, h1Mean, I, F0, F1, F2;
+  private double[] inflow, h1Mean, I, longitudinalForce;
   /** Strickler Wert **/
   private double kSt = 100; // Fest verdrahtet
   
@@ -152,9 +152,7 @@ public class OneDimensionalModel implements Model {
     inflow = new double[maxStep + 1];
     h1Mean = new double[maxStep + 1];
     I = new double[maxStep + 1];
-    F0 = new double[maxStep + 1];
-    F1 = new double[maxStep + 1];
-    F2 = new double[maxStep + 1];
+    longitudinalForce = new double[maxStep + 1];
 
     timeSeries = new double[maxStep + 1];
 
@@ -190,9 +188,7 @@ public class OneDimensionalModel implements Model {
       h1Mean[i] = uw;
       inflow[i] = 0;
       I[i] = (h1[0] - h1[nx - 2]) / (kL - dx);
-      F0[i] = 0;
-      F1[i] = 0;
-      F2[i] = 0;
+      longitudinalForce[i] = 0;
     }
   }
 
@@ -378,27 +374,10 @@ public class OneDimensionalModel implements Model {
         final double AA = aShipNode[i + 1];
         final double AB = aShipNode[i];
 
-        // Massenkraft des Schiffes:
-        F0[step] += 1000. * GRAVITY * AA * dx;
-        // Summe:
-        F1[step] += -1000. * GRAVITY * h1[i] * (AA - AB);
         // Über Flächendifferenzen*Druecke
-        F2[step] += -(h1[i] - h1[i + 1]) / dx * 1000. * GRAVITY * 0.5
+        longitudinalForce[step] += -(h1[i] - h1[i + 1]) / dx * 1000. * GRAVITY * 0.5
             * (AA + AB) * dx;
-            // F2[it] += -(h1[i] - h1[i + 1]) / dx * 1000. * 9.81 * 0.5 * (AA +
-            // AB) * dx / 1000.;// lokales
-            // Gefaelle
-            // *
-            // lokale
-            // Masse
-            // F2[it] = 1000;
-
-        // System.out.println(i*dx+" "+AA+" "+AB+" "+F[it]+" "+F2[it]);
       }
-      // System.out.println("Massenkraft: "+F0[it]/1.e6 +" MN");
-
-      // Hangabtriebskraft des Schiffes:
-      F0[step] *= -(h1[0] - h1[nx - 1]) / ((nx - 1) * dx) / 1000.;
       
     } while ((step < maxStep) && (Math.abs(h1Mean[step] - ow) > ow_uw));
 
@@ -417,8 +396,8 @@ public class OneDimensionalModel implements Model {
         Qmax = Math.max(Qmax, inflow[i]);
         Imax = Math.max(Imax, I[i]);
         Imin = Math.min(Imin, I[i]);
-        Fmax = Math.max(Fmax, F2[i]);
-        Fmin = Math.min(Fmin, F2[i]);
+        Fmax = Math.max(Fmax, longitudinalForce[i]);
+        Fmin = Math.min(Fmin, longitudinalForce[i]);
         if (i > 0) {
           if ((inflow[i] - inflow[i - 1]) / dt < dQ_dt_min) {
             dQ_dt_min = (inflow[i] - inflow[i - 1]) / dt;
@@ -499,7 +478,7 @@ public class OneDimensionalModel implements Model {
 
       @Override
       public double[] getLongitudinalForceOverTime() {
-        return F2;
+        return longitudinalForce;
       }
 
       @Override
