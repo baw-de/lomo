@@ -291,19 +291,21 @@ public class Controller implements Initializable {
           final double[] waterLevelResults = results.getChamberWaterLevelOverTime();
           final double[] valveOpeningResults = results.getValveOpeningOverTime();
 
-          final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(
-              timeResults.length);
-          final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(
-              timeResults.length);
-          final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(
-              timeResults.length);
-          final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(
-              timeResults.length);
+          final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(15000);
+          final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(15000);
+          final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(15000);
+          final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(15000);
 
           bgYmax = Double.MIN_VALUE;
           bgYmin = Double.MAX_VALUE;
+          
+          // thinning out of result values to optimize plotting speed
+          int iStepSize = Math.max(10000,timeResults.length) / 10000;
+          
+          // avoid even step size:
+          if (iStepSize % 2 == 0) iStepSize += 1;
 
-          for (int i = 0; i < timeResults.length; i++) {
+          for (int i = 0; i < timeResults.length-iStepSize; i+=iStepSize) {
 
             if (i > 0 && timeResults[i] == 0) {
               break;
@@ -781,12 +783,18 @@ public class Controller implements Initializable {
     final double[] waterLevelResults = results.getChamberWaterLevelOverTime();
     final double[] valveOpeningResults = results.getValveOpeningOverTime();
    
-    final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(timeResults.length);
-    final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(timeResults.length);
-    final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(timeResults.length);
-    final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(timeResults.length);
+    final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(15000);
+    final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(15000);
+    final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(15000);
+    final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(15000);
+    
+    // thinning out of result values to optimize plotting speed
+    int iStepSize = Math.max(10000,timeResults.length) / 10000;
+    
+    // avoid even step size:
+    if (iStepSize % 2 == 0) iStepSize += 1;
 
-    for (int i = 0; i < timeResults.length; i++) {
+    for (int i = 0; i < timeResults.length-iStepSize; i+=iStepSize) {
 
       if (i > 0 && timeResults[i] == 0) {
         break;
