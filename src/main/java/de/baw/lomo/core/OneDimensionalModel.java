@@ -137,7 +137,7 @@ public class OneDimensionalModel implements Model {
     chamberVol = 0.;
 
     // Zeitschrittweite aus Wellengeschwindigkeit und CFL:
-    dt = dx / Math.sqrt(GRAVITY * ow) * data.getCfl();
+    dt = dx / Math.sqrt(GRAVITY * Math.max(ow,uw)) * data.getCfl();
 
     // Maximale Anzahl Zeitschritte:
     maxStep = (int) (data.getTimeMax() / dt);
