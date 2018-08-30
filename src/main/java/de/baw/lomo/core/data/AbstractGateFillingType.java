@@ -109,13 +109,7 @@ public abstract class AbstractGateFillingType extends FillingType {
     // Effektive Fallhöhe: Entweder OW bis Schütz oder OW bis UW
     final double dh = Math.min(ow - h[0], maxDh);
 
-    double flowRate = aMue * Math.sqrt(2. * GRAVITY * Math.abs(dh));
-
-    // TODO: Warum eigentlich?
-    // Negative Qs abfangen
-    if (dh < 0.) {
-      flowRate = 0.;
-    }
+    double flowRate =  Math.signum(dh) * aMue * Math.sqrt(2. * GRAVITY * Math.abs(dh));  
 
     source[0][0] = flowRate;
     source[1][0] = flowRate * 1.;
