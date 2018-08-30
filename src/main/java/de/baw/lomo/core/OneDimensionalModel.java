@@ -315,16 +315,12 @@ public class OneDimensionalModel implements Model {
           // - dt*Q0[i]*0.002; // Kuenstliche Daempfung
 
           // Upwind
-          if (upwind > 0.) {
-            if (Q0[i] >= 0.) {
-              Q1[i] += -dt * upwind
-                  * (beta[i] * Q05[i] * vP - beta[i - 1] * Q05[i - 1] * vM)
-                  / dx;
-            } else {
-              Q1[i] += -dt * upwind
-                  * (beta[i] * Q05[i + 1] * vP - beta[i - 1] * Q05[i] * vM)
-                  / dx;
-            }
+          if (Q0[i] >= 0.) {
+            Q1[i] += -dt * upwind
+                * (beta[i] * Q05[i] * vP - beta[i - 1] * Q05[i - 1] * vM) / dx;
+          } else {
+            Q1[i] += -dt * upwind
+                * (beta[i] * Q05[i + 1] * vP - beta[i - 1] * Q05[i] * vM) / dx;
           }
 
           Q1[i] += momentumSource[i];
