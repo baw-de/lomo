@@ -396,7 +396,7 @@ public class OneDimensionalModel implements Model {
       // Hangabtriebskraft des Schiffes:
       F0[step] *= -(h1[0] - h1[nx - 1]) / ((nx - 1) * dx) / 1000.;
       
-    } while ((step < maxStep) && (h1Mean[step] < ow - ow_uw));
+    } while ((step < maxStep) && (Math.abs(h1Mean[step] - ow) > ow_uw));
 
     runtime = System.nanoTime() - runtime;
   }
