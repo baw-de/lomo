@@ -1,3 +1,21 @@
+# Release 1.0-beta22
+
+## Core
+* Negative flow rates are now allowed for gate filling types.
+* New time step is computed is computed from either upstream or downstream water depth, depending on which one is greater.
+* Removed check for negative upwind parameter.
+* New default values for jet parameters. 
+* Fixed missing per mille sign in ratio of ship force to gravitational force in model output.
+* Code improvements.
+
+## GUI
+* Plotting speed is heavily optimized by thinning out results data
+
+## Other
+* Better understandable column headers in exported result files (WARNING: destroys backward compatibility when loading old result files for comparison).
+* Improved handling of invalid values in result files when loaded for comparison.
+
+
 # Release 1.0-beta21
 
 ## Core
