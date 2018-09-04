@@ -29,10 +29,10 @@ public abstract class AbstractGateFillingType extends FillingType {
   
   private static final double GRAVITY = 9.81;
   
-  private double jetCoefficientC0 = 0.0;
+  private double jetCoefficientC0 = 1.0;
   private double jetCoefficientC1 = 1.0;
-  private double jetCoefficientC2 = 0.1;
-  private double jetCoefficientC3 = 2.0;
+  private double jetCoefficientC2 = 1.0;
+  private double jetCoefficientC3 = 1.0;
   protected List<KeyValueEntry> jetOutletLookup = new ArrayList<>();
   protected double maximumPressureHead;
 
