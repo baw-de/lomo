@@ -598,7 +598,7 @@ public class Controller implements Initializable {
 
     writePropertyHelpDescription(textFlow, liste);
 
-    for (FillingType fillingType : FillingTypes.LIST) {
+    for (FillingType fillingType : FillingTypes.getFillingTypes()) {
 
       final Text headingFillingType = new Text(
           String.format("\n%s\n\r", fillingType.toString())); //$NON-NLS-1$
@@ -683,7 +683,7 @@ public class Controller implements Initializable {
     
     ToggleGroup toggleGroup = new ToggleGroup();
   
-    for(FillingType fillingType : FillingTypes.LIST) {
+    for(FillingType fillingType : FillingTypes.getFillingTypes()) {
       
        RadioMenuItem item = new RadioMenuItem(fillingType.toString());
        item.setToggleGroup(toggleGroup);
