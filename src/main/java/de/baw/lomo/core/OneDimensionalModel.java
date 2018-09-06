@@ -384,12 +384,14 @@ public class OneDimensionalModel implements Model {
     
     if (isVerbose) {
 
-      double Qmax = 0., Imax = Double.MIN_VALUE, Imin = Double.MAX_VALUE,
+      double Qmax = Double.MIN_VALUE, Qmin = Double.MAX_VALUE, 
+          Imax = Double.MIN_VALUE, Imin = Double.MAX_VALUE,
           Fmax = Double.MIN_VALUE, Fmin = Double.MAX_VALUE,
           dQ_dt_min = Double.MAX_VALUE, dQ_dt_max = Double.MIN_VALUE;
 
       for (int i = 0; i < step; i++) {
         Qmax = Math.max(Qmax, inflow[i]);
+        Qmin = Math.min(Qmin, inflow[i]);
         Imax = Math.max(Imax, I[i]);
         Imin = Math.min(Imin, I[i]);
         Fmax = Math.max(Fmax, longitudinalForce[i]);
@@ -420,8 +422,8 @@ public class OneDimensionalModel implements Model {
       bf.append(String.format(Messages.getString("resultShipVolume") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
           shipVol));
 
-      bf.append(String.format(Messages.getString("resultMaxFlowRate") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-          Qmax));
+      bf.append(String.format(Messages.getString("resultMinMaxFlowRate") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+          Qmin, Qmax));
 
       bf.append(String.format(
           Messages.getString("resultMinMaxLongitudinalForces") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
