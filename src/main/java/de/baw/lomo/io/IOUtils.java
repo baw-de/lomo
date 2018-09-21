@@ -107,7 +107,7 @@ public class IOUtils {
         bw.newLine();
       }
       
-      bw.write("TIME[s] VALVE_OPENING[m,°,%] CHAMBER_WATER_LEVEL[m] INFLOW[m^3/s] SLOPE[-] LONGITUDINAL_FORCE[N]"); //$NON-NLS-1$
+      bw.write("TIME[s] VALVE_OPENING[m,°,%] CHAMBER_WATER_LEVEL[m] FLOW_RATE[m^3/s] SLOPE[-] LONGITUDINAL_FORCE[N]"); //$NON-NLS-1$
       bw.newLine();
 
       for (int i = 0; i < timeResults.length; i++) {
@@ -174,7 +174,7 @@ public class IOUtils {
               listList.add(openingList);
             } else if (columnHeader.startsWith("chamber_water_level")) { //$NON-NLS-1$
               listList.add(waterLevelList);
-            } else if (columnHeader.startsWith("inflow")) { //$NON-NLS-1$
+            } else if (columnHeader.startsWith("flow_rate")) { //$NON-NLS-1$
               listList.add(dischargeList);
             } else if (columnHeader.startsWith("slope")) { //$NON-NLS-1$
               listList.add(slopeList);
