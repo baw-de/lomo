@@ -55,6 +55,7 @@
 				</Menu>
 				<Menu mnemonicParsing="false" text="%menuHelp">
 					<items>
+					   <MenuItem mnemonicParsing="false" onAction="#processMenuOnlineHelp" text="%menuOnlineHelp" />
 					   <MenuItem mnemonicParsing="false" onAction="#processMenuParameterHelp" text="%menuParameterHelp" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem mnemonicParsing="false" onAction="#processMenuAbout" text="%menuAbout" />

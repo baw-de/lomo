@@ -53,6 +53,7 @@ import de.baw.lomo.core.data.FillingTypes;
 import de.baw.lomo.core.data.Results;
 import de.baw.lomo.core.data.SluiceGateFillingType;
 import de.baw.lomo.io.IOUtils;
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -123,6 +124,8 @@ public class Controller implements Initializable {
   @FXML
   private Text chartExportTag;
   
+  private HostServices hostServices;
+  
   private File lastUsedDir = null;
   
   public static BooleanProperty SHOW_PROP_CHARTS = new SimpleBooleanProperty(true);
@@ -191,6 +194,10 @@ public class Controller implements Initializable {
     
   }
   
+  public void setHostServices(HostServices hostServices) {
+    this.hostServices = hostServices;
+  }
+
   public void initConsole() {
 
     try {
@@ -612,6 +619,11 @@ public class Controller implements Initializable {
     pane.setContent(textFlow);
     alert.getDialogPane().setContent(pane);
     alert.showAndWait();
+  }
+  
+  @FXML
+  public void processMenuOnlineHelp(ActionEvent event) {
+    hostServices.showDocument(Messages.getString("urlOnlineHelp")); //$NON-NLS-1$
   }
   
   @FXML

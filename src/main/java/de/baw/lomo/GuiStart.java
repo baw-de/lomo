@@ -41,6 +41,7 @@ public class GuiStart extends Application {
     loader.load();  
       
     Controller c = loader.getController();  
+    c.setHostServices(getHostServices());
     Case data;
     
     try {
