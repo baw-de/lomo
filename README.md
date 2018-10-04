@@ -50,6 +50,7 @@ Proceedings of the 34th PIANC World Congress 2018, Panama. [PDF](https://coms.ev
 ## Further information
 
 * [Changelog](CHANGELOG.md)
+* [Wiki](https://github.com/baw-de/lomo/wiki)
 
 
 ## License 
