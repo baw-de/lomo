@@ -1,3 +1,23 @@
+# Release 1.0
+
+## Core
+n/a
+
+## GUI
+* Added link to online help
+* Improved descriptions
+* Added minimum flow rate to console output
+* Clean reset when selecting File>New
+
+## Other
+* Renamed column header 'inflow' to 'flow\_rate' for consistency 
+(WARNING: destroys backward compatibility when loading old result files for 
+comparison. Workaround: Manually rename column 'inflow' to 'flow_rate' in older 
+result files).
+* Brand-new wiki on github.com with information on getting started and some 
+features of LoMo. (work in progress)
+
+
 # Release 1.0-beta22
 
 ## Core
