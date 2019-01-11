@@ -1,3 +1,21 @@
+# Release 1.1-beta1
+
+## Core
+* An error in the determination of the cell midpoints was fixed. These positions
+were only used in the prescribed inflow filling type so far.
+* The prescribed inflow filling type was replaced by the new custom source 
+filling types.
+
+## GUI
+n/a
+
+## Other
+* Due to the changes in the filling type the XML case version was updated to 0.9. 
+To load XML case files from version 0.8, make sure you have not used the 
+`prescribedInflowType` element and replace the `version` attribute of the 
+`BAWLomoCase` element with 0.9 in a text editor.
+
+
 # Release 1.0
 
 ## Core
