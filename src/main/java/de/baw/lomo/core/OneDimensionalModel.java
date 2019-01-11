@@ -169,7 +169,7 @@ public class OneDimensionalModel implements Model {
 
       beta[i] = 1.;
       h1[i] = 0.;
-      positions[i] = i * dx;
+      positions[i] = dx * (i + 0.5);
     }
 
     // Knotenwerte
