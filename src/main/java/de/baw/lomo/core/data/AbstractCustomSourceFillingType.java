@@ -28,21 +28,6 @@ public abstract class AbstractCustomSourceFillingType extends FillingType {
 
   private List<CustomSource> sources = new ArrayList<>();
 
-  public AbstractCustomSourceFillingType() {
-
-    if (sources.isEmpty()) {
-      
-      for (int i=1; i < 100; i++) {
-      CustomSource c = new CustomSource();
-      c.setPosition(i);
-      c.setData(new double[] {0.0, 500.0}, new double[] {1.0, 2.0});
-      
-      sources.add(c);      
-      }
-    }
-
-  }
-
   @XmlElement(name = "source")
   public List<CustomSource> getSources() {
     return sources;
