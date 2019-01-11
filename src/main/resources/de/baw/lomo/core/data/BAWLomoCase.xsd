@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
-  Copyright (C) 2018 Bundesanstalt für Wasserbau
+  Copyright (C) 2019 Bundesanstalt für Wasserbau
   
   This file is part of LoMo.
   
@@ -20,19 +20,23 @@
 
   <xs:element name="BAWLomoCase" type="case"/>
 
+  <xs:element name="customSourceFillingType" type="customSourceFillingType"/>
+
+  <xs:element name="customSourceFromFileFillingType" type="customSourceFromFileFillingType"/>
+
   <xs:element name="fillingType" type="fillingType"/>
 
   <xs:element name="genericGateFillingType" type="genericGateFillingType"/>
 
   <xs:element name="keyValueEntry" type="keyValueEntry"/>
 
-  <xs:element name="prescribedInflowFillingType" type="prescribedInflowFillingType"/>
-
   <xs:element name="segmentGateFillingType" type="segmentGateFillingType"/>
 
   <xs:element name="segmentGateVelocityFillingType" type="segmentGateVelocityFillingType"/>
 
   <xs:element name="sluiceGateFillingType" type="sluiceGateFillingType"/>
+
+  <xs:element name="source" type="customSource"/>
 
   <xs:complexType name="case">
     <xs:sequence>
@@ -49,7 +53,8 @@
         <xs:element ref="segmentGateFillingType"/>
         <xs:element ref="segmentGateVelocityFillingType"/>
         <xs:element ref="genericGateFillingType"/>
-        <xs:element ref="prescribedInflowFillingType"/>
+        <xs:element ref="customSourceFillingType"/>
+        <xs:element ref="customSourceFromFileFillingType"/>
       </xs:choice>
       <xs:element name="numberOfNodes" type="xs:int"/>
       <xs:element name="shipAreaLookup" minOccurs="0">
@@ -211,32 +216,36 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="prescribedInflowFillingType">
+  <xs:complexType name="customSourceFillingType">
+    <xs:complexContent>
+      <xs:extension base="fillingType">
+        <xs:sequence>
+          <xs:element ref="source" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="customSource">
+    <xs:sequence>
+      <xs:element name="lengthOfInfluence" type="xs:double"/>
+      <xs:element name="momentumFactor" type="xs:double"/>
+      <xs:element name="position" type="xs:double"/>
+      <xs:element name="sourceLookup" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="customSourceFromFileFillingType">
     <xs:complexContent>
       <xs:extension base="fillingType">
         <xs:sequence>
           <xs:element name="file" type="xs:string" minOccurs="0"/>
-          <xs:element name="lengthOfInfluenceLookup" minOccurs="0">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="momentumFactorLookup" minOccurs="0">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="positionLookup" minOccurs="0">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 Bundesanstalt für Wasserbau
+ * Copyright (C) 2019 Bundesanstalt für Wasserbau
  * 
  * This file is part of LoMo.
  * 
@@ -31,7 +31,7 @@ import de.baw.lomo.utils.Utils;
 @XmlRootElement(name="BAWLomoCase")
 public class Case {
 
-  private final static String VERSION = "0.8";
+  private final static String VERSION = "0.9";
   
   private String author = "BAW";
   
