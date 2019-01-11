@@ -23,7 +23,6 @@ public final class FillingTypes {
     
     return new FillingType[] {
         new SluiceGateFillingType(), new SegmentGateVelocityFillingType(),
-        new SegmentGateFillingType(), new GenericGateFillingType(),
-        new PrescribedInflowFillingType() };
+        new SegmentGateFillingType(), new GenericGateFillingType() };
   }
 }

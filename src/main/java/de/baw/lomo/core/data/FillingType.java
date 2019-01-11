@@ -22,8 +22,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 
 @XmlRootElement(name="fillingType")
 @XmlSeeAlso({SluiceGateFillingType.class, SegmentGateFillingType.class, 
-  SegmentGateVelocityFillingType.class, GenericGateFillingType.class,
-  PrescribedInflowFillingType.class})
+  SegmentGateVelocityFillingType.class, GenericGateFillingType.class})
 public abstract class FillingType {
 
   /**
