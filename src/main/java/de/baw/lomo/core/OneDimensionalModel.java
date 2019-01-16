@@ -17,6 +17,8 @@
  ******************************************************************************/
 package de.baw.lomo.core;
 
+import java.util.Arrays;
+
 import de.baw.lomo.core.data.AbstractGateFillingType;
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.FillingType;
@@ -183,13 +185,6 @@ public class OneDimensionalModel implements Model {
       v1[i] = 0;
     }
 
-    // Ergebnisse ueber die Zeit loeschen
-    for (int i = 0; i < maxStep; i++) {
-      h1Mean[i] = uw;
-      inflow[i] = 0;
-      I[i] = (h1[0] - h1[nx - 2]) / (kL - dx);
-      longitudinalForce[i] = 0;
-    }
   }
 
   private void compute() {
@@ -456,32 +451,32 @@ public class OneDimensionalModel implements Model {
 
       @Override
       public double[] getTimeline() {
-        return timeSeries;
+        return Arrays.copyOf(timeSeries, step);
       }
 
       @Override
       public double[] getSlopeOverTime() {
-        return I;
+        return Arrays.copyOf(I, step);
       }
 
       @Override
       public double[] getDischargeOverTime() {
-        return inflow;
+        return Arrays.copyOf(inflow, step);
       }
 
       @Override
       public double[] getChamberWaterLevelOverTime() {
-        return h1Mean;
+        return Arrays.copyOf(h1Mean, step);
       }
 
       @Override
       public double[] getLongitudinalForceOverTime() {
-        return longitudinalForce;
+        return Arrays.copyOf(longitudinalForce, step);
       }
 
       @Override
       public double[] getValveOpeningOverTime() {
-        return valveOpening;
+        return Arrays.copyOf(valveOpening, step);
       }
     };
   }
