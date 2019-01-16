@@ -66,13 +66,15 @@ public class CustomSourceFromFileFillingType extends AbstractCustomSourceFilling
 
   private void readFile() {
     if (file.isEmpty()) {
-      throw new IllegalArgumentException(Messages.getString("customSourceFromFile.customSourceFromFileMissingFileError")); //$NON-NLS-1$
+      System.out.println(Messages.getString("customSourceFromFile.customSourceFromFileMissingFileError")); //$NON-NLS-1$
+      return;
     }
 
     final File f = new File(file);
 
     if (!f.isFile()) {
-      throw new IllegalArgumentException(Messages.getString("customSourceFromFile.fileDoesNotExistError") + f); //$NON-NLS-1$
+      System.out.format(Messages.getString("customSourceFromFile.fileDoesNotExistError") + "\n", f.getName()); //$NON-NLS-1$
+      return;
     }
 
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -84,8 +86,7 @@ public class CustomSourceFromFileFillingType extends AbstractCustomSourceFilling
       List<CustomSource> sources = new ArrayList<>();
 
       String line;
-
-      int headerLine = 0;
+      int lineNb = 1;
 
       while ((line = reader.readLine()) != null) {
 
@@ -93,50 +94,47 @@ public class CustomSourceFromFileFillingType extends AbstractCustomSourceFilling
             .split("\\s+"); //$NON-NLS-1$
 
         if (lineData.length == 0) {
-          break;
+          continue;
         }
 
         if (lineData[0].equals("#")) { //$NON-NLS-1$
+          
+          if (lineData.length == 4) {
 
-          if (headerLine == 0) {
-
-            for (int s = 0; s < lineData.length - 1; s++) {
+            try {
               CustomSource source = new CustomSource();
-              source.setPosition(format.parse(lineData[s + 1]).doubleValue());
-              sources.add(source);
-            }
-
-          } else if (headerLine == 1) {
-
-            for (int s = 0; s < lineData.length - 1; s++) {
-              CustomSource source = sources.get(s);
+              source.setPosition(format.parse(lineData[1]).doubleValue());
               source.setLengthOfInfluence(
-                  format.parse(lineData[s + 1]).doubleValue());
-            }
+                  format.parse(lineData[2]).doubleValue());
+              source.setMomentumFactor(format.parse(lineData[3]).doubleValue());
+              sources.add(source);
 
-          } else if (headerLine == 2) {
-
-            for (int s = 0; s < lineData.length - 1; s++) {
-              CustomSource source = sources.get(s);
-              source.setMomentumFactor(
-                  format.parse(lineData[s + 1]).doubleValue());
+            } catch (final ParseException e) {
+              System.out.format(Messages
+                  .getString("customSourceFromFile.cannotReadSourceInLineError") //$NON-NLS-1$
+                  + "\n", lineNb);//$NON-NLS-1$
+              return;
             }
 
           } else {
-            throw new RuntimeException(
-                Messages.getString("customSourceFromFile.tooManyHeaderLinesError")); //$NON-NLS-1$
+            System.out.format(
+                Messages.getString("customSourceFromFile.cannotReadSourceInLineError") //$NON-NLS-1$
+                    + "\n", lineNb);//$NON-NLS-1$                
+            return;
           }
-          headerLine++;
+
         } else {
 
           if (sources.size() == 0) {
-            throw new RuntimeException(
+            System.out.format(
                 Messages.getString("customSourceFromFile.missingHeaderLinesError")); //$NON-NLS-1$
+            return;
           }
           
           if (lineData.length != sources.size() * 2) {
-            throw new RuntimeException(
+            System.out.format(
                 Messages.getString("customSourceFromFile.missingDataColumnsError")); //$NON-NLS-1$
+            return;
           }
 
           for (int i = 0; i < sources.size(); i++) {
@@ -148,6 +146,8 @@ public class CustomSourceFromFileFillingType extends AbstractCustomSourceFilling
           }
           
         }
+        
+        lineNb++;
       }
 
       setSources(sources);

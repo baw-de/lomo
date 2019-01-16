@@ -78,7 +78,8 @@ public class CustomSource {
   public void setData(double[] time, double[] source) {
     
     if (time.length != source.length) {
-      throw new IllegalArgumentException(Messages.getString("customSourceArrayLengthError")); //$NON-NLS-1$
+      System.out.format(Messages.getString("customSourceArrayLengthError")); //$NON-NLS-1$
+      return;
     }
     
     sourceLookup.clear();
