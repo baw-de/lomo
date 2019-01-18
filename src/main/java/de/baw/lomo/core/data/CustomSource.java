@@ -36,6 +36,18 @@ public class CustomSource {
   private double momentumFactor = 0.0;
   
   private List<KeyValueEntry> sourceLookup = new ArrayList<>();
+  
+  public CustomSource() {
+    super();
+  }
+
+  public CustomSource(double position, double lengthOfInfluence,
+      double momentumFactor) {
+    super();
+    this.position = position;
+    this.lengthOfInfluence = lengthOfInfluence;
+    this.momentumFactor = momentumFactor;
+  }
 
   public double getPosition() {
     return position;
