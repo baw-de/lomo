@@ -139,10 +139,16 @@ public class CustomSourceFromFileFillingType extends AbstractCustomSourceFilling
 
           for (int i = 0; i < sources.size(); i++) {
 
+            try {
             sources.get(i).getSourceLookup()
                 .add(new KeyValueEntry(
                     format.parse(lineData[i * 2]).doubleValue(),
                     format.parse(lineData[i * 2 + 1]).doubleValue()));
+            } catch (final ParseException e) {
+              System.out.format(Messages
+                  .getString("customSourceFromFile.cannotReadDataInLineError") //$NON-NLS-1$
+                  + "\n", lineNb);//$NON-NLS-1$
+            }
           }
           
         }
@@ -153,9 +159,7 @@ public class CustomSourceFromFileFillingType extends AbstractCustomSourceFilling
       setSources(sources);
 
     } catch (final IOException e) {
-      e.printStackTrace();
-    } catch (final ParseException e) {
-      e.printStackTrace();
+      System.out.println(Messages.getString("customSourceFromFile.cannotReadFile"));
     }
   }
 }

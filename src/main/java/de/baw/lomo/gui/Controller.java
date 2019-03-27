@@ -385,7 +385,8 @@ public class Controller implements Initializable {
       task.exceptionProperty().addListener((observable, oldValue, newValue) ->  {
         if(newValue != null) {
           Exception ex = (Exception) newValue;
-          ex.printStackTrace();
+          System.out.println(String
+              .format(Messages.getString("errInComputation"), ex.getMessage())); //$NON-NLS-1$
         }
       });
       
