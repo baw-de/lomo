@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.baw</groupId>
@@ -42,8 +44,8 @@
 	<scm>
 		<url>https://github.com/baw-de/lomo</url>
 		<connection>scm:git:https://github.com/baw-de/lomo.git</connection>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<issueManagement>
 		<system>GitHub Issues</system>
@@ -51,22 +53,41 @@
 	</issueManagement>
 
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mainClass>de.baw.lomo.GuiStart</mainClass>
+		<moduleName>lomo</moduleName>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.controlsfx</groupId>
 			<artifactId>controlsfx</artifactId>
-			<version>8.40.12</version>
+			<version>11.0.0-RC2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.activation</groupId>
+					<artifactId>javax.activation-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<!-- Aus lokalem repository. Quelle. https://github.com/eclipse-ee4j/jaxb-ri/issues/1236 -->
+			<groupId>com.sun.activation</groupId>
+			<artifactId>javax.activation</artifactId>
+			<version>1.2.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-		
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -113,7 +134,93 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<release>11</release>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>de.baw.lomo.GuiStart</mainClass>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.moditect</groupId>
+				<artifactId>moditect-maven-plugin</artifactId>
+				<version>1.0.0.Beta2</version>
+				<executions>
+					<execution>
+						<id>create-runtime-image</id>
+						<phase>package</phase>
+						<goals>
+							<goal>create-runtime-image</goal>
+						</goals>
+						<configuration>
+							<modulePath>
+								<path>${project.build.directory}/modules</path>
+							</modulePath>
+							<modules>
+								<module>${moduleName}</module>
+								<!-- <module>java.desktop</module> <module>javafx.base</module> <module>javafx.controls</module> 
+									<module>javafx.fxml</module> <module>javafx.graphics</module> <module>org.controlsfx.controls</module> 
+									<module>java.xml.bind</module> -->
+							</modules>
+							<launcher>
+								<name>LoMo</name>
+								<module>lomo/de.baw.lomo.GuiStart</module>
+							</launcher>
+							<compression>2</compression>
+							<stripDebug>true</stripDebug>
+							<outputDirectory>${project.build.directory}/jlink-image</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/modules</outputDirectory>
+							<includeScope>runtime</includeScope>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<outputDirectory>
+						${project.build.directory}/modules
+					</outputDirectory>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
-	
 </project>
