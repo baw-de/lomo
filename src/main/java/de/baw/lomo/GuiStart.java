@@ -40,8 +40,16 @@ public class GuiStart extends Application {
         de.baw.lomo.gui.Messages.RESOURCE_BUNDLE);
     loader.load();  
       
-    Controller c = loader.getController();  
-    c.setHostServices(getHostServices());
+    Controller c = loader.getController(); 
+    
+    try {
+      // Workaround for ojdkbuild 1.8 (https://github.com/ojdkbuild/ojdkbuild/issues/68)
+      Class.forName("com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory");
+      c.setHostServices(getHostServices());
+    } catch (ClassNotFoundException e) {
+      c.setHostServices(null);
+    }
+    
     Case data;
     
     try {
