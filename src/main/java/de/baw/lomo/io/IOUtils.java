@@ -112,10 +112,6 @@ public class IOUtils {
 
       for (int i = 0; i < timeResults.length; i++) {
 
-        if (i > 0 && timeResults[i] == 0) {
-          break;
-        }
-
         bw.write(df.format(timeResults[i]) + " "); //$NON-NLS-1$
         bw.write(df.format(valeOpeningResults[i]) + " "); //$NON-NLS-1$
         bw.write(df.format(waterLevelResults[i]) + " "); //$NON-NLS-1$
