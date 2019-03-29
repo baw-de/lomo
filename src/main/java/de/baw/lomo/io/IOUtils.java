@@ -130,6 +130,56 @@ public class IOUtils {
 
   }
   
+  public static void writeResultsToOpenFoam(Results results, File file) {
+    writeResultsToOpenFoam(results, file, null);
+  }
+  
+  public static void writeResultsToOpenFoam(Results results, File file, String comment) {
+    
+    final double[] timeResults = results.getTimeline();
+    final double[] dischargeResults = results.getDischargeOverTime();
+    
+    DecimalFormatSymbols dSep = new DecimalFormatSymbols();
+    dSep.setDecimalSeparator('.');
+    
+    DecimalFormat df = new DecimalFormat("#.######", dSep); //$NON-NLS-1$
+
+    try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+        new FileOutputStream(file), StandardCharsets.UTF_8))) {
+      
+      if (comment != null) {
+        bw.write("// " + comment); //$NON-NLS-1$
+        bw.newLine();
+      }
+      
+      bw.write("// TIME[s] FLOW_RATE[m^3/s]"); //$NON-NLS-1$
+      bw.newLine();
+      
+      bw.write(Integer.toUnsignedString(timeResults.length));
+      bw.newLine();
+      bw.write('(');
+      bw.newLine();
+
+      for (int i = 0; i < timeResults.length; i++) {
+
+        bw.write('(');
+        bw.write(df.format(timeResults[i]) + " "); //$NON-NLS-1$
+        // We have to multiply by one as the filling flow rate will leave 
+        // the OpenFOAM domain.
+        bw.write(df.format(dischargeResults[i] * -1.)); //$NON-NLS-1$
+        bw.write(')');
+        bw.newLine();
+      }
+      bw.write(')');
+      bw.newLine();
+      bw.close();
+
+    } catch (IOException e) {
+      
+      throw new RuntimeException(Messages.getString("errorWritingResults"), e); //$NON-NLS-1$
+    }
+  }
+  
   public static Results readResultsFromFile(File file) {
     
     final List<Double> timeList = new ArrayList<>();

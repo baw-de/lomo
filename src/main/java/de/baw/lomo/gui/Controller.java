@@ -504,9 +504,12 @@ public class Controller implements Initializable {
 
     final FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle(Messages.getString("dlgTitleExportResults")); //$NON-NLS-1$
-    fileChooser.getExtensionFilters().addAll(
-        new ExtensionFilter(Messages.getString("descrDatFileFilter"), "*.dat"), //$NON-NLS-1$ //$NON-NLS-2$
-        new ExtensionFilter(Messages.getString("descrAllFileFilter"), "*.*")); //$NON-NLS-1$ //$NON-NLS-2$
+    
+    final ExtensionFilter datFileFilter = new ExtensionFilter(Messages.getString("descrDatFileFilter"), "*.dat"); //$NON-NLS-1$ //$NON-NLS-2$
+    final ExtensionFilter ofFileFilter = new ExtensionFilter(Messages.getString("descrOfFileFilter"), "*.dat"); //$NON-NLS-1$ //$NON-NLS-2$
+    final ExtensionFilter allFileFilter = new ExtensionFilter(Messages.getString("descrAllFileFilter"), "*.*"); //$NON-NLS-1$ //$NON-NLS-2$
+    
+    fileChooser.getExtensionFilters().addAll(datFileFilter, ofFileFilter, allFileFilter); 
 
     if (lastUsedDir != null) {
       fileChooser.setInitialDirectory(lastUsedDir);
@@ -520,8 +523,12 @@ public class Controller implements Initializable {
     }
     
     lastUsedDir = selectedFile.getParentFile();
-
-    IOUtils.writeResultsToText(lastResults, selectedFile, getExportTag());
+    
+    if (fileChooser.getSelectedExtensionFilter().equals(ofFileFilter)) {
+      IOUtils.writeResultsToOpenFoam(lastResults, selectedFile, getExportTag());
+    } else {
+      IOUtils.writeResultsToText(lastResults, selectedFile, getExportTag());
+    }
   }
 
   @FXML
