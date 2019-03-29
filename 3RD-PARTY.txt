@@ -1,4 +1,4 @@
-ControlsFX (http://fxexperience.com/controlsfx/): 3-Clause BSD License
+ControlsFX (https://github.com/controlsfx/controlsfx): 3-Clause BSD License
 
 /**
  * Copyright (c) 2013, 2014, ControlsFX

@@ -64,6 +64,6 @@ See [LICENSE.txt](LICENSE.txt) for details.
 **LoMo** uses the following third party libraries which are distributed under 
 their own terms. See [3RD-PARTY.txt](3RD-PARTY.txt) for details.
 
-• [ControlsFX](http://fxexperience.com/controlsfx): 3-Clause BSD License
+• [ControlsFX](https://github.com/controlsfx/controlsfx): 3-Clause BSD License
 
 
