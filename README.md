@@ -8,7 +8,8 @@ direction are computed.
 
 ## System requirements
 
-* [Java Runtime Environment 8](https://java.com) 
+* [Oracle Java Runtime Environment 8](https://java.com) 
+or [OpenJDK 1.8 from ojdkbuild project](https://github.com/ojdkbuild/ojdkbuild) (Select the JavaFX feature in the MSI installer.)
 * Java SE Development Kit 8 (optional)
 * Apache Maven 3.3+ (optional)
 

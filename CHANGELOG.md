@@ -1,3 +1,19 @@
+# Release 1.1-beta2
+
+## Core
+* Improved file format for custom sources.
+* Result arrays are now truncated to avoid empty entries.
+* New constructor for CustomSource to allow initialization of fields.
+
+## GUI
+* Improved error handling.
+
+## Other
+* LoMo can be used with OpenJDK 1.8 from ojdkbuild project as an replacement 
+for Oracle Java Runtime Environment 8. You have to select the JavaFX feature 
+in the MSI installer.
+
+
 # Release 1.1-beta1
 
 ## Core
