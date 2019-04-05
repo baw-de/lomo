@@ -43,8 +43,6 @@ import org.controlsfx.control.PropertySheet.Item;
 import org.controlsfx.property.BeanProperty;
 import org.controlsfx.property.BeanPropertyUtils;
 
-import com.sun.javafx.charts.Legend;
-
 import de.baw.lomo.core.Model;
 import de.baw.lomo.core.data.AbstractGateFillingType;
 import de.baw.lomo.core.data.Case;
@@ -83,6 +81,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -888,8 +887,8 @@ public class Controller implements Initializable {
   }
 
   private void clearLegend() {
-    final Legend fgLegend = (Legend) fgChart.lookup(".chart-legend"); //$NON-NLS-1$          
-    final Legend bgLegend = (Legend) bgChart.lookup(".chart-legend"); //$NON-NLS-1$
+    final TilePane fgLegend = (TilePane) fgChart.lookup(".chart-legend"); //$NON-NLS-1$          
+    final TilePane bgLegend = (TilePane) bgChart.lookup(".chart-legend"); //$NON-NLS-1$
     
     fgLegend.getChildren().remove(2, fgLegend.getChildren().size());
     bgLegend.getChildren().remove(2, bgLegend.getChildren().size());
