@@ -21,6 +21,7 @@ module lomo {
   requires javafx.controls;
   requires javafx.fxml;
   requires transitive javafx.graphics; 
+  requires javafx.swing;
   requires java.xml.bind;
   requires transitive org.controlsfx.controls;
   
