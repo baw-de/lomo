@@ -81,6 +81,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -539,6 +540,7 @@ public class Controller implements Initializable {
     final Alert dlg = new Alert(AlertType.INFORMATION);
     dlg.initModality(Modality.APPLICATION_MODAL);
     dlg.getDialogPane().setPrefWidth(500);
+    dlg.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
     dlg.setResizable(true);
     dlg.initOwner(rootPane.getScene().getWindow());
     dlg.setTitle(Messages.getString("dlgAbout.title")); //$NON-NLS-1$
