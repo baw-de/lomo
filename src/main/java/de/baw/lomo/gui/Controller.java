@@ -188,10 +188,7 @@ public class Controller implements Initializable {
           }
         });
     
-    SHOW_PROP_CHARTS.bind(menuShowPropCharts.selectedProperty());
-    // workaround for sorting of categories:
-    propList.setSkin(new PropertySheetSkin(propList));   
-    
+    SHOW_PROP_CHARTS.bind(menuShowPropCharts.selectedProperty());    
   }
   
   public void setHostServices(HostServices hostServices) {
@@ -744,10 +741,38 @@ public class Controller implements Initializable {
     ObservableList<Item> liste = BeanPropertyUtils.getProperties(data);
     Collections.sort(liste, propertyComparator);
     propList.getItems().setAll(liste);
-    
+
     liste = BeanPropertyUtils.getProperties(data.getFillingType());
     Collections.sort(liste, propertyComparator);
     propList.getItems().addAll(liste);
+
+    propList.categoryComparatorProperty().set(new Comparator<String>() {
+
+      @Override
+      public int compare(String o1, String o2) {
+        return getCategoryIndex(o1) - getCategoryIndex(o2);
+      }
+
+      private int getCategoryIndex(String categoryLabel) {
+
+        if (categoryLabel.equals(
+            de.baw.lomo.core.data.Messages.getString("catNameGeometry"))) { //$NON-NLS-1$
+          return 0;
+        } else if (categoryLabel.equals(
+            de.baw.lomo.core.data.Messages.getString("catNameFilling"))) { //$NON-NLS-1$
+          return 1;
+        } else if (categoryLabel.equals(
+            de.baw.lomo.core.data.Messages.getString("catNameNumerics"))) { //$NON-NLS-1$
+          return 2;
+        } else if (categoryLabel
+            .equals(de.baw.lomo.core.data.Messages.getString("catNameMisc"))) { //$NON-NLS-1$
+          return 3;
+        } else {
+          return 0;
+        }
+      }
+
+    });
   }
 
   private void clearFigure() {
