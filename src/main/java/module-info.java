@@ -16,7 +16,6 @@
  * along with LoMo.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 module lomo {
-  requires transitive java.desktop;
   requires transitive javafx.base;
   requires javafx.controls;
   requires javafx.fxml;
