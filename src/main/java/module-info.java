@@ -32,4 +32,5 @@ module lomo {
   exports de.baw.lomo.core;
   exports de.baw.lomo;
   opens de.baw.lomo.gui to javafx.fxml;
+  opens de.baw.lomo.core.data to java.xml.bind;
 }
