@@ -17,8 +17,8 @@
  ******************************************************************************/
 package de.baw.lomo.core.data;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlSeeAlso;
 
 @XmlRootElement(name="fillingType")
 @XmlSeeAlso({SluiceGateFillingType.class, SegmentGateFillingType.class, 

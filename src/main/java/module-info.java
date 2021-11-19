@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with LoMo.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-module lomo {
-  requires transitive java.desktop;
-  requires transitive javafx.base;
+module de.baw.lomo {
+  requires java.desktop;
+  requires javafx.base;
   requires javafx.controls;
   requires javafx.fxml;
-  requires transitive javafx.graphics; 
+  requires javafx.graphics;
   requires javafx.swing;
-  requires java.xml.bind;
-  requires transitive org.controlsfx.controls;
+  requires jakarta.xml.bind;
+  requires org.controlsfx.controls;
   
   exports de.baw.lomo.utils;
   exports de.baw.lomo.io;
@@ -31,6 +31,7 @@ module lomo {
   exports de.baw.lomo.core.data;
   exports de.baw.lomo.core;
   exports de.baw.lomo;
+
   opens de.baw.lomo.gui to javafx.fxml;
-  opens de.baw.lomo.core.data to java.xml.bind;
+  opens de.baw.lomo.core.data to jakarta.xml.bind;
 }
