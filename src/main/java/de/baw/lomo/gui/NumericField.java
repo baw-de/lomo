@@ -44,9 +44,7 @@ class NumericField extends TextField {
     		value = new DoubleValidator(this);
     	}
     	
-      textProperty().addListener((observable) -> {
-        value.setValue(value.toNumber(getText()));
-      });
+      textProperty().addListener((observable) -> value.setValue(value.toNumber(getText())));
         
     }
     
@@ -79,7 +77,7 @@ class NumericField extends TextField {
     }
     
     
-    private static abstract interface NumericValidator<T extends Number> extends NumberExpression {
+    private interface NumericValidator<T extends Number> extends NumberExpression {
     	void setValue(Number num);
     	T toNumber(String s);
     	
@@ -87,7 +85,7 @@ class NumericField extends TextField {
     
     static class DoubleValidator extends SimpleDoubleProperty implements NumericValidator<Double>{
     	
-    	private NumericField field;
+    	private final NumericField field;
     	
     	public DoubleValidator(NumericField field) {
     		super(field, "value", 0.0); //$NON-NLS-1$
@@ -115,18 +113,18 @@ class NumericField extends TextField {
 	    	if ( d.endsWith("f") || d.endsWith("d") || d.endsWith("F") || d.endsWith("D") ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	    		throw new NumberFormatException("There should be no alpha symbols"); //$NON-NLS-1$
 	    	}
-	    	return new Double(d);
-		};
+	    	return Double.valueOf(d);
+		}
 		
     }
  
     
     static class LongValidator extends SimpleLongProperty implements NumericValidator<Long>{
     	
-    	private NumericField field;
+    	private final NumericField field;
     	
     	public LongValidator(NumericField field) {
-    		super(field, "value", 0l); //$NON-NLS-1$
+    		super(field, "value", 0L); //$NON-NLS-1$
     		this.field = field;
 		}
     	
@@ -136,10 +134,10 @@ class NumericField extends TextField {
 
 		@Override
 		public Long toNumber(String s) {
-			if ( s == null || s.trim().isEmpty() ) return 0l;
+			if ( s == null || s.trim().isEmpty() ) return 0L;
 	    	String d = s.trim();
-	    	return new Long(d);
-		};
+	    	return Long.valueOf(d);
+		}
 		
     }    
     
