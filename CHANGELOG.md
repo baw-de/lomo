@@ -1,3 +1,17 @@
+# Release 1.1
+
+## Core
+n/a
+
+## GUI
+* Considered new URL for ControlsFX library.
+
+## Other
+* Discharge results can now be exported to BAW OpenFOAM 'timeVaryingFlowRateVelocity' 
+boundary condition file. 
+* Considered truncated result arrays in IOUtils.
+
+
 # Release 1.1-beta2
 
 ## Core
