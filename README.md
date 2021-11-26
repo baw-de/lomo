@@ -6,25 +6,22 @@ chamber. Beside the filling time, the forces acting on the ship in longitudinal
 direction are computed. 
 
 
-## System requirements
-
-* [Oracle Java Runtime Environment 8](https://java.com) 
-or [OpenJDK 1.8 from ojdkbuild project](https://github.com/ojdkbuild/ojdkbuild) (Select the JavaFX feature in the MSI installer.)
-* Java SE Development Kit 8 (optional)
-* Apache Maven 3.3+ (optional)
-
-
 ## Installation
 
-**LoMo** can be run using our [release binaries](https://github.com/baw-de/lomo/releases).
-Download the ZIP or TAR.GZ archive and execute the JAR file with a double click.
+**LoMo** can be run using our [release binaries](https://github.com/baw-de/lomo/releases). Download and extract the ZIP
+or TAR.GZ archive depending on your operating system. On Windows you can execute `bin\lomo.bat` with a double click. On
+a UN*X system execute `bin\lomo`.
 
-**LoMo** can be build from source using [Apache Maven](https://maven.apache.org/):
+To build **LoMo** from source a Java JDK 11+ (e.g. [Oracle OpenJDK](https://openjdk.java.net/)) is required. Make sure
+the environment variable`JAVA_HOME` is pointing to your JDK. **LoMo** is build and run using
+the [Gradle Build Tool](https://gradle.org/):
 
 ```
 git clone https://github.com/baw-de/lomo.git
+cd lomo
 git checkout -t <TAG>
-mvn clean package
+gradlew.bat run        # Windows
+./gradlew run          # UN*X systems
 ```
 
 
@@ -35,7 +32,7 @@ It is based on an object-oriented software design to allow simple extension of
 the software. 
 
 **LoMo** is written in the Java programming language. Developing **LoMo** using 
-the [Eclipse IDE](http://www.eclipse.org/) should work well.
+ [IntelliJ IDEA](https://www.jetbrains.com/idea/) should work well.
 
 You are welcome to submit issues or pull requests on [GitHub](https://github.com/baw-de/lomo/) 
 to support the development of **LoMo**.
@@ -61,9 +58,12 @@ and is freely available and open source, licensed under the
 [GNU General Public License 3](https://www.gnu.org/licenses/gpl.html). 
 See [LICENSE.txt](LICENSE.txt) for details.
 
-**LoMo** uses the following third party libraries which are distributed under 
+**LoMo** release binaries include the following third party libraries which are distributed under 
 their own terms. See [3RD-PARTY.txt](3RD-PARTY.txt) for details.
 
-• [ControlsFX](https://github.com/controlsfx/controlsfx): 3-Clause BSD License
-
+* [Oracle OpenJDK](https://openjdk.java.net/): GNU General Public License 2, with the Classpath Exception
+* [JavaFX](https://openjfx.io/): GNU General Public License 2, with the Classpath Exception
+* [ControlsFX](https://github.com/controlsfx/controlsfx): 3-Clause BSD License
+* [Jakarta XML Binding](https://github.com/eclipse-ee4j/jaxb-api): Eclipse Distribution License (EDL) v1.0
+* [Eclipse Implementation of JAXB](https://github.com/eclipse-ee4j/jaxb-ri): Eclipse Distribution License (EDL) v1.0
 
