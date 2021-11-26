@@ -8,9 +8,9 @@ direction are computed.
 
 ## Installation
 
-**LoMo** can be run using our [release binaries](https://github.com/baw-de/lomo/releases). Download and extract the ZIP
-or TAR.GZ archive depending on your operating system. On Windows you can execute `bin\lomo.bat` with a double click. On
-a UN*X system execute `bin\lomo`.
+**LoMo** can be run using our [released runtime images](https://github.com/baw-de/lomo/releases). Download and extract
+the ZIP or TAR.GZ archive depending on your operating system. On Windows you can execute `bin\lomo.bat` with a double
+click. On a UN*X system execute `bin\lomo`.
 
 To build **LoMo** from source a Java JDK 11+ (e.g. [Oracle OpenJDK](https://openjdk.java.net/)) is required. Make sure
 the environment variable`JAVA_HOME` is pointing to your JDK. **LoMo** is build and run using
@@ -58,7 +58,7 @@ and is freely available and open source, licensed under the
 [GNU General Public License 3](https://www.gnu.org/licenses/gpl.html). 
 See [LICENSE.txt](LICENSE.txt) for details.
 
-**LoMo** release binaries include the following third party libraries which are distributed under 
+**LoMo** runtime images include the following third party libraries which are distributed under 
 their own terms. See [3RD-PARTY.txt](3RD-PARTY.txt) for details.
 
 * [Oracle OpenJDK](https://openjdk.java.net/): GNU General Public License 2, with the Classpath Exception
