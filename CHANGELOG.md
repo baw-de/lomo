@@ -1,3 +1,18 @@
+# Release 2.0-beta1
+
+## Core
+n/a
+
+## GUI
+n/a
+
+## Other
+* Migrated to Java JDK 11+
+* Migrated to Gradle Build Tool
+* Release binaries have no more system requirements
+* Release binaries are now platform dependent
+
+
 # Release 1.1
 
 ## Core

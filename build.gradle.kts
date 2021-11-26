@@ -3,7 +3,7 @@ import java.lang.reflect.Field
 import java.lang.reflect.Method
 
 group = "de.baw"
-version = "1.1-beta3-SNAPSHOT"
+version = "2.0-beta1-SNAPSHOT"
 description = "LoMo"
 
 val releasePlatform: String? by project
