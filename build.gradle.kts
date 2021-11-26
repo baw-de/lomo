@@ -31,13 +31,11 @@ dependencies {
     implementation("org.controlsfx:controlsfx:11.1.0")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:3.0.1")
     implementation("org.glassfish.jaxb:jaxb-runtime:3.0.1")
-
 }
 
 application {
     mainModule.set("de.baw.lomo")
     mainClass.set("de.baw.lomo.GuiStart")
-//    applicationDefaultJvmArgs = listOf("--add-modules","org.glassfish.jaxb.runtime")
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_11
@@ -56,7 +54,6 @@ jlink {
     }
     addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
     addOptions("--release-info", "add:LOMO_VERSION=${project.version}")
-//    addOptions("--add-modules", "org.glassfish.jaxb.runtime")
 
     if (releasePlatform != null) {
         targetPlatform(releasePlatform) {
