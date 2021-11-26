@@ -121,8 +121,6 @@ public class IOUtils {
         bw.newLine();
       }
 
-      bw.close();
-
     } catch (IOException e) {
       
       throw new RuntimeException(Messages.getString("errorWritingResults"), e); //$NON-NLS-1$
@@ -172,7 +170,6 @@ public class IOUtils {
       }
       bw.write(')');
       bw.newLine();
-      bw.close();
 
     } catch (IOException e) {
       
@@ -181,8 +178,6 @@ public class IOUtils {
   }
 
   public static void generateCaseSchema() {
-
-    System.out.println("Generating schema file for LoMo Case XML structure.");
 
     try {
       JAXBContext jaxbContext = JAXBContext.newInstance(Case.class);
@@ -194,7 +189,7 @@ public class IOUtils {
       });
 
     } catch (JAXBException | IOException e) {
-      throw new RuntimeException("Error writing schema", e);
+      throw new RuntimeException(Messages.getString("errorWritingSchema"), e); //$NON-NLS-1$
     }
   }
   
@@ -228,9 +223,9 @@ public class IOUtils {
         
         if (lineData[0].toLowerCase().startsWith("time")) { //$NON-NLS-1$
 
-          for (int i = 0; i < lineData.length; i++) {
+          for (String lineDatum : lineData) {
 
-            final String columnHeader = lineData[i].toLowerCase();
+            final String columnHeader = lineDatum.toLowerCase();
 
             if (columnHeader.startsWith("time")) { //$NON-NLS-1$
               listList.add(timeList);

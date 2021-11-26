@@ -17,6 +17,7 @@
  */
 package de.baw.lomo.gui;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.controlsfx.control.PopOver;
@@ -63,7 +64,7 @@ public class PopOverKeyValueListPropertyEditor
       btnEditor = new Button(". . .");
       value.set((List<KeyValueEntry>) item.getValue());
     } else {
-      btnEditor = new Button("<empty>");
+      btnEditor = new Button("<empty>"); //$NON-NLS-1$
     }
     btnEditor.setAlignment(Pos.CENTER);
 
@@ -116,9 +117,9 @@ public class PopOverKeyValueListPropertyEditor
     final TableColumn<KeyValueEntry, Double> keyCol = new TableColumn<>(
         tbColKey);
     keyCol.setPrefWidth(99);
-    keyCol.setCellValueFactory(new PropertyValueFactory<>("key"));
+    keyCol.setCellValueFactory(new PropertyValueFactory<>("key")); //$NON-NLS-1$
     keyCol.setCellFactory(TextFieldTableCell
-        .<KeyValueEntry, Double> forTableColumn(new DoubleStringConverter() {
+        .forTableColumn(new DoubleStringConverter() {
 
           @Override
           public Double fromString(String value) {
@@ -143,9 +144,7 @@ public class PopOverKeyValueListPropertyEditor
       t.getTableView().getItems().get(t.getTablePosition().getRow())
           .setKey(t.getNewValue());
             
-      data.sort((KeyValueEntry o1, KeyValueEntry o2) -> {
-        return Double.compare(o1.getKey(), o2.getKey());
-      }); 
+      data.sort(Comparator.comparingDouble(KeyValueEntry::getKey));
       
       syncVisualData(data, visualData);
     });
@@ -153,9 +152,9 @@ public class PopOverKeyValueListPropertyEditor
     final TableColumn<KeyValueEntry, Double> valueCol = new TableColumn<>(
         tbColValue);
     valueCol.setPrefWidth(99);
-    valueCol.setCellValueFactory(new PropertyValueFactory<>("value"));
+    valueCol.setCellValueFactory(new PropertyValueFactory<>("value")); //$NON-NLS-1$
     valueCol.setCellFactory(TextFieldTableCell
-        .<KeyValueEntry, Double> forTableColumn(new DoubleStringConverter() {
+        .forTableColumn(new DoubleStringConverter() {
 
           @Override
           public Double fromString(String value) {
@@ -226,7 +225,7 @@ public class PopOverKeyValueListPropertyEditor
     chart.setPrefSize(table.getPrefWidth() * 1.618, vbox.getHeight());
     final XYChart.Series<Number, Number> series = new XYChart.Series<>();
     series.setData(visualData);
-    chart.setId("prop-chart");
+    chart.setId("prop-chart"); //$NON-NLS-1$
     chart.getData().add(series);
 
     chart.visibleProperty().bind(Controller.SHOW_PROP_CHARTS);

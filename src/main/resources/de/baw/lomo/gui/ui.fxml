@@ -16,116 +16,116 @@
   You should have received a copy of the GNU General Public License
   along with LoMo.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.chart.*?>
-<?import org.controlsfx.control.*?>
-<?import org.controlsfx.property.BeanProperty?>
-<?import javafx.scene.control.ProgressIndicator?>
-
+<?import javafx.scene.text.Text?>
+<?import org.controlsfx.control.PropertySheet?>
 <BorderPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.baw.lomo.gui.Controller">
 	<top>
 		<MenuBar>
-			<menus>
-				<Menu mnemonicParsing="false" text="%menuFile">
-					<items>
-						<MenuItem mnemonicParsing="false" onAction="#processMenuNew" text="%menuNew" />
-						<MenuItem mnemonicParsing="false" onAction="#processMenuFileOpen" text="%menuOpen" />
-						<MenuItem mnemonicParsing="false" onAction="#processMenuFileSave" text="%menuSave" />
-						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" onAction="#processMenuLoadComparison" text="%menuLoadComparison" />
-						<MenuItem mnemonicParsing="false" onAction="#processMenuSnapshotComparison" text="%menuSnapshotComparison" />
-						<MenuItem mnemonicParsing="false" onAction="#processMenuClearComparison" text="%menuClearComparison" />
-						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" onAction="#processMenuExportImage" text="%menuExportImage" />
-						<MenuItem mnemonicParsing="false" onAction="#processMenuExportResults" text="%menuExportResults" />
-						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" onAction="#processMenuExit" text="%menuExit" />
-					</items>
-				</Menu>
-				<Menu mnemonicParsing="false" text="%menuSettings">
-					<items>					
-						<Menu fx:id="menuFillingType" mnemonicParsing="false" text="%menuFillingType"/>
-						<SeparatorMenuItem mnemonicParsing="false" />
-						<CheckMenuItem fx:id="menuShowPropCharts" selected="true" mnemonicParsing="false" text="%menuShowPropCharts" />					
-					</items>
-				</Menu>
-				<Menu mnemonicParsing="false" text="%menuHelp">
-					<items>
-					   <MenuItem mnemonicParsing="false" onAction="#processMenuOnlineHelp" text="%menuOnlineHelp" />
-					   <MenuItem mnemonicParsing="false" onAction="#processMenuParameterHelp" text="%menuParameterHelp" />
-						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" onAction="#processMenuAbout" text="%menuAbout" />
-					</items>
-				</Menu>
-			</menus>
+			<Menu mnemonicParsing="false" text="%menuFile">
+				<MenuItem mnemonicParsing="false" onAction="#processMenuNew" text="%menuNew"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuFileOpen" text="%menuOpen"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuFileSave" text="%menuSave"/>
+				<SeparatorMenuItem mnemonicParsing="false"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuLoadComparison" text="%menuLoadComparison"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuSnapshotComparison"
+						  text="%menuSnapshotComparison"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuClearComparison"
+						  text="%menuClearComparison"/>
+				<SeparatorMenuItem mnemonicParsing="false"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuExportImage" text="%menuExportImage"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuExportResults" text="%menuExportResults"/>
+				<SeparatorMenuItem mnemonicParsing="false"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuExit" text="%menuExit"/>
+			</Menu>
+			<Menu mnemonicParsing="false" text="%menuSettings">
+				<Menu fx:id="menuFillingType" mnemonicParsing="false" text="%menuFillingType"/>
+				<SeparatorMenuItem mnemonicParsing="false"/>
+				<CheckMenuItem fx:id="menuShowPropCharts" selected="true" mnemonicParsing="false"
+							   text="%menuShowPropCharts"/>
+			</Menu>
+			<Menu mnemonicParsing="false" text="%menuHelp">
+				<MenuItem mnemonicParsing="false" onAction="#processMenuOnlineHelp" text="%menuOnlineHelp"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuParameterHelp" text="%menuParameterHelp"/>
+				<SeparatorMenuItem mnemonicParsing="false"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuAbout" text="%menuAbout"/>
+			</Menu>
 		</MenuBar>
 	</top>
 	<center>
-		<SplitPane dividerPositions="0.2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
-			<items>
-				<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity">
-					<children>
-						<VBox maxHeight="1.7976931348623157E308" maxWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-							<children>
-								<PropertySheet fx:id="propList" maxHeight="1.7976931348623157E308" mode="CATEGORY" modeSwitcherVisible="false" searchBoxVisible="false" VBox.vgrow="ALWAYS" />
-								<TilePane alignment="CENTER_RIGHT" hgap="10.0" prefColumns="3" prefRows="2" tileAlignment="BOTTOM_LEFT" vgap="8.0">
-									<children>
-									   <ProgressIndicator fx:id="progress" centerShape="true" prefHeight="25" progress="-1" visible="false"/>
-										<Button fx:id="btnCalc" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#processButtonCalc" text="%btnCalc" />
-									</children>
-									<padding>
-										<Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
-									</padding>
-								</TilePane>
-							</children>
-						</VBox>
-					</children>
-				</AnchorPane>
-				<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-					<children>
-						<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-							<children>
-								<StackPane id="plot" fx:id="plotPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
-									<children>
-										<LineChart id="bgchart" fx:id="bgChart" animated="false" createSymbols="false" legendSide="TOP">
-											<xAxis>
-												<NumberAxis fx:id="bgXaxis" animated="false" autoRanging="true" label="x1" side="BOTTOM" />
-											</xAxis>
-											<yAxis>
-												<NumberAxis fx:id="bgYaxis" animated="false" autoRanging="false" label="y1" maxWidth="60.0" prefWidth="60.0" side="LEFT" />
-											</yAxis>
-											<StackPane.margin>
-												<Insets />
-											</StackPane.margin>
-										</LineChart>
-										<LineChart id="fgchart" fx:id="fgChart" animated="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendSide="TOP" translateX="60.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
-											<xAxis>
-												<NumberAxis fx:id="fgXaxis" animated="false" autoRanging="false" label="x2" opacity="0.0" side="BOTTOM" visible="false" />
-											</xAxis>
-											<yAxis>
-												<NumberAxis fx:id="fgYaxis" animated="false" autoRanging="true" forceZeroInRange="true" label="y2" maxWidth="60.0" prefWidth="60.0" side="RIGHT" />
-											</yAxis>
-										</LineChart>
-										<Text id="chartExportTag" fx:id="chartExportTag" text="de.baw.lomo" visible="false" StackPane.alignment="BOTTOM_LEFT">
-                                 <StackPane.margin>
-                                    <Insets bottom="1.0" left="2.0" />
-                                 </StackPane.margin>
-                              </Text>
-									</children>
-									<padding>
-										<Insets right="60.0" />
-									</padding>
-								</StackPane>
-								<TextArea fx:id="console" editable="false" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
-							</children>
-						</VBox>
-					</children>
-				</AnchorPane>
-			</items>
+		<SplitPane dividerPositions="0.2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+				   BorderPane.alignment="CENTER">
+			<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity">
+				<VBox maxHeight="1.7976931348623157E308" maxWidth="-Infinity" AnchorPane.bottomAnchor="0.0"
+					  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+					<PropertySheet fx:id="propList" maxHeight="1.7976931348623157E308" mode="CATEGORY"
+								   modeSwitcherVisible="false" searchBoxVisible="false" VBox.vgrow="ALWAYS"/>
+					<TilePane alignment="CENTER_RIGHT" hgap="10.0" prefColumns="3" prefRows="2"
+							  tileAlignment="BOTTOM_LEFT" vgap="8.0">
+						<padding>
+							<Insets bottom="20.0" left="10.0" right="10.0" top="20.0"/>
+						</padding>
+						<ProgressIndicator fx:id="progress" centerShape="true" prefHeight="25" progress="-1"
+										   visible="false"/>
+						<Button fx:id="btnCalc" defaultButton="true" maxHeight="1.7976931348623157E308"
+								maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+								mnemonicParsing="false" onAction="#processButtonCalc" text="%btnCalc"/>
+					</TilePane>
+				</VBox>
+			</AnchorPane>
+			<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+				<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+					  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+					  AnchorPane.topAnchor="0.0">
+					<StackPane id="plot" fx:id="plotPane" maxHeight="1.7976931348623157E308"
+							   maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+						<padding>
+							<Insets right="60.0"/>
+						</padding>
+						<LineChart id="bgchart" fx:id="bgChart" animated="false" createSymbols="false"
+								   legendSide="TOP">
+							<xAxis>
+								<NumberAxis fx:id="bgXaxis" animated="false" autoRanging="true" label="x1"
+											side="BOTTOM"/>
+							</xAxis>
+							<yAxis>
+								<NumberAxis fx:id="bgYaxis" animated="false" autoRanging="false" label="y1"
+											maxWidth="60.0" prefWidth="60.0" side="LEFT"/>
+							</yAxis>
+							<StackPane.margin>
+								<Insets/>
+							</StackPane.margin>
+						</LineChart>
+						<LineChart id="fgchart" fx:id="fgChart" animated="false" createSymbols="false"
+								   horizontalGridLinesVisible="false" horizontalZeroLineVisible="false"
+								   legendSide="TOP" translateX="60.0" verticalGridLinesVisible="false"
+								   verticalZeroLineVisible="false">
+							<xAxis>
+								<NumberAxis fx:id="fgXaxis" animated="false" autoRanging="false" label="x2"
+											opacity="0.0" side="BOTTOM" visible="false"/>
+							</xAxis>
+							<yAxis>
+								<NumberAxis fx:id="fgYaxis" animated="false" autoRanging="true"
+											forceZeroInRange="true" label="y2" maxWidth="60.0"
+											prefWidth="60.0" side="RIGHT"/>
+							</yAxis>
+						</LineChart>
+						<Text id="chartExportTag" fx:id="chartExportTag" text="de.baw.lomo" visible="false"
+							  StackPane.alignment="BOTTOM_LEFT">
+							<StackPane.margin>
+								<Insets bottom="1.0" left="2.0"/>
+							</StackPane.margin>
+						</Text>
+					</StackPane>
+					<TextArea fx:id="console" editable="false" focusTraversable="false"
+							  maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+							  BorderPane.alignment="CENTER"/>
+				</VBox>
+			</AnchorPane>
 		</SplitPane>
 	</center>
 </BorderPane>

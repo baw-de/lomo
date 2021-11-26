@@ -19,7 +19,7 @@ package de.baw.lomo.core.data;
 
 public final class FillingTypes {
   
-  public final static FillingType[] getFillingTypes() {
+  public static FillingType[] getFillingTypes() {
     
     return new FillingType[] {
         new SluiceGateFillingType(), new SegmentGateVelocityFillingType(),

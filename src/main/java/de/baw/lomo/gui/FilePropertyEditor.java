@@ -36,7 +36,7 @@ public class FilePropertyEditor implements PropertyEditor<String> {
 
   private final Button btnEditor;
   private final PropertySheet.Item item;
-  private ObjectProperty<String> value = new SimpleObjectProperty<>();
+  private final ObjectProperty<String> value = new SimpleObjectProperty<>();
 
   public FilePropertyEditor(PropertySheet.Item item) {
     this.item = item;
@@ -47,9 +47,7 @@ public class FilePropertyEditor implements PropertyEditor<String> {
     btnEditor.setMaxWidth(177.);
     btnEditor.setAlignment(Pos.CENTER);
     btnEditor.setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
-    btnEditor.setOnAction((ActionEvent event) -> {
-      displayPopupEditor();
-    });
+    btnEditor.setOnAction((ActionEvent event) -> displayPopupEditor());
   }
 
   private void displayPopupEditor() {

@@ -28,13 +28,9 @@ import java.io.PipedOutputStream;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import javax.imageio.ImageIO;
 
@@ -199,7 +195,7 @@ public class Controller implements Initializable {
 
     try {
 
-      PrintStream out = new PrintStream(new MyOutputStream(), true, "UTF-8"); //$NON-NLS-1$
+      PrintStream out = new PrintStream(new MyOutputStream(), true, StandardCharsets.UTF_8); //$NON-NLS-1$
 
       System.setOut(out);
       System.setErr(out);
@@ -216,7 +212,7 @@ public class Controller implements Initializable {
 
     public MyOutputStream() throws IOException {
       PipedInputStream in = new PipedInputStream(out);
-      reader = new InputStreamReader(in, "UTF-8"); //$NON-NLS-1$
+      reader = new InputStreamReader(in, StandardCharsets.UTF_8); //$NON-NLS-1$
     }
 
     public void write(int i) throws IOException {
@@ -256,12 +252,8 @@ public class Controller implements Initializable {
   public void initModel(Model model, Case data) {
 
     this.model = model;
-    
-    if (data == null) {
-      this.data = new Case();
-    } else {
-      this.data = data;
-    }
+
+    this.data = Objects.requireNonNullElseGet(data, Case::new);
 
     model.setCaseData(data);
 
@@ -274,21 +266,21 @@ public class Controller implements Initializable {
 
     if (!isComputing) {      
       
-      final Task<Results> task = new Task<Results>() {
+      final Task<Results> task = new Task<>() {
 
         @Override
         protected Results call() throws Exception {
           isComputing = true;
-          
+
           return model.run();
         }
 
         @Override
         protected void succeeded() {
           super.succeeded();
-          
+
           Results results = getValue();
-          
+
           final double[] timeResults = results.getTimeline();
           final double[] dischargeResults = results.getDischargeOverTime();
           final double[] forceResults = results.getLongitudinalForceOverTime();
@@ -302,51 +294,51 @@ public class Controller implements Initializable {
 
           bgYmax = Double.MIN_VALUE;
           bgYmin = Double.MAX_VALUE;
-          
+
           // thinning out of result values to optimize plotting speed
-          int iStepSize = Math.max(10000,timeResults.length) / 10000;
-          
+          int iStepSize = Math.max(10000, timeResults.length) / 10000;
+
           // avoid even step size:
           if (iStepSize % 2 == 0) iStepSize += 1;
 
-          for (int i = 0; i < timeResults.length-iStepSize; i+=iStepSize) {
+          for (int i = 0; i < timeResults.length - iStepSize; i += iStepSize) {
 
             dataQ.add(new XYChart.Data<>(timeResults[i], dischargeResults[i]));
             dataF.add(new XYChart.Data<>(timeResults[i], forceResults[i] / 1000.));
             dataH.add(new XYChart.Data<>(timeResults[i], waterLevelResults[i]));
-            
+
             double scale = 1.;
-            
+
             if (data.getFillingType() instanceof SluiceGateFillingType) {
               scale = 10.;
             }
-            
+
             dataO.add(new XYChart.Data<>(timeResults[i], valveOpeningResults[i] * scale));
 
-            bgYmax = Math.max(bgYmax, Math.max(waterLevelResults[i],valveOpeningResults[i] * scale));
-            bgYmin = Math.min(bgYmin, Math.min(waterLevelResults[i],valveOpeningResults[i] * scale));
-          }             
-          
+            bgYmax = Math.max(bgYmax, Math.max(waterLevelResults[i], valveOpeningResults[i] * scale));
+            bgYmin = Math.min(bgYmin, Math.min(waterLevelResults[i], valveOpeningResults[i] * scale));
+          }
+
           final XYChart.Series<Number, Number> seriesF = new XYChart.Series<>(
-              FXCollections.observableList(dataF));
+                  FXCollections.observableList(dataF));
           seriesF.setName(Messages.getString("lblSeriesF")); //$NON-NLS-1$
           fgChart.getData().set(0, seriesF);
 
           final XYChart.Series<Number, Number> seriesQ = new XYChart.Series<>(
-              FXCollections.observableList(dataQ));
+                  FXCollections.observableList(dataQ));
           seriesQ.setName(Messages.getString("lblSeriesQ")); //$NON-NLS-1$
           fgChart.getData().set(1, seriesQ);
 
           final XYChart.Series<Number, Number> seriesH = new XYChart.Series<>(
-              FXCollections.observableList(dataH));
+                  FXCollections.observableList(dataH));
           seriesH.setName(Messages.getString("lblSeriesH")); //$NON-NLS-1$
           bgChart.getData().set(0, seriesH);
 
           final XYChart.Series<Number, Number> seriesO = new XYChart.Series<>(
-              FXCollections.observableList(dataO));
+                  FXCollections.observableList(dataO));
           seriesO.setName(Messages.getString("lblSeriesO")); //$NON-NLS-1$
           bgChart.getData().set(1, seriesO);
-          
+
           clearLegend();
 
           if (!(data.getFillingType() instanceof AbstractGateFillingType)) {
@@ -359,13 +351,13 @@ public class Controller implements Initializable {
 
         @Override
         protected void failed() {
-          super.failed();          
+          super.failed();
           isComputing = false;
         }
-        
+
         @Override
         protected void cancelled() {
-          super.cancelled();          
+          super.cancelled();
           isComputing = false;
         }
       };
@@ -546,7 +538,7 @@ public class Controller implements Initializable {
     dlg.setTitle(Messages.getString("dlgAbout.title")); //$NON-NLS-1$
     dlg.setHeaderText(de.baw.lomo.Messages.getString("lomo.name")); //$NON-NLS-1$
     
-    final StringBuffer aboutString = new StringBuffer();
+    final StringBuilder aboutString = new StringBuilder();
     aboutString.append(de.baw.lomo.Messages.getString("lomo.copyright")); //$NON-NLS-1$
     aboutString.append("\n"); //$NON-NLS-1$
     aboutString.append(Messages.getString("dlgAbout.web_baw")); //$NON-NLS-1$
@@ -557,7 +549,7 @@ public class Controller implements Initializable {
     aboutString.append("\n"); //$NON-NLS-1$
     dlg.getDialogPane().setContentText(aboutString.toString());
         
-    final StringBuffer licenseString = new StringBuffer();
+    final StringBuilder licenseString = new StringBuilder();
     licenseString.append(Messages.getString("dlgAbout.license_lomo")); //$NON-NLS-1$
     licenseString.append("\n\n"); //$NON-NLS-1$
     licenseString.append(Messages.getString("dlgAbout.license_3rdParty")); //$NON-NLS-1$
@@ -683,7 +675,7 @@ public class Controller implements Initializable {
 
   private void writePropertyHelpDescription(TextFlow textFlow,
       ObservableList<Item> liste) {
-    Collections.sort(liste, propertyComparator);
+    liste.sort(propertyComparator);
     for (Item i : liste) {
 
       final PropertyDescriptor p = ((BeanProperty) i).getPropertyDescriptor();
@@ -740,14 +732,14 @@ public class Controller implements Initializable {
 
   private void initPropertSheet() {
     ObservableList<Item> liste = BeanPropertyUtils.getProperties(data);
-    Collections.sort(liste, propertyComparator);
+    liste.sort(propertyComparator);
     propList.getItems().setAll(liste);
 
     liste = BeanPropertyUtils.getProperties(data.getFillingType());
-    Collections.sort(liste, propertyComparator);
+    liste.sort(propertyComparator);
     propList.getItems().addAll(liste);
 
-    propList.categoryComparatorProperty().set(new Comparator<String>() {
+    propList.categoryComparatorProperty().set(new Comparator<>() {
 
       @Override
       public int compare(String o1, String o2) {
@@ -757,16 +749,16 @@ public class Controller implements Initializable {
       private int getCategoryIndex(String categoryLabel) {
 
         if (categoryLabel.equals(
-            de.baw.lomo.core.data.Messages.getString("catNameGeometry"))) { //$NON-NLS-1$
+                de.baw.lomo.core.data.Messages.getString("catNameGeometry"))) { //$NON-NLS-1$
           return 0;
         } else if (categoryLabel.equals(
-            de.baw.lomo.core.data.Messages.getString("catNameFilling"))) { //$NON-NLS-1$
+                de.baw.lomo.core.data.Messages.getString("catNameFilling"))) { //$NON-NLS-1$
           return 1;
         } else if (categoryLabel.equals(
-            de.baw.lomo.core.data.Messages.getString("catNameNumerics"))) { //$NON-NLS-1$
+                de.baw.lomo.core.data.Messages.getString("catNameNumerics"))) { //$NON-NLS-1$
           return 2;
         } else if (categoryLabel
-            .equals(de.baw.lomo.core.data.Messages.getString("catNameMisc"))) { //$NON-NLS-1$
+                .equals(de.baw.lomo.core.data.Messages.getString("catNameMisc"))) { //$NON-NLS-1$
           return 3;
         } else {
           return 0;
@@ -806,7 +798,7 @@ public class Controller implements Initializable {
   
   private String getExportTag() {
     
-    final StringBuffer bf = new StringBuffer();
+    final StringBuilder bf = new StringBuilder();
     
     bf.append(String.format("%s, %s %s",  //$NON-NLS-1$
         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()), //$NON-NLS-1$
@@ -871,17 +863,17 @@ public class Controller implements Initializable {
       }
     }
     
-    final XYChart.Series<Number, Number> seriesFComp = 
-        new XYChart.Series<Number, Number>(FXCollections.observableList(dataF));
+    final XYChart.Series<Number, Number> seriesFComp =
+            new XYChart.Series<>(FXCollections.observableList(dataF));
     fgChart.getData().add(seriesFComp);
-    final XYChart.Series<Number, Number> seriesQComp = 
-        new XYChart.Series<Number, Number>(FXCollections.observableList(dataQ));
+    final XYChart.Series<Number, Number> seriesQComp =
+            new XYChart.Series<>(FXCollections.observableList(dataQ));
     fgChart.getData().add(seriesQComp);
-    final XYChart.Series<Number, Number> seriesHComp = 
-        new XYChart.Series<Number, Number>(FXCollections.observableList(dataH));
+    final XYChart.Series<Number, Number> seriesHComp =
+            new XYChart.Series<>(FXCollections.observableList(dataH));
     bgChart.getData().add(seriesHComp);
-    final XYChart.Series<Number, Number> seriesOComp = 
-        new XYChart.Series<Number, Number>(FXCollections.observableList(dataO));
+    final XYChart.Series<Number, Number> seriesOComp =
+            new XYChart.Series<>(FXCollections.observableList(dataO));
     bgChart.getData().add(seriesOComp);
     
     clearLegend();
@@ -896,19 +888,14 @@ public class Controller implements Initializable {
     bgLegend.getChildren().remove(2, bgLegend.getChildren().size());
   }
 
-  private static Comparator<Item> propertyComparator = new Comparator<Item>() {
+  private static Comparator<Item> propertyComparator = (o1, o2) -> {
+    final PropertyDescriptor p1 = ((BeanProperty) o1).getPropertyDescriptor();
+    final PropertyDescriptor p2 = ((BeanProperty) o2).getPropertyDescriptor();
 
-    @Override
-    public int compare(Item o1, Item o2) {
-      final PropertyDescriptor p1 = ((BeanProperty) o1).getPropertyDescriptor();
-      final PropertyDescriptor p2 = ((BeanProperty) o2).getPropertyDescriptor();
+    final int b1 = (int) p1.getValue("order"); //$NON-NLS-1$
+    final int b2 = (int) p2.getValue("order"); //$NON-NLS-1$
 
-      final int b1 = (int) p1.getValue("order"); //$NON-NLS-1$
-      final int b2 = (int) p2.getValue("order"); //$NON-NLS-1$
-
-      return Integer.compare(b1, b2);
-    }
-
+    return Integer.compare(b1, b2);
   };
 
 }

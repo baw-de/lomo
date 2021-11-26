@@ -59,12 +59,12 @@ public class NumberPropertyEditor extends AbstractPropertyEditor<Number, Numeric
 
   @Override
   public void setValue(Number value) {
-    sourceClass = (Class<? extends Number>) value.getClass();
+    sourceClass = value.getClass();
 
     String number = value.toString();
 
     if (number.contains(".")) {
-      number = number.replaceAll("\\.?0+$", "");
+      number = number.replaceAll("\\.?0+$", ""); // TODO
     }
 
     getEditor().setText(value.toString());
@@ -74,9 +74,7 @@ public class NumberPropertyEditor extends AbstractPropertyEditor<Number, Numeric
     control.focusedProperty()
         .addListener((ObservableValue<? extends Boolean> o, Boolean oldValue, Boolean newValue) -> {
           if (newValue) {
-            Platform.runLater(() -> {
-              control.selectAll();
-            });
+            Platform.runLater(control::selectAll);
           }
         });
   }
