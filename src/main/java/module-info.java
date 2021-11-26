@@ -23,6 +23,7 @@ module de.baw.lomo {
   requires javafx.graphics;
   requires javafx.swing;
   requires jakarta.xml.bind;
+  requires org.glassfish.jaxb.runtime;
   requires org.controlsfx.controls;
   
   exports de.baw.lomo.utils;

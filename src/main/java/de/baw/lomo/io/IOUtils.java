@@ -34,13 +34,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.*;
 
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.Results;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
 
 public class IOUtils {
 
@@ -179,6 +179,24 @@ public class IOUtils {
       throw new RuntimeException(Messages.getString("errorWritingResults"), e); //$NON-NLS-1$
     }
   }
+
+  public static void generateCaseSchema() {
+
+    System.out.println("Generating schema file for LoMo Case XML structure.");
+
+    try {
+      JAXBContext jaxbContext = JAXBContext.newInstance(Case.class);
+      jaxbContext.generateSchema(new SchemaOutputResolver() {
+        @Override
+        public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {
+          return new StreamResult("BAWLomoCase.xsd"); //$NON-NLS-1$
+        }
+      });
+
+    } catch (JAXBException | IOException e) {
+      throw new RuntimeException("Error writing schema", e);
+    }
+  }
   
   public static Results readResultsFromFile(File file) {
     
@@ -209,9 +227,9 @@ public class IOUtils {
         }
         
         if (lineData[0].toLowerCase().startsWith("time")) { //$NON-NLS-1$
-          
+
           for (int i = 0; i < lineData.length; i++) {
-            
+
             final String columnHeader = lineData[i].toLowerCase();
 
             if (columnHeader.startsWith("time")) { //$NON-NLS-1$
@@ -229,7 +247,7 @@ public class IOUtils {
             } else {
               throw new RuntimeException(String.format(Messages.getString("errorLoadingResults"), columnHeader)); //$NON-NLS-1$
             }
-     
+
           }
           
           readData = true;       
@@ -304,4 +322,8 @@ public class IOUtils {
 //      throw new RuntimeException("There was an error when writing XML results file.", e);
 //    }
 //  }
+
+  public static void main(String[] args) {
+    IOUtils.generateCaseSchema();
+  }
 }
