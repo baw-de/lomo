@@ -47,17 +47,15 @@ tasks.withType<JavaCompile> {
 
 jlink {
 
-    imageName.set("lomo-${project.version}")
-
     launcher {
         noConsole = true
     }
     addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
     addOptions("--release-info", "add:LOMO_VERSION=${project.version}")
 
-    if (releasePlatform != null) {
-        targetPlatform(releasePlatform) {
+    targetPlatform("${project.version}-".plus(releasePlatform ?: "default")) {
 
+        if (releasePlatform != null) {
             val jdkUrl = when (releasePlatform) {
                 "win-x64" -> "https://download.java.net/java/GA/jdk17.0.1/2a2082e5a09d4267845be086888add4f/12/GPL/openjdk-17.0.1_windows-x64_bin.zip"
                 "linux-x64" -> "https://download.java.net/java/GA/jdk17.0.1/2a2082e5a09d4267845be086888add4f/12/GPL/openjdk-17.0.1_linux-x64_bin.tar.gz"
@@ -78,12 +76,15 @@ tasks.named<org.beryx.jlink.JlinkTask>("jlink") {
         copy {
             from(layout.projectDirectory)
             include("*.md")
-            into(imageDirFromName)
+            into("$imageDir/${project.name}-${project.version}-"
+                .plus(releasePlatform ?: "default"))
         }
         copy {
             from(layout.projectDirectory)
             include("*.txt")
-            into("$imageDirFromName/legal/de.baw.lomo/")
+            into("$imageDir/${project.name}-${project.version}-"
+                .plus(releasePlatform ?: "default")
+                .plus("/legal/de.baw.lomo/"))
         }
     }
 }
