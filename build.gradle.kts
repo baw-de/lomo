@@ -48,6 +48,8 @@ jlink {
     addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
     addOptions("--release-info", "add:LOMO_VERSION=${project.version}")
 
+    imageZip.set(file("${project.buildDir}/${project.name}.zip"))
+
     targetPlatform("${project.version}-" + (releasePlatform ?: "local")) {
 
         if (releasePlatform != null && releasePlatform != "local") {
