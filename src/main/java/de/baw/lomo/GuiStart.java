@@ -60,7 +60,7 @@ public class GuiStart extends Application {
     primaryStage.setScene(scene);
     primaryStage.setTitle(Messages.getString("lomo.name"));
     primaryStage.show();
-//    c.initConsole();
+    c.initConsole();
   }
   
   public static void main(String[] args) {
