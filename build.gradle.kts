@@ -9,7 +9,6 @@ plugins {
     application
     id("org.openjfx.javafxplugin") version "0.0.10"
     id("org.beryx.jlink") version "2.24.4"
-    id("net.researchgate.release") version "2.8.1"
 }
 
 repositories {
