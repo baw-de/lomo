@@ -617,20 +617,8 @@ public class Controller implements Initializable {
   
   @FXML
   public void processMenuOnlineHelp(ActionEvent event) {
-    
-    try {
-      hostServices.showDocument(Messages.getString("urlOnlineHelp")); //$NON-NLS-1$
-      
-    } catch (NullPointerException e) {
-      // Workaround for ojdkbuild 1.8 (https://github.com/ojdkbuild/ojdkbuild/issues/68)
-      try {
-        new ProcessBuilder("rundll32", "url.dll,FileProtocolHandler", //$NON-NLS-1$ //$NON-NLS-2$
-            Messages.getString("urlOnlineHelp")).start(); //$NON-NLS-1$
-      } catch (IOException ex) {
-        System.out.format(Messages.getString("urlOnlineHelpErr"), //$NON-NLS-1$
-            Messages.getString("urlOnlineHelp")); //$NON-NLS-1$
-      }          
-    }
+
+    hostServices.showDocument(Messages.getString("urlOnlineHelp")); //$NON-NLS-1$
   }
   
   @FXML

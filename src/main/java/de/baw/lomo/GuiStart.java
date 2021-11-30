@@ -41,14 +41,7 @@ public class GuiStart extends Application {
     loader.load();  
       
     Controller c = loader.getController(); 
-    
-    try {
-      // Workaround for ojdkbuild 1.8 (https://github.com/ojdkbuild/ojdkbuild/issues/68)
-      Class.forName("com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory");
-      c.setHostServices(getHostServices());
-    } catch (ClassNotFoundException e) {
-      c.setHostServices(null);
-    }
+    c.setHostServices(getHostServices());
     
     Case data;
     
@@ -67,7 +60,7 @@ public class GuiStart extends Application {
     primaryStage.setScene(scene);
     primaryStage.setTitle(Messages.getString("lomo.name"));
     primaryStage.show();
-    c.initConsole();
+//    c.initConsole();
   }
   
   public static void main(String[] args) {
