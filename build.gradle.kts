@@ -9,6 +9,7 @@ plugins {
     application
     id("org.openjfx.javafxplugin") version "0.0.10"
     id("org.beryx.jlink") version "2.24.4"
+    id("net.nemerosa.versioning") version "2.15.1"
 }
 
 repositories {
@@ -33,11 +34,24 @@ application {
     mainClass.set("de.baw.lomo.GuiStart")
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_11
-java.targetCompatibility = JavaVersion.VERSION_11
+tasks.jar {
+    manifest {
+        attributes(
+            "LOMO_VERSION" to "${project.version}",
+            "SOURCE" to versioning.info.build + (if (versioning.info.dirty) "-dirty" else "")
+        )
+    }
+}
 
-tasks.withType<JavaCompile> {
+tasks.compileJava {
     options.encoding = "UTF-8"
+    options.release.set(11)
+}
+
+tasks.register<Copy>("jarRelease") {
+    from(tasks.jar)
+    from(configurations.runtimeClasspath)
+    into("${project.buildDir}/jars")
 }
 
 jlink {
@@ -46,7 +60,9 @@ jlink {
         noConsole = true
     }
     addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
-    addOptions("--release-info", "add:LOMO_VERSION=${project.version}")
+    addOptions("--release-info",
+        "add:LOMO_VERSION=${project.version}:OS_CLASSIFIER=${releasePlatform}"
+                + ":SOURCE=${versioning.info.build}" + (if (versioning.info.dirty) "-dirty" else ""))
 
     imageZip.set(file("${project.buildDir}/${project.name}.zip"))
 
