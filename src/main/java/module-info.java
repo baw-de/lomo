@@ -31,4 +31,14 @@ module de.baw.lomo {
 
   opens de.baw.lomo.gui to javafx.fxml;
   opens de.baw.lomo.core.data to jakarta.xml.bind;
+
+  uses de.baw.lomo.core.data.FillingType;
+
+  provides de.baw.lomo.core.data.FillingType with
+          de.baw.lomo.core.data.SluiceGateFillingType,
+          de.baw.lomo.core.data.SegmentGateFillingType,
+          de.baw.lomo.core.data.SegmentGateVelocityFillingType,
+          de.baw.lomo.core.data.GenericGateFillingType,
+          de.baw.lomo.core.data.CustomSourceFillingType,
+          de.baw.lomo.core.data.CustomSourceFromFileFillingType;
 }

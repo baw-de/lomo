@@ -43,7 +43,6 @@ import de.baw.lomo.core.Model;
 import de.baw.lomo.core.data.AbstractGateFillingType;
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.FillingType;
-import de.baw.lomo.core.data.FillingTypes;
 import de.baw.lomo.core.data.Results;
 import de.baw.lomo.core.data.SluiceGateFillingType;
 import de.baw.lomo.io.IOUtils;
@@ -601,7 +600,7 @@ public class Controller implements Initializable {
 
     writePropertyHelpDescription(textFlow, liste);
 
-    for (FillingType fillingType : FillingTypes.getFillingTypes()) {
+    for (FillingType fillingType : ServiceLoader.load(FillingType.class)) {
 
       final Text headingFillingType = new Text(
           String.format("\n%s\n\r", fillingType.toString())); //$NON-NLS-1$
@@ -695,20 +694,20 @@ public class Controller implements Initializable {
     menuFillingType.getItems().clear();
     
     ToggleGroup toggleGroup = new ToggleGroup();
-  
-    for(FillingType fillingType : FillingTypes.getFillingTypes()) {
-      
+
+    for(FillingType fillingType : ServiceLoader.load(FillingType.class)) {
+
        RadioMenuItem item = new RadioMenuItem(fillingType.toString());
        item.setToggleGroup(toggleGroup);
-      
+
       if (fillingType.getClass() == data.getFillingType().getClass()) {
         item.setUserData(data.getFillingType());
         item.setSelected(true);
       } else {
         item.setUserData(fillingType);
         item.setSelected(false);
-      }      
-            
+      }
+
       menuFillingType.getItems().add(item);
     }
     
