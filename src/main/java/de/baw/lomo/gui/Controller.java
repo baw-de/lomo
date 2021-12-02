@@ -617,8 +617,12 @@ public class Controller implements Initializable {
   
   @FXML
   public void processMenuOnlineHelp(ActionEvent event) {
-
-    hostServices.showDocument(Messages.getString("urlOnlineHelp")); //$NON-NLS-1$
+    try {
+      hostServices.showDocument(Messages.getString("urlOnlineHelp")); //$NON-NLS-1$
+    } catch (NullPointerException e) {
+      System.out.format(Messages.getString("urlOnlineHelpErr"), //$NON-NLS-1$
+              Messages.getString("urlOnlineHelp")); //$NON-NLS-1$
+    }
   }
   
   @FXML
