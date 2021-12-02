@@ -31,7 +31,7 @@ dependencies {
 
 application {
     mainModule.set("de.baw.lomo")
-    mainClass.set("de.baw.lomo.GuiStart")
+    mainClass.set("de.baw.lomo.gui.App")
 }
 
 tasks.jar {

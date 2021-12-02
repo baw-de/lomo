@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with LoMo.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.baw.lomo;
+package de.baw.lomo.gui;
 
 import java.io.File;
 
@@ -29,7 +29,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class GuiStart extends Application {   
+public class App extends Application {
   
   @Override
   public void start(Stage primaryStage) throws Exception {
@@ -58,7 +58,7 @@ public class GuiStart extends Application {
     scene.getStylesheets().add(
         Controller.class.getResource("ui.css").toExternalForm());
     primaryStage.setScene(scene);
-    primaryStage.setTitle(Messages.getString("lomo.name"));
+    primaryStage.setTitle(de.baw.lomo.Messages.getString("lomo.name"));
     primaryStage.show();
     c.initConsole();
   }

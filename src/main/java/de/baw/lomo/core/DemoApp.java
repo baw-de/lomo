@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with LoMo.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.baw.lomo;
+package de.baw.lomo.core;
 
 import java.io.File;
 
@@ -25,7 +25,7 @@ import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.Results;
 import de.baw.lomo.io.IOUtils;
 
-public class Headless {
+public class DemoApp {
 
   public static void main(String[] args) {
         
