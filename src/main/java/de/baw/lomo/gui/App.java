@@ -18,6 +18,7 @@
 package de.baw.lomo.gui;
 
 import java.io.File;
+import java.util.ResourceBundle;
 
 import de.baw.lomo.core.OneDimensionalModel;
 import de.baw.lomo.core.data.Case;
@@ -58,7 +59,7 @@ public class App extends Application {
     scene.getStylesheets().add(
         Controller.class.getResource("ui.css").toExternalForm());
     primaryStage.setScene(scene);
-    primaryStage.setTitle(de.baw.lomo.Messages.getString("lomo.name"));
+    primaryStage.setTitle(ResourceBundle.getBundle("de.baw.lomo.version").getString("lomo.name"));
     primaryStage.show();
     c.initConsole();
   }

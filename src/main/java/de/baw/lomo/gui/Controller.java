@@ -529,6 +529,8 @@ public class Controller implements Initializable {
   @FXML
   public void processMenuAbout(ActionEvent event) {
 
+    final ResourceBundle versionInfo = ResourceBundle.getBundle("de.baw.lomo.version");
+
     final Alert dlg = new Alert(AlertType.INFORMATION);
     dlg.initModality(Modality.APPLICATION_MODAL);
     dlg.getDialogPane().setPrefWidth(500);
@@ -536,14 +538,14 @@ public class Controller implements Initializable {
     dlg.setResizable(true);
     dlg.initOwner(rootPane.getScene().getWindow());
     dlg.setTitle(Messages.getString("dlgAbout.title")); //$NON-NLS-1$
-    dlg.setHeaderText(de.baw.lomo.Messages.getString("lomo.name")); //$NON-NLS-1$
+    dlg.setHeaderText(versionInfo.getString("lomo.name")); //$NON-NLS-1$
     
     final StringBuilder aboutString = new StringBuilder();
-    aboutString.append(de.baw.lomo.Messages.getString("lomo.copyright")); //$NON-NLS-1$
+    aboutString.append(versionInfo.getString("lomo.copyright")); //$NON-NLS-1$
     aboutString.append("\n"); //$NON-NLS-1$
     aboutString.append(Messages.getString("dlgAbout.web_baw")); //$NON-NLS-1$
     aboutString.append("\n\n"); //$NON-NLS-1$
-    aboutString.append(de.baw.lomo.Messages.getString("lomo.version")); //$NON-NLS-1$
+    aboutString.append(versionInfo.getString("lomo.version")); //$NON-NLS-1$
     aboutString.append("\n"); //$NON-NLS-1$
     aboutString.append(Messages.getString("dlgAbout.web_lomo")); //$NON-NLS-1$
     aboutString.append("\n"); //$NON-NLS-1$
@@ -789,13 +791,15 @@ public class Controller implements Initializable {
   }
   
   private String getExportTag() {
+
+    final ResourceBundle versionInfo = ResourceBundle.getBundle("de.baw.lomo.version");
     
     final StringBuilder bf = new StringBuilder();
     
     bf.append(String.format("%s, %s %s",  //$NON-NLS-1$
         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()), //$NON-NLS-1$
-        de.baw.lomo.Messages.getString("lomo.name"), //$NON-NLS-1$
-        de.baw.lomo.Messages.getString("lomo.version"))); //$NON-NLS-1$
+            versionInfo.getString("lomo.name"), //$NON-NLS-1$
+            versionInfo.getString("lomo.version"))); //$NON-NLS-1$
     
     if (data.getAuthor().length() > 0) {
       bf.append(": ").append(data.getAuthor()); //$NON-NLS-1$
