@@ -29,6 +29,11 @@ dependencies {
     implementation("org.glassfish.jaxb:jaxb-runtime:3.0.1")
 }
 
+tasks.compileJava {
+    options.encoding = "UTF-8"
+    options.release.set(11)
+}
+
 application {
     mainModule.set("de.baw.lomo")
     mainClass.set("de.baw.lomo.gui.App")
@@ -41,11 +46,6 @@ tasks.jar {
             "SOURCE" to versioning.info.build + (if (versioning.info.dirty) "-dirty" else "")
         )
     }
-}
-
-tasks.compileJava {
-    options.encoding = "UTF-8"
-    options.release.set(11)
 }
 
 tasks.register<Copy>("jarRelease") {
