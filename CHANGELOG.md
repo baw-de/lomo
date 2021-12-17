@@ -1,3 +1,26 @@
+# Release 2.0-beta2
+
+## Core
+* More than one filling type can be added to a case!
+* New filling type representing a saving basin.
+
+## GUI
+* New 'Edit' menu which allows to add, copy and delete filling types.
+* New dropdown in the filling type properties to select the current filling type and to change its name.
+* New assistant for designing a saving lock in 'Help' menu.
+* Added possibility to change language in 'Settings' menu.
+
+## Other
+* Added SavingLockDesigner in the utils.
+* Added possibility to deep copy data objects in the IOUtils.
+* Filling types are now loaded with ServiceLoader.
+* Filling type now have a name field.
+
+## Known bugs and flaws
+* Renaming a filling element in the GUI does not always refresh the dropdown list consistently.
+* The valve opening line in the chart is not yet optimized for multiple filling elements.
+
+
 # Release 2.0-beta1
 
 ## Core
