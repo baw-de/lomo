@@ -34,11 +34,6 @@ public abstract class AbstractGateFillingType extends FillingType {
   private double jetCoefficientC2 = 1.0;
   private double jetCoefficientC3 = 1.0;
   protected List<KeyValueEntry> jetOutletLookup = new ArrayList<>();
-  protected double maximumPressureHead;
-
-  public abstract double getGateOpening(double time);
-
-  public abstract double getAreaTimesDischargeCoefficient(double time);
 
   public double getJetCoefficientC0() {
     return jetCoefficientC0;
@@ -82,16 +77,22 @@ public abstract class AbstractGateFillingType extends FillingType {
     this.jetOutletLookup = jetOutletLookup;
   }
 
+  public abstract double getGateOpening(double time);
+
+  public abstract double getMaximumPressureHead();
+
+  public abstract double getAreaTimesDischargeCoefficient(double time);
+
   public double getJetOutlet(double gateOpening) {
     return Utils.linearInterpolate(jetOutletLookup, gateOpening);
   }
 
-  public double getMaximumPressureHead() {
-    return maximumPressureHead;
-  }
+  public double getPressureHead(double currentWaterLevel, double upstreamWaterLevel, double downstreamWaterLevel) {
 
-  public void setMaximumPressureHead(double maximumPressureHead) {
-    this.maximumPressureHead = maximumPressureHead;
+    final double maxDh = getMaximumPressureHead();
+
+    // Effektive Fallhöhe: Entweder OW bis Schütz oder OW bis UW
+    return Math.min(upstreamWaterLevel - currentWaterLevel, maxDh);
   }
 
   // ***************************************************************************
@@ -103,11 +104,7 @@ public abstract class AbstractGateFillingType extends FillingType {
     final double[][] source = new double[2][positions.length];
 
     final double aMue = getAreaTimesDischargeCoefficient(time);
-    final double ow = data.getUpstreamWaterLevel();
-    final double maxDh = getMaximumPressureHead();
-
-    // Effektive Fallhöhe: Entweder OW bis Schütz oder OW bis UW
-    final double dh = Math.min(ow - h[0], maxDh);
+    final double dh = getPressureHead(h[0], data.getUpstreamWaterLevel(), data.getDownstreamWaterLevel());
 
     double flowRate =  Math.signum(dh) * aMue * Math.sqrt(2. * GRAVITY * Math.abs(dh));  
 

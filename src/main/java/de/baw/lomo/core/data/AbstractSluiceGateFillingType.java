@@ -29,11 +29,33 @@ public abstract class AbstractSluiceGateFillingType
     extends AbstractGateFillingType {
 
   protected List<KeyValueEntry> sluiceGateDischargeCoefficientLookup = new ArrayList<>();
+  protected List<KeyValueEntry> sluiceGateHeightLookup = new ArrayList<>();
+  protected List<KeyValueEntry> sluiceGateWidthLookup = new ArrayList<>();
 
   private boolean prescribedJetOutletEnabled = false;
 
   public AbstractSluiceGateFillingType() {
     super();
+  }
+
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
+  public List<KeyValueEntry> getSluiceGateHeightLookup() {
+    return sluiceGateHeightLookup;
+  }
+
+  public void setSluiceGateHeightLookup(List<KeyValueEntry> sluiceGateHeightLookup) {
+    this.sluiceGateHeightLookup = sluiceGateHeightLookup;
+  }
+
+  @XmlElementWrapper
+  @XmlElement(name = "entry")
+  public List<KeyValueEntry> getSluiceGateWidthLookup() {
+    return sluiceGateWidthLookup;
+  }
+
+  public void setSluiceGateWidthLookup(List<KeyValueEntry> sluiceGateWidthLookup) {
+    this.sluiceGateWidthLookup = sluiceGateWidthLookup;
   }
 
   @XmlElementWrapper
@@ -47,11 +69,6 @@ public abstract class AbstractSluiceGateFillingType
     this.sluiceGateDischargeCoefficientLookup = sluiceGateDischargeCoeffcientLookup;
   }
 
-  public double getSluiceGateDischargeCoefficient(double gateOpening) {
-    return Utils.linearInterpolate(sluiceGateDischargeCoefficientLookup,
-        gateOpening);
-  }
-
   public boolean isPrescribedJetOutletEnabled() {
     return prescribedJetOutletEnabled;
   }
@@ -61,7 +78,27 @@ public abstract class AbstractSluiceGateFillingType
     this.prescribedJetOutletEnabled = prescribedJetOutletEnabled;
   }
 
-  public abstract double getSluiceGateCrossSection(double gateOpening);
+  public double getSluiceGateHeight(double time) {
+    return Utils.linearInterpolate(sluiceGateHeightLookup, time);
+  }
+
+  public double getSluiceGateWidth(double height) {
+    return Utils.linearInterpolate(sluiceGateWidthLookup, height);
+  }
+
+  @Override
+  public double getGateOpening(double time) {
+    return getSluiceGateHeight(time);
+  }
+
+  public double getSluiceGateDischargeCoefficient(double gateOpening) {
+    return Utils.linearInterpolate(sluiceGateDischargeCoefficientLookup,
+            gateOpening);
+  }
+
+  public double getSluiceGateCrossSection(double gateOpening) {
+    return Utils.linearIntegrate(sluiceGateWidthLookup, gateOpening);
+  }
 
   @Override
   public double getAreaTimesDischargeCoefficient(double time) {
@@ -76,7 +113,7 @@ public abstract class AbstractSluiceGateFillingType
   @Override
   public double getJetOutlet(double gateOpening) {
 
-    if (prescribedJetOutletEnabled) {
+    if (isPrescribedJetOutletEnabled()) {
       return super.getJetOutlet(gateOpening);
     } else {      
       return getSluiceGateCrossSection(gateOpening);

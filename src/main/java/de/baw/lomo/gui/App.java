@@ -18,11 +18,14 @@
 package de.baw.lomo.gui;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import de.baw.lomo.core.OneDimensionalModel;
 import de.baw.lomo.core.data.Case;
-import de.baw.lomo.gui.Controller;
 import de.baw.lomo.io.IOUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -35,7 +38,7 @@ public class App extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     
-//    Locale.setDefault(Locale.ENGLISH);
+    Locale.setDefault(determineLocale());
       
     FXMLLoader loader = new FXMLLoader(Controller.class.getResource("ui.fxml"), 
         de.baw.lomo.gui.Messages.RESOURCE_BUNDLE);
@@ -61,7 +64,29 @@ public class App extends Application {
     primaryStage.setScene(scene);
     primaryStage.setTitle(ResourceBundle.getBundle("de.baw.lomo.version").getString("lomo.name"));
     primaryStage.show();
-    c.initConsole();
+    c.initGUI();
+//    c.initConsole();
+  }
+
+  private Locale determineLocale() {
+
+    try {
+      Properties settings = new Properties();
+      settings.load(new FileInputStream(App.getUserSettings()));
+      String lang = settings.getProperty("lang");
+      return Locale.forLanguageTag(lang);
+    } catch (IOException e) {
+      return Locale.getDefault();
+    }
+
+  }
+
+  protected static String getVersionString() {
+    return ResourceBundle.getBundle("de.baw.lomo.version").getString("lomo.version");
+  }
+
+  protected static String getUserSettings() {
+    return System.getProperty("user.home") + File.separator + ".lomo" + File.separator + App.getVersionString() + File.separator + "settings.properties";
   }
   
   public static void main(String[] args) {

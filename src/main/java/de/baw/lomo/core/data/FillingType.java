@@ -17,14 +17,31 @@
  */
 package de.baw.lomo.core.data;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlSeeAlso;
 
 @XmlRootElement(name="fillingType")
 @XmlSeeAlso({SluiceGateFillingType.class, SegmentGateFillingType.class, 
-  SegmentGateVelocityFillingType.class, GenericGateFillingType.class, 
-  CustomSourceFillingType.class, CustomSourceFromFileFillingType.class})
+  SegmentGateVelocityFillingType.class, GenericGateFillingType.class,
+  CustomSourceFillingType.class, CustomSourceFromFileFillingType.class,
+  SavingBasinFillingType.class})
 public abstract class FillingType {
+
+  private String name;
+
+  public FillingType() {
+    name = this.toString();
+  }
+
+  @XmlAttribute
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 
   /**
    * Returns mass and momentum source at given time and positions.

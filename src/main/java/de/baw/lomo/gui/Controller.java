@@ -19,32 +19,31 @@ package de.baw.lomo.gui;
 
 import java.awt.image.BufferedImage;
 import java.beans.PropertyDescriptor;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.PrintStream;
-import java.io.Reader;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
+import de.baw.lomo.core.data.*;
+import de.baw.lomo.utils.SavingLockDesigner;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.*;
+import javafx.util.converter.DoubleStringConverter;
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.control.PropertySheet.Item;
 import org.controlsfx.property.BeanProperty;
 import org.controlsfx.property.BeanPropertyUtils;
 
 import de.baw.lomo.core.Model;
-import de.baw.lomo.core.data.AbstractGateFillingType;
-import de.baw.lomo.core.data.Case;
-import de.baw.lomo.core.data.FillingType;
-import de.baw.lomo.core.data.Results;
-import de.baw.lomo.core.data.SluiceGateFillingType;
 import de.baw.lomo.io.IOUtils;
 import javafx.application.HostServices;
 import javafx.application.Platform;
@@ -61,17 +60,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -113,6 +102,8 @@ public class Controller implements Initializable {
   @FXML
   private Menu menuFillingType;
   @FXML
+  private Menu menuLanguage;
+  @FXML
   private ProgressIndicator progress;
   @FXML
   private CheckMenuItem menuShowPropCharts;
@@ -128,13 +119,14 @@ public class Controller implements Initializable {
   private Model model;
   private Case data;
   private Results lastResults;
-  // private ResourceBundle resources;  
 
   private final double[] multiples = new double[] { 0.01, 0.1, 0.25, 1, 2, 5,
       10, 25, 50, 100, 500, 1000, 2000 };
   private double bgYmax = Double.NaN;
   private double bgYmin = Double.NaN;
   private boolean isComputing = false;
+  private FillingTypeSelection guiDataModel;
+  private int lastOpenAccordionPane;
 
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
@@ -183,7 +175,36 @@ public class Controller implements Initializable {
           }
         });
     
-    SHOW_PROP_CHARTS.bind(menuShowPropCharts.selectedProperty());    
+    SHOW_PROP_CHARTS.bind(menuShowPropCharts.selectedProperty());
+
+    propList.categoryComparatorProperty().set(new Comparator<>() {
+
+      @Override
+      public int compare(String o1, String o2) {
+        return getCategoryIndex(o1) - getCategoryIndex(o2);
+      }
+
+      private int getCategoryIndex(String categoryLabel) {
+
+        if (categoryLabel.equals(
+                de.baw.lomo.core.data.Messages.getString("catNameGeometry"))) { //$NON-NLS-1$
+          return 0;
+        } else if (categoryLabel.equals(
+                de.baw.lomo.core.data.Messages.getString("catNameFilling"))) { //$NON-NLS-1$
+          return 1;
+        } else if (categoryLabel.equals(
+                de.baw.lomo.core.data.Messages.getString("catNameNumerics"))) { //$NON-NLS-1$
+          return 2;
+        } else if (categoryLabel
+                .equals(de.baw.lomo.core.data.Messages.getString("catNameMisc"))) { //$NON-NLS-1$
+          return 3;
+        } else {
+          return 0;
+        }
+      }
+    });
+
+    initLanguageMenu();
   }
   
   public void setHostServices(HostServices hostServices) {
@@ -203,7 +224,123 @@ public class Controller implements Initializable {
       e.printStackTrace();
     } 
   }
-  
+
+  public void processMenuCopyFillingType(ActionEvent actionEvent) {
+    data.addFillingType(IOUtils.deepCopyDataObjects(guiDataModel.getFillingElement()));
+    guiDataModel.setFillingElement(data.getFillingTypes().get(data.getFillingTypes().size()-1));
+    initGUI();
+  }
+
+  public void processMenuDeleteFillingType(ActionEvent actionEvent) {
+
+    if (data.getFillingTypes().size() > 1) {
+      data.removeFillingType(guiDataModel.getFillingElement());
+      guiDataModel.setFillingElement(data.getFillingTypes().get(0));
+      initGUI();
+    }
+  }
+
+  public void processMenuLanguage(ActionEvent actionEvent) {
+  }
+
+  public void processMenuDesignSavingLock(ActionEvent actionEvent) {
+
+    final Dialog<ButtonType> dlg = new Dialog<>();
+    dlg.initModality(Modality.APPLICATION_MODAL);
+    dlg.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
+    dlg.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+    dlg.initOwner(rootPane.getScene().getWindow());
+    dlg.setTitle(Messages.getString("dlgDSL.title")); //$NON-NLS-1$
+    dlg.setHeaderText(Messages.getString("dlgDSL.header")); //$NON-NLS-1$
+    dlg.getDialogPane().getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
+
+    GridPane gridPane = new GridPane();
+    gridPane.setHgap(10.);
+    gridPane.setVgap(5.);
+
+    Label lblNbBasins = new Label(Messages.getString("dlgDSL.nbBasins"));
+    lblNbBasins.setTooltip(new Tooltip("test"));
+
+    gridPane.addColumn(0,
+            lblNbBasins,
+            new Label(Messages.getString("dlgDSL.ratioAreaBasinToAreaChamber")),
+            new Label(Messages.getString("dlgDSL.restFillingHeightBasins")),
+            new Label(Messages.getString("dlgDSL.waterDepthBasins")),
+            new Label(Messages.getString("dlgDSL.lamellaHeight")),
+            new Label(Messages.getString("dlgDSL.initialFillingHeightBasins")),
+            new Label(Messages.getString("dlgDSL.restFillingHeightChamber")),
+            new Label(Messages.getString("dlgDSL.savingRate")),
+            new Label(Messages.getString("dlgDSL.lossOfWater")));
+
+    Spinner<Integer> parNbBasins = new Spinner<>(1, 99, 1);
+    parNbBasins.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+
+    Pattern validEditingState = Pattern.compile("-?(([1-9][0-9]*)|0)?(\\.[0-9]*)?");
+    final UnaryOperator<TextFormatter.Change> filter =
+            change -> {
+              if (validEditingState.matcher(change.getControlNewText()).matches()) {
+                return change; //if change is a number
+              } else {
+                return null;
+              }
+            };
+
+    TextField parRatioAreaBasinToAreaChamber = new TextField();
+    parRatioAreaBasinToAreaChamber.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), 1.0, filter));
+    TextField parRestFillingHeightBasins = new TextField();
+    parRestFillingHeightBasins.setTextFormatter(new TextFormatter<>(new DoubleStringConverter(), 0.0, filter));
+
+    // Results
+    TextField parWaterDepthBasins = new TextField();
+    parWaterDepthBasins.setDisable(true);
+    TextField parLamellaHeight = new TextField();
+    parLamellaHeight.setDisable(true);
+    TextField parInitialFillingHeightBasins = new TextField();
+    parInitialFillingHeightBasins.setDisable(true);
+    TextField parRestFillingHeightChamber = new TextField();
+    parRestFillingHeightChamber.setDisable(true);
+    TextField parSavingRatio = new TextField();
+    parSavingRatio.setDisable(true);
+    TextField parLossOfWater = new TextField();
+    parLossOfWater.setDisable(true);
+
+    DecimalFormatSymbols dSep = new DecimalFormatSymbols();
+    dSep.setDecimalSeparator('.');
+
+    DecimalFormat df = new DecimalFormat("0.0", dSep); //$NON-NLS-1$
+
+    SavingLockDesigner lockDesigner = new SavingLockDesigner(data);
+
+    ChangeListener changeListener = (observable, oldValue, newValue) -> {
+      lockDesigner.setParameters(parNbBasins.getValue(), (double) parRatioAreaBasinToAreaChamber.getTextFormatter().getValue(),
+              (double) parRestFillingHeightBasins.getTextFormatter().getValue());
+
+      parWaterDepthBasins.setText(df.format(lockDesigner.getWaterDepthBasins()));
+      parLamellaHeight.setText(df.format(lockDesigner.getLamellaHeight()));
+      parInitialFillingHeightBasins.setText(df.format(lockDesigner.getInitialFillingHeightBasins()));
+      parRestFillingHeightChamber.setText(df.format(lockDesigner.getRestFillingHeightChamber()));
+      parSavingRatio.setText(String.valueOf(Math.round(lockDesigner.getSavingRate())));
+      parLossOfWater.setText(String.valueOf(Math.round(lockDesigner.getLossOfWater())));
+    };
+
+    parNbBasins.valueProperty().addListener(changeListener);
+    parRatioAreaBasinToAreaChamber.getTextFormatter().valueProperty().addListener(changeListener);
+    parRestFillingHeightBasins.getTextFormatter().valueProperty().addListener(changeListener);
+
+    gridPane.addColumn(1, parNbBasins, parRatioAreaBasinToAreaChamber, parRestFillingHeightBasins,
+            parWaterDepthBasins, parLamellaHeight, parInitialFillingHeightBasins,
+            parRestFillingHeightChamber, parSavingRatio, parLossOfWater);
+
+    dlg.getDialogPane().setContent(gridPane);
+
+    changeListener.changed(null, null, null);
+
+    dlg.showAndWait().filter(response -> response == ButtonType.APPLY).ifPresent(response -> {
+      lockDesigner.generateSavingBasins();
+      initGUI();
+    });
+  }
+
   public class MyOutputStream extends OutputStream {
 
     private PipedOutputStream out = new PipedOutputStream();
@@ -222,7 +359,7 @@ public class Controller implements Initializable {
       out.write(bytes, i, i1);
     }
 
-    public void flush() throws IOException {
+    public void flush() {
       Platform.runLater(() -> {
         try {
 
@@ -254,9 +391,15 @@ public class Controller implements Initializable {
 
     this.data = Objects.requireNonNullElseGet(data, Case::new);
 
-    model.setCaseData(data);
+    model.setCaseData(this.data);
 
-    initPropertSheet();
+    guiDataModel = new FillingTypeSelection();
+    guiDataModel.setFillingElement(this.data.getFillingTypes().get(0));
+
+    guiDataModel.fillingTypeProperty().addListener(
+            (observable, oldValue, newValue) -> initGUI());
+
+    initGUI();
     initFillingTypeMenu();
   }
 
@@ -268,7 +411,7 @@ public class Controller implements Initializable {
       final Task<Results> task = new Task<>() {
 
         @Override
-        protected Results call() throws Exception {
+        protected Results call() {
           isComputing = true;
 
           return model.run();
@@ -308,7 +451,8 @@ public class Controller implements Initializable {
 
             double scale = 1.;
 
-            if (data.getFillingType() instanceof SluiceGateFillingType) {
+            if (data.getFillingTypes().stream().anyMatch(ft -> ft instanceof SluiceGateFillingType
+              || ft instanceof SavingBasinFillingType)) {
               scale = 10.;
             }
 
@@ -340,7 +484,7 @@ public class Controller implements Initializable {
 
           clearLegend();
 
-          if (!(data.getFillingType() instanceof AbstractGateFillingType)) {
+          if (data.getFillingTypes().stream().noneMatch(ft -> ft instanceof AbstractGateFillingType)) {
             seriesO.getData().clear();
           }
 
@@ -384,11 +528,8 @@ public class Controller implements Initializable {
 
   @FXML
   public void processMenuNew(ActionEvent event) {
-    data = new Case();
     clearFigure();
-    initPropertSheet();
-    initFillingTypeMenu();
-    model.setCaseData(data);
+    initModel(model,null);
   }
 
   @FXML
@@ -416,9 +557,7 @@ public class Controller implements Initializable {
     try {
       data = IOUtils.readCaseFromXml(selectedFile);
       clearFigure();
-      initPropertSheet();
-      initFillingTypeMenu();
-      model.setCaseData(data);
+      initModel(model,data);
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
@@ -690,75 +829,93 @@ public class Controller implements Initializable {
   }
 
   private void initFillingTypeMenu() {
-    
+
     menuFillingType.getItems().clear();
-    
-    ToggleGroup toggleGroup = new ToggleGroup();
 
-    for(FillingType fillingType : ServiceLoader.load(FillingType.class)) {
+    for (FillingType fillingType : ServiceLoader.load(FillingType.class)) {
 
-       RadioMenuItem item = new RadioMenuItem(fillingType.toString());
-       item.setToggleGroup(toggleGroup);
+      MenuItem item = new MenuItem(fillingType.toString());
+      item.setUserData(fillingType);
 
-      if (fillingType.getClass() == data.getFillingType().getClass()) {
-        item.setUserData(data.getFillingType());
-        item.setSelected(true);
-      } else {
-        item.setUserData(fillingType);
-        item.setSelected(false);
-      }
+      item.setOnAction(event -> {
+        try {
+          FillingType newFt = (FillingType) item.getUserData().getClass().getDeclaredConstructor().newInstance();
+          data.addFillingType(newFt);
+          guiDataModel.setFillingElement(newFt);
+          initGUI();
+        } catch (InstantiationException | InvocationTargetException
+                | NoSuchMethodException | IllegalAccessException e) {
+          e.printStackTrace();
+        }
+      });
 
       menuFillingType.getItems().add(item);
     }
-    
-    toggleGroup.selectedToggleProperty()
-        .addListener((observable, oldValue, newValue) -> {
-
-          if (newValue != null) {
-            FillingType fillingType = (FillingType) newValue.getUserData();
-            data.setFillingType(fillingType);
-            initPropertSheet();
-          }
-
-        });
   }
 
-  private void initPropertSheet() {
+  private void initLanguageMenu() {
+
+    Locale[] localeList = new Locale[] {Locale.US,Locale.GERMANY};
+    ToggleGroup toggleGroup = new ToggleGroup();
+
+    for (Locale locale : localeList) {
+      RadioMenuItem item = new RadioMenuItem(locale.getDisplayLanguage());
+      item.setUserData(locale);
+      item.setToggleGroup(toggleGroup);
+      if (locale.getLanguage().equals(Locale.getDefault().getLanguage())) {
+        item.setSelected(true);
+      }
+      menuLanguage.getItems().add(item);
+    }
+
+    toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+
+      if (newValue != null) {
+        try {
+          Properties settings = new Properties();
+          settings.setProperty("lang",((Locale)newValue.getUserData()).toLanguageTag());
+          File settingsFile = new File(App.getUserSettings());
+          settingsFile.getParentFile().mkdirs();
+          settingsFile.createNewFile();
+          settings.store(new FileOutputStream(settingsFile),null);
+          Alert alert = new Alert(AlertType.INFORMATION);
+          alert.setTitle(Messages.getString("alertLanguageChange.title"));
+          alert.setHeaderText(null);
+          alert.setContentText(Messages.getString("alertLanguageChange.content"));
+          alert.showAndWait();
+        } catch (IOException e) {
+          System.out.println(Messages.getString("alertLanguageChange.failed"));
+        }
+
+      }
+    });
+  }
+
+  public void initGUI() {
     ObservableList<Item> liste = BeanPropertyUtils.getProperties(data);
     liste.sort(propertyComparator);
     propList.getItems().setAll(liste);
 
-    liste = BeanPropertyUtils.getProperties(data.getFillingType());
+    propList.getItems().addAll(BeanPropertyUtils.getProperties(guiDataModel));
+
+    liste = BeanPropertyUtils.getProperties(guiDataModel.getFillingElement());
     liste.sort(propertyComparator);
     propList.getItems().addAll(liste);
 
-    propList.categoryComparatorProperty().set(new Comparator<>() {
+    if (propList.getSkin() != null) {
+      Accordion acc = (Accordion) propList.getSkin().getNode().lookup(".accordion");
 
-      @Override
-      public int compare(String o1, String o2) {
-        return getCategoryIndex(o1) - getCategoryIndex(o2);
-      }
+      if (lastOpenAccordionPane >= 0)
+        acc.setExpandedPane(acc.getPanes().get(lastOpenAccordionPane));
 
-      private int getCategoryIndex(String categoryLabel) {
+      acc.expandedPaneProperty().addListener(
+              (observable, oldValue, newValue) -> lastOpenAccordionPane = acc.getPanes().indexOf(newValue));
 
-        if (categoryLabel.equals(
-                de.baw.lomo.core.data.Messages.getString("catNameGeometry"))) { //$NON-NLS-1$
-          return 0;
-        } else if (categoryLabel.equals(
-                de.baw.lomo.core.data.Messages.getString("catNameFilling"))) { //$NON-NLS-1$
-          return 1;
-        } else if (categoryLabel.equals(
-                de.baw.lomo.core.data.Messages.getString("catNameNumerics"))) { //$NON-NLS-1$
-          return 2;
-        } else if (categoryLabel
-                .equals(de.baw.lomo.core.data.Messages.getString("catNameMisc"))) { //$NON-NLS-1$
-          return 3;
-        } else {
-          return 0;
-        }
-      }
-
-    });
+      Platform.runLater(() -> {
+        ComboBox<FillingType> cb = (ComboBox<FillingType>) propList.getSkin().getNode().lookup("#ftSelector");
+        cb.setItems(FXCollections.observableList(data.getFillingTypes()));
+      });
+    }
   }
 
   private void clearFigure() {
@@ -850,7 +1007,7 @@ public class Controller implements Initializable {
 
       double scale = 1.;
 
-      if (data.getFillingType() instanceof SluiceGateFillingType) {
+      if (data.getFillingTypes() instanceof SluiceGateFillingType) {
         scale = 10.;
       }
       if (i < valveOpeningResults.length && !Double.isNaN(valveOpeningResults[i])) {

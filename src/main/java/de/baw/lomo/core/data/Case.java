@@ -19,6 +19,9 @@ package de.baw.lomo.core.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -31,7 +34,7 @@ import de.baw.lomo.utils.Utils;
 @XmlRootElement(name="BAWLomoCase")
 public class Case {
 
-  private final static String VERSION = "0.9";
+  private final static String VERSION = "1.0";
   
   private String author = "BAW";
   
@@ -45,7 +48,7 @@ public class Case {
 
   private double downstreamWaterLevel = 4.0;
 
-  private FillingType fillingType = new SluiceGateFillingType();
+  private List<FillingType> fillingTypes = new ArrayList<>();
 
   private List<KeyValueEntry> shipAreaLookup = new ArrayList<>();
 
@@ -69,6 +72,10 @@ public class Case {
       shipAreaLookup.add(new KeyValueEntry(133, 32.06));
       shipAreaLookup.add(new KeyValueEntry(135, 0));
     }
+
+    if (fillingTypes.isEmpty()) {
+      fillingTypes.add(new SluiceGateFillingType());
+    }
   }
 
   @XmlAttribute(required = true)
@@ -81,6 +88,22 @@ public class Case {
       throw new IllegalArgumentException("Wrong case version: " + version
           + " Required version is: " + VERSION);
     }
+  }
+
+  public String getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(String author) {
+    this.author = author;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public double getChamberLength() {
@@ -116,12 +139,39 @@ public class Case {
   }
 
   @XmlElementRef
-  public FillingType getFillingType() {
-    return fillingType;
+  public List<FillingType> getFillingTypes() {
+    return fillingTypes;
   }
 
-  public void setFillingType(FillingType fillingType) {
-    this.fillingType = fillingType;
+  public void setFillingTypes(List<FillingType> fillingTypes) {
+    this.fillingTypes = fillingTypes;
+  }
+
+  public void addFillingType(FillingType fillingType){
+
+    Optional<FillingType> lastFtOfSameType = this.fillingTypes.stream().filter(ft -> ft.getClass().equals(fillingType.getClass())).reduce((first, second) -> second);
+
+    if (lastFtOfSameType.isPresent()) {
+
+      Pattern pattern = Pattern.compile("\\d+");
+
+      Matcher matcher = pattern.matcher(lastFtOfSameType.get().getName());
+
+      if (matcher.find()) {
+        String num = matcher.group();
+        int inc = Integer.parseInt(num) + 1;
+        fillingType.setName(matcher.replaceFirst(String.valueOf(inc)));
+      } else {
+        fillingType.setName(String.format("%s 1", lastFtOfSameType.get().getName()));
+      }
+
+    }
+
+    this.fillingTypes.add(fillingType);
+  }
+
+  public void removeFillingType(FillingType fillingType) {
+    this.fillingTypes.remove(fillingType);
   }
 
   @XmlElementWrapper
@@ -184,22 +234,6 @@ public class Case {
 
   public double getShipArea(double x) {
     return Utils.linearInterpolate(shipAreaLookup, x);
-  }
-
-  public String getAuthor() {
-    return author;
-  }
-
-  public void setAuthor(String author) {
-    this.author = author;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
   }
 
 }

@@ -17,14 +17,7 @@
  */
 package de.baw.lomo.io;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -34,10 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.baw.lomo.core.data.FillingType;
 import jakarta.xml.bind.*;
 
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.core.data.Results;
+import jakarta.xml.bind.util.JAXBSource;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
@@ -46,6 +41,20 @@ public class IOUtils {
 
   private IOUtils() {
     throw new AssertionError();
+  }
+
+  public static <T extends FillingType> T deepCopyDataObjects(T obj) {
+
+    try {
+      JAXBContext jaxbContext = JAXBContext.newInstance(obj.getClass());
+      Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+      return (T) jaxbUnmarshaller.unmarshal(new JAXBSource(jaxbContext,obj));
+
+    } catch (JAXBException e) {
+
+      throw new RuntimeException(Messages.getString("errorDeepCopy"), e); //$NON-NLS-1$
+    }
   }
 
   public static Case readCaseFromXml(File xmlFile) {
@@ -183,7 +192,7 @@ public class IOUtils {
       JAXBContext jaxbContext = JAXBContext.newInstance(Case.class);
       jaxbContext.generateSchema(new SchemaOutputResolver() {
         @Override
-        public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {
+        public Result createOutput(String namespaceUri, String suggestedFileName) {
           return new StreamResult("BAWLomoCase.xsd"); //$NON-NLS-1$
         }
       });
@@ -299,24 +308,6 @@ public class IOUtils {
       }
     };    
   }
-  
-//  public static void writeResultsToXml(Results results, File xmlFile) {
-//
-//    try {
-//
-//      JAXBContext jaxbContext = JAXBContext.newInstance(Results.class);
-//      Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-//
-//      // output pretty printed
-//      jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//
-//      jaxbMarshaller.marshal(results, xmlFile);
-//
-//    } catch (JAXBException e) {
-//
-//      throw new RuntimeException("There was an error when writing XML results file.", e);
-//    }
-//  }
 
   public static void main(String[] args) {
     IOUtils.generateCaseSchema();

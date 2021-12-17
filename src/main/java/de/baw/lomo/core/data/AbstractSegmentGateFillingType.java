@@ -28,6 +28,7 @@ import de.baw.lomo.utils.Utils;
 public abstract class AbstractSegmentGateFillingType extends AbstractGateFillingType {
 
   protected List<KeyValueEntry> segmentGateAMueLookup = new ArrayList<>();
+  protected double maximumPressureHead;
     
   public AbstractSegmentGateFillingType() {    
     super();
@@ -36,6 +37,14 @@ public abstract class AbstractSegmentGateFillingType extends AbstractGateFilling
     if (jetOutletLookup.isEmpty()) {
       jetOutletLookup.add(new KeyValueEntry(0.0, 999999.));
     }
+  }
+
+  public double getMaximumPressureHead() {
+    return maximumPressureHead;
+  }
+
+  public void setMaximumPressureHead(double maximumPressureHead) {
+    this.maximumPressureHead = maximumPressureHead;
   }
 
   @XmlElementWrapper

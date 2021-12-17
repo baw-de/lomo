@@ -101,3 +101,7 @@
 #prop-chart .default-color0.chart-line-symbol { -fx-background-color: #2c63b1, white; }
 
 #chartExportTag { -fx-fill: #b1b1b1; -fx-font-size: 10; }
+
+.property-sheet .warning {
+    -fx-effect: dropshadow(three-pass-box, gold, 14, 0, 0, 0);
+}

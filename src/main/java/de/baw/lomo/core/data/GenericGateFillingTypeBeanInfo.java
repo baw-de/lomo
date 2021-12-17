@@ -23,7 +23,6 @@ import java.beans.SimpleBeanInfo;
 
 import org.controlsfx.property.BeanProperty;
 
-import de.baw.lomo.gui.NumberPropertyEditor;
 import de.baw.lomo.gui.PopOverKeyValueListPropertyEditor;
 
 public class GenericGateFillingTypeBeanInfo extends SimpleBeanInfo {
@@ -53,7 +52,6 @@ public class GenericGateFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[2].setValue("order", 3); //$NON-NLS-1$
       properties[2].setDisplayName(Messages.getString("nameMaximumPressureHead")); //$NON-NLS-1$
       properties[2].setShortDescription(Messages.getString("descrMaximumPressureHead")); //$NON-NLS-1$
-      properties[2].setPropertyEditorClass(NumberPropertyEditor.class);
       properties[2].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameFilling")); //$NON-NLS-1$
       
       properties[3] = new PropertyDescriptor("jetOutletLookup", GenericGateFillingType.class); //$NON-NLS-1$
@@ -67,28 +65,24 @@ public class GenericGateFillingTypeBeanInfo extends SimpleBeanInfo {
       properties[4].setValue("order", 5); //$NON-NLS-1$
       properties[4].setDisplayName(Messages.getString("nameJetCoefficientC0")); //$NON-NLS-1$
       properties[4].setShortDescription(Messages.getString("descrJetCoefficientC0")); //$NON-NLS-1$
-      properties[4].setPropertyEditorClass(NumberPropertyEditor.class);  
       properties[4].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameFilling")); //$NON-NLS-1$
                   
       properties[5] = new PropertyDescriptor("jetCoefficientC1", GenericGateFillingType.class); //$NON-NLS-1$
       properties[5].setValue("order", 6); //$NON-NLS-1$
       properties[5].setDisplayName(Messages.getString("nameJetCoefficientC1")); //$NON-NLS-1$
       properties[5].setShortDescription(Messages.getString("descrJetCoefficientC1")); //$NON-NLS-1$
-      properties[5].setPropertyEditorClass(NumberPropertyEditor.class);  
       properties[5].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameFilling")); //$NON-NLS-1$
       
       properties[6] = new PropertyDescriptor("jetCoefficientC2", GenericGateFillingType.class); //$NON-NLS-1$
       properties[6].setValue("order", 7); //$NON-NLS-1$
       properties[6].setDisplayName(Messages.getString("nameJetCoefficientC2")); //$NON-NLS-1$
       properties[6].setShortDescription(Messages.getString("descrJetCoefficientC2")); //$NON-NLS-1$
-      properties[6].setPropertyEditorClass(NumberPropertyEditor.class);  
       properties[6].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameFilling")); //$NON-NLS-1$
       
       properties[7] = new PropertyDescriptor("jetCoefficientC3", GenericGateFillingType.class); //$NON-NLS-1$
       properties[7].setValue("order", 8); //$NON-NLS-1$
       properties[7].setDisplayName(Messages.getString("nameJetCoefficientC3")); //$NON-NLS-1$
       properties[7].setShortDescription(Messages.getString("descrJetCoefficientC3")); //$NON-NLS-1$
-      properties[7].setPropertyEditorClass(NumberPropertyEditor.class);  
       properties[7].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameFilling")); //$NON-NLS-1$
 
       

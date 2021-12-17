@@ -18,11 +18,9 @@
 package de.baw.lomo.core;
 
 import java.util.Arrays;
+import java.util.List;
 
-import de.baw.lomo.core.data.AbstractGateFillingType;
-import de.baw.lomo.core.data.Case;
-import de.baw.lomo.core.data.FillingType;
-import de.baw.lomo.core.data.Results;
+import de.baw.lomo.core.data.*;
 
 public class OneDimensionalModel implements Model {
   
@@ -53,7 +51,7 @@ public class OneDimensionalModel implements Model {
   /** Kammerbreite **/
   private double kB;
   /** Füllorgan **/
-  private FillingType filling;
+  private List<FillingType> fillingTypes;
   /** Aktuelle Zeit **/
   private double time;
   /** Aktueller Zeitschritt **/
@@ -102,7 +100,7 @@ public class OneDimensionalModel implements Model {
     kL = data.getChamberLength();
     kB = data.getChamberWidth();
 
-    filling = data.getFillingType();
+    fillingTypes = data.getFillingTypes();
 
     // *************************************************************************
     // Räumliche Diskretisierung
@@ -203,13 +201,18 @@ public class OneDimensionalModel implements Model {
 
       timeSeries[step] = time;
 
-      if (filling instanceof AbstractGateFillingType) {
-        valveOpening[step] = ((AbstractGateFillingType) filling).getGateOpening(time);
-      }      
-      
-      final double[][] source = filling.getSource(time, positions, h1, v1, data);
-      final double[] volumeSource = source[0];
-      final double[] momentumSource = source[1];
+      final double[] volumeSource = new double[positions.length];
+      final double[] momentumSource = new double[positions.length];
+
+      for (FillingType ft : fillingTypes) {
+
+        if (ft instanceof AbstractGateFillingType) {
+          valveOpening[step] += ((AbstractGateFillingType) ft).getGateOpening(time);
+        }
+
+        Arrays.setAll(volumeSource, i -> volumeSource[i] + ft.getSource(time, positions, h1, v1, data)[0][i]);
+        Arrays.setAll(momentumSource, i -> volumeSource[i] + ft.getSource(time, positions, h1, v1, data)[1][i]);
+      }
       
       // Alte Zeitebene wird ganz alte Zeitebene, neue Zeitebene wird alte
       // Zeitebene:
@@ -242,14 +245,19 @@ public class OneDimensionalModel implements Model {
           beta[i] = 1.;
 
           // Strahlausbreitung
-          double aEffective = filling.getEffectiveFlowSection(time, dx * i);
-          
-          if (Double.isNaN(aEffective)) {
-            continue;
-          }
+          double aEffective = A05[i];
 
-          // aEffective cannot be larger than actual wet cross section
-          aEffective = Math.min(aEffective, A05[i]);
+          for (FillingType ft : fillingTypes) {
+
+            double aEffSection = ft.getEffectiveFlowSection(time, dx * i);
+
+            if (Double.isNaN(aEffSection)) {
+              continue;
+            }
+
+            // aEffective cannot be larger than actual wet cross section
+            aEffective = Math.min(aEffective, aEffSection);
+          }
 
           // avoid division by zero
           if (aEffective > 1.e-3) {

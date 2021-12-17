@@ -39,6 +39,6 @@ module de.baw.lomo {
           de.baw.lomo.core.data.SegmentGateFillingType,
           de.baw.lomo.core.data.SegmentGateVelocityFillingType,
           de.baw.lomo.core.data.GenericGateFillingType,
-          de.baw.lomo.core.data.CustomSourceFillingType,
+          de.baw.lomo.core.data.SavingBasinFillingType,
           de.baw.lomo.core.data.CustomSourceFromFileFillingType;
 }

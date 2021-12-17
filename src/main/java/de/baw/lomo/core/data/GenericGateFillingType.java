@@ -32,6 +32,8 @@ public class GenericGateFillingType extends AbstractGateFillingType {
   private List<KeyValueEntry> genericGateOpeningLookup = new ArrayList<>();
 
   private List<KeyValueEntry> genericGateAMueLookup = new ArrayList<>();
+
+  protected double maximumPressureHead;
   
   public GenericGateFillingType() {
     
@@ -56,6 +58,14 @@ public class GenericGateFillingType extends AbstractGateFillingType {
     
   }
 
+  public double getMaximumPressureHead() {
+    return maximumPressureHead;
+  }
+
+  public void setMaximumPressureHead(double maximumPressureHead) {
+    this.maximumPressureHead = maximumPressureHead;
+  }
+
   @XmlElementWrapper
   @XmlElement(name = "entry")
   public List<KeyValueEntry> getGenericGateOpeningLookup() {
@@ -64,11 +74,6 @@ public class GenericGateFillingType extends AbstractGateFillingType {
 
   public void setGenericGateOpeningLookup(List<KeyValueEntry> genericGateOpeningLookup) {
     this.genericGateOpeningLookup = genericGateOpeningLookup;
-  }
-
-  @Override
-  public double getGateOpening(double time) {
-    return  Utils.linearInterpolate(genericGateOpeningLookup, time);
   }
 
   @XmlElementWrapper
@@ -80,6 +85,11 @@ public class GenericGateFillingType extends AbstractGateFillingType {
   public void setGenericGateAMueLookup(
       List<KeyValueEntry> genericGateAMueLookup) {
     this.genericGateAMueLookup = genericGateAMueLookup;
+  }
+
+  @Override
+  public double getGateOpening(double time) {
+    return  Utils.linearInterpolate(genericGateOpeningLookup, time);
   }
 
   @Override

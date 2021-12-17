@@ -29,10 +29,8 @@ import de.baw.lomo.utils.Utils;
 @XmlRootElement(name="sluiceGateFillingType")
 public class SluiceGateFillingType extends AbstractSluiceGateFillingType {
 
-  private List<KeyValueEntry> sluiceGateHeightLookup = new ArrayList<>();
-  
-  private List<KeyValueEntry> sluiceGateWidthLookup = new ArrayList<>();
-  
+  protected double maximumPressureHead;
+
   public SluiceGateFillingType() {
     
     super();
@@ -60,42 +58,12 @@ public class SluiceGateFillingType extends AbstractSluiceGateFillingType {
     
   }
 
-  @XmlElementWrapper
-  @XmlElement(name = "entry")
-  public List<KeyValueEntry> getSluiceGateHeightLookup() {
-    return sluiceGateHeightLookup;
+  public double getMaximumPressureHead() {
+    return maximumPressureHead;
   }
 
-  public void setSluiceGateHeightLookup(List<KeyValueEntry> sluiceGateHeightLookup) {
-    this.sluiceGateHeightLookup = sluiceGateHeightLookup;
-  }
-
-  public double getSluiceGateHeight(double time) {
-    return Utils.linearInterpolate(sluiceGateHeightLookup, time);
-  }
-
-  @XmlElementWrapper
-  @XmlElement(name = "entry")
-  public List<KeyValueEntry> getSluiceGateWidthLookup() {
-    return sluiceGateWidthLookup;
-  }
-
-  public void setSluiceGateWidthLookup(List<KeyValueEntry> sluiceGateWidthLookup) {
-    this.sluiceGateWidthLookup = sluiceGateWidthLookup;
-  }
-  
-  public double getSluiceGateWidth(double height) {
-    return Utils.linearInterpolate(sluiceGateWidthLookup, height);
-  }
-
-  @Override
-  public double getGateOpening(double time) {    
-    return getSluiceGateHeight(time);
-  }  
-
-  @Override
-  public double getSluiceGateCrossSection(double gateOpening) {
-    return Utils.linearIntegrate(sluiceGateWidthLookup, gateOpening);
+  public void setMaximumPressureHead(double maximumPressureHead) {
+    this.maximumPressureHead = maximumPressureHead;
   }
 
   @Override

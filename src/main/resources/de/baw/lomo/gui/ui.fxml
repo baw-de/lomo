@@ -42,8 +42,13 @@
 				<SeparatorMenuItem mnemonicParsing="false"/>
 				<MenuItem mnemonicParsing="false" onAction="#processMenuExit" text="%menuExit"/>
 			</Menu>
+			<Menu mnemonicParsing="false" text="%menuEdit">
+				<Menu fx:id="menuFillingType" mnemonicParsing="false" text="%menuAddFillingType"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuCopyFillingType" text="%menuCopyFillingType"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuDeleteFillingType" text="%menuDeleteFillingType"/>
+			</Menu>
 			<Menu mnemonicParsing="false" text="%menuSettings">
-				<Menu fx:id="menuFillingType" mnemonicParsing="false" text="%menuFillingType"/>
+				<Menu fx:id="menuLanguage" mnemonicParsing="false" text="%menuLanguage"/>
 				<SeparatorMenuItem mnemonicParsing="false"/>
 				<CheckMenuItem fx:id="menuShowPropCharts" selected="true" mnemonicParsing="false"
 							   text="%menuShowPropCharts"/>
@@ -51,6 +56,8 @@
 			<Menu mnemonicParsing="false" text="%menuHelp">
 				<MenuItem mnemonicParsing="false" onAction="#processMenuOnlineHelp" text="%menuOnlineHelp"/>
 				<MenuItem mnemonicParsing="false" onAction="#processMenuParameterHelp" text="%menuParameterHelp"/>
+				<SeparatorMenuItem mnemonicParsing="false"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuDesignSavingLock" text="%menuDesignSavingLock"/>
 				<SeparatorMenuItem mnemonicParsing="false"/>
 				<MenuItem mnemonicParsing="false" onAction="#processMenuAbout" text="%menuAbout"/>
 			</Menu>
