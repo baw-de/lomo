@@ -65,7 +65,7 @@ public class App extends Application {
     primaryStage.setTitle(ResourceBundle.getBundle("de.baw.lomo.version").getString("lomo.name"));
     primaryStage.show();
     c.initGUI();
-//    c.initConsole();
+    c.initConsole();
   }
 
   private Locale determineLocale() {
