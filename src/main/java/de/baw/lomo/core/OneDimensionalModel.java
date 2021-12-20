@@ -210,8 +210,10 @@ public class OneDimensionalModel implements Model {
           valveOpening[step] += ((AbstractGateFillingType) ft).getGateOpening(time);
         }
 
-        Arrays.setAll(volumeSource, i -> volumeSource[i] + ft.getSource(time, positions, h1, v1, data)[0][i]);
-        Arrays.setAll(momentumSource, i -> volumeSource[i] + ft.getSource(time, positions, h1, v1, data)[1][i]);
+        final double[][] source = ft.getSource(time, positions, h1, v1, data);
+
+        Arrays.setAll(volumeSource, i -> volumeSource[i] + source[0][i]);
+        Arrays.setAll(momentumSource, i -> volumeSource[i] + source[1][i]);
       }
       
       // Alte Zeitebene wird ganz alte Zeitebene, neue Zeitebene wird alte
