@@ -17,7 +17,6 @@
 * Filling types now have a name field.
 
 ## Known bugs and flaws
-* Renaming a filling element in the GUI does not always refresh the dropdown list consistently.
 * The valve opening line in the chart is not yet optimized for multiple filling elements.
 * There are no consistent default values for the saving basins yet.
 * No rounding of values set by saving lock design assistant.

@@ -49,6 +49,12 @@ public class FillingTypeSelectionEditor extends AbstractPropertyEditor<FillingTy
                     }
                 });
 
+        getEditor().addEventHandler(ComboBox.ON_SHOWING, event -> {
+            getEditor().cancelEdit();
+            getEditor().getEditor().getStyleClass().remove("warning");
+            isValid = true;
+        });
+
         getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 if (!isValid) {
