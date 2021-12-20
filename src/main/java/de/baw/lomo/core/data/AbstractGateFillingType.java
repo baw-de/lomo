@@ -87,12 +87,12 @@ public abstract class AbstractGateFillingType extends FillingType {
     return Utils.linearInterpolate(jetOutletLookup, gateOpening);
   }
 
-  public double getPressureHead(double currentWaterLevel, double upstreamWaterLevel, double downstreamWaterLevel) {
+  public double getPressureHead(double time, double[] positions, double[] h, double[] v, Case data) {
 
     final double maxDh = getMaximumPressureHead();
 
     // Effektive Fallhöhe: Entweder OW bis Schütz oder OW bis UW
-    return Math.min(upstreamWaterLevel - currentWaterLevel, maxDh);
+    return Math.min(data.getUpstreamWaterLevel() - h[0], maxDh);
   }
 
   // ***************************************************************************
@@ -104,7 +104,7 @@ public abstract class AbstractGateFillingType extends FillingType {
     final double[][] source = new double[2][positions.length];
 
     final double aMue = getAreaTimesDischargeCoefficient(time);
-    final double dh = getPressureHead(h[0], data.getUpstreamWaterLevel(), data.getDownstreamWaterLevel());
+    final double dh = getPressureHead(time, positions, h, v, data);
 
     double flowRate =  Math.signum(dh) * aMue * Math.sqrt(2. * GRAVITY * Math.abs(dh));  
 

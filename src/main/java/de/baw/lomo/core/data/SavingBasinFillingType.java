@@ -105,8 +105,8 @@ public class SavingBasinFillingType extends AbstractSluiceGateFillingType {
 	}
 
 	@Override
-	public double getPressureHead(double currentWaterLevel, double upstreamWaterLevel, double downstreamWaterLevel) {
-		return Math.max(currentFillHeight - currentWaterLevel, floorHeight - currentWaterLevel);
+	public double getPressureHead(double time, double[] positions, double[] h, double[] v, Case data) {
+		return Math.max(currentFillHeight - h[0], floorHeight - h[0]);
 	}
 
 	@Override
