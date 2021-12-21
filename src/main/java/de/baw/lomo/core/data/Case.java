@@ -161,7 +161,7 @@ public class Case {
         String num = matcher.group();
         int inc = Integer.parseInt(num) + 1;
         fillingType.setName(matcher.replaceFirst(String.valueOf(inc)));
-      } else {
+      } else if(fillingType.getName().equals(lastFtOfSameType.get().getName())) {
         fillingType.setName(String.format("%s 1", lastFtOfSameType.get().getName()));
       }
 

@@ -19,6 +19,7 @@ package de.baw.lomo.gui;
 
 import de.baw.lomo.core.data.FillingType;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 import org.controlsfx.control.PropertySheet;
@@ -49,12 +50,6 @@ public class FillingTypeSelectionEditor extends AbstractPropertyEditor<FillingTy
                     }
                 });
 
-        getEditor().addEventHandler(ComboBox.ON_SHOWING, event -> {
-            getEditor().cancelEdit();
-            getEditor().getEditor().getStyleClass().remove("warning");
-            isValid = true;
-        });
-
         getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 if (!isValid) {
@@ -63,9 +58,9 @@ public class FillingTypeSelectionEditor extends AbstractPropertyEditor<FillingTy
                     isValid = true;
                 } else {
                     getValue().setName(getEditor().getEditor().getText());
+                    getEditor().setItems(FXCollections.observableArrayList(getEditor().getItems()));
+                    getEditor().getSelectionModel().select(getValue());
                 }
-
-                getEditor().commitValue();
             }
         });
 
