@@ -240,9 +240,6 @@ public class Controller implements Initializable {
     }
   }
 
-  public void processMenuLanguage(ActionEvent actionEvent) {
-  }
-
   public void processMenuDesignSavingLock(ActionEvent actionEvent) {
 
     final Dialog<ButtonType> dlg = new Dialog<>();
@@ -259,18 +256,28 @@ public class Controller implements Initializable {
     gridPane.setVgap(5.);
 
     Label lblNbBasins = new Label(Messages.getString("dlgDSL.nbBasins"));
-    lblNbBasins.setTooltip(new Tooltip("test"));
+    lblNbBasins.setTooltip(new Tooltip(Messages.getString("dlgDSL.lblNbBasins")));
+    Label lblRatioAreaBasinToAreaChamber = new Label(Messages.getString("dlgDSL.ratioAreaBasinToAreaChamber"));
+    lblRatioAreaBasinToAreaChamber.setTooltip(new Tooltip(Messages.getString("dlgDSL.lblRatioAreaBasinToAreaChamber")));
+    Label lblRestFillingHeight = new Label(Messages.getString("dlgDSL.restFillingHeightBasins"));
+    lblRestFillingHeight.setTooltip(new Tooltip(Messages.getString("dlgDSL.lblRestFillingHeightBasins")));
+    Label lblWaterDepthBasins = new Label(Messages.getString("dlgDSL.waterDepthBasins"));
+    lblWaterDepthBasins.setTooltip(new Tooltip(Messages.getString("dlgDSL.lblWaterDepthBasins")));
+    Label lblLamellaHeight = new Label(Messages.getString("dlgDSL.lamellaHeight"));
+    lblLamellaHeight.setTooltip(new Tooltip(Messages.getString("dlgDSL.lblLamellaHeight")));
+    Label lblInitFillingHeightBasins = new Label(Messages.getString("dlgDSL.initialFillingHeightBasins"));
+    lblInitFillingHeightBasins.setTooltip(new Tooltip(Messages.getString("dlgDSL.lblInitialFillingHeightBasins")));
+    Label lblRestFillingHeightChamber = new Label(Messages.getString("dlgDSL.restFillingHeightChamber"));
+    lblRestFillingHeightChamber.setTooltip(new Tooltip(Messages.getString("dlgDSL.lblRestFillingHeightChamber")));
+    Label lblSavingRate = new Label(Messages.getString("dlgDSL.savingRate"));
+    lblSavingRate.setTooltip(new Tooltip(Messages.getString("dlgDSL.lblSavingRate")));
+    Label lblLossOfWater = new Label(Messages.getString("dlgDSL.lossOfWater"));
+    lblLossOfWater.setTooltip(new Tooltip(Messages.getString("dlgDSL.lblLossOfWater")));
 
     gridPane.addColumn(0,
-            lblNbBasins,
-            new Label(Messages.getString("dlgDSL.ratioAreaBasinToAreaChamber")),
-            new Label(Messages.getString("dlgDSL.restFillingHeightBasins")),
-            new Label(Messages.getString("dlgDSL.waterDepthBasins")),
-            new Label(Messages.getString("dlgDSL.lamellaHeight")),
-            new Label(Messages.getString("dlgDSL.initialFillingHeightBasins")),
-            new Label(Messages.getString("dlgDSL.restFillingHeightChamber")),
-            new Label(Messages.getString("dlgDSL.savingRate")),
-            new Label(Messages.getString("dlgDSL.lossOfWater")));
+            lblNbBasins, lblRatioAreaBasinToAreaChamber, lblRestFillingHeight ,lblWaterDepthBasins,
+            lblLamellaHeight, lblInitFillingHeightBasins, lblRestFillingHeightChamber,
+            lblSavingRate, lblLossOfWater);
 
     Spinner<Integer> parNbBasins = new Spinner<>(1, 99, 1);
     parNbBasins.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
@@ -311,7 +318,7 @@ public class Controller implements Initializable {
 
     SavingLockDesigner lockDesigner = new SavingLockDesigner(data);
 
-    ChangeListener changeListener = (observable, oldValue, newValue) -> {
+    ChangeListener<Object> changeListener = (observable, oldValue, newValue) -> {
       lockDesigner.setParameters(parNbBasins.getValue(), (double) parRatioAreaBasinToAreaChamber.getTextFormatter().getValue(),
               (double) parRestFillingHeightBasins.getTextFormatter().getValue());
 
