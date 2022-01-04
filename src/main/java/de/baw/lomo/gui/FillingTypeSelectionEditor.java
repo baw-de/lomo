@@ -57,9 +57,12 @@ public class FillingTypeSelectionEditor extends AbstractPropertyEditor<FillingTy
                     getEditor().getEditor().getStyleClass().remove("warning");
                     isValid = true;
                 } else {
-                    getValue().setName(getEditor().getEditor().getText());
-                    getEditor().setItems(FXCollections.observableArrayList(getEditor().getItems()));
-                    getEditor().getSelectionModel().select(getValue());
+                    final String editorText = getEditor().getEditor().getText();
+                    if (!editorText.equals(getValue().getName())) {
+                        getValue().setName(editorText);
+                        getEditor().setItems(FXCollections.observableArrayList(getEditor().getItems()));
+                        getEditor().getSelectionModel().select(getValue());
+                    }
                 }
             }
         });
