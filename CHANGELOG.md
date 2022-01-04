@@ -1,3 +1,21 @@
+# Release 2.0-beta3
+
+## Core
+n/a
+
+## GUI
+* Fixed bug in filling type selector which appeared if the currently selected filling type is selected again in the list.
+* Added tooltips to the saving lock design assistant.
+
+## Other
+n/a
+
+## Known bugs and flaws
+* The valve opening line in the chart is not yet optimized for multiple filling elements.
+* There are no consistent default values for the saving basins yet.
+* No rounding of values set by saving lock design assistant.
+
+
 # Release 2.0-beta2
 
 ## Core
@@ -20,6 +38,7 @@
 * The valve opening line in the chart is not yet optimized for multiple filling elements.
 * There are no consistent default values for the saving basins yet.
 * No rounding of values set by saving lock design assistant.
+
 
 # Release 2.0-beta1
 
