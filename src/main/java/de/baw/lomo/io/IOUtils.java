@@ -97,7 +97,7 @@ public class IOUtils {
 
     final double[] timeResults = results.getTimeline();
     final double[] valeOpeningResults = results.getValveOpeningOverTime();
-    final double[] waterLevelResults = results.getChamberWaterLevelOverTime();
+    final double[] waterLevelResults = results.getMeanChamberWaterLevelOverTime();
     final double[] dischargeResults = results.getDischargeOverTime();
     final double[] slopeResults = results.getSlopeOverTime();   
     final double[] forceResults = results.getLongitudinalForceOverTime();  
@@ -281,7 +281,7 @@ public class IOUtils {
       public double[] getValveOpeningOverTime() {
         return openingList.stream().mapToDouble(d -> d).toArray();
       }
-      
+
       @Override
       public double[] getTimeline() {
         return timeList.stream().mapToDouble(d -> d).toArray();
@@ -303,8 +303,18 @@ public class IOUtils {
       }
       
       @Override
-      public double[] getChamberWaterLevelOverTime() {
+      public double[] getMeanChamberWaterLevelOverTime() {
         return waterLevelList.stream().mapToDouble(d -> d).toArray();
+      }
+
+      @Override
+      public double[][] getChamberWaterLevelOverTime() {
+        return new double[timeList.size()][];
+      }
+
+      @Override
+      public double[][] getFlowVelocityOverTime() {
+        return new double[timeList.size()][];
       }
     };    
   }

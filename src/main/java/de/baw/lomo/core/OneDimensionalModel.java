@@ -71,6 +71,7 @@ public class OneDimensionalModel implements Model {
   /** Neue Zeitebene **/
   private double[] Q1, A1;
   /** Postprozessing **/
+  private double[][] v1overT, h1overT;
   private double[] v1, h1;
   /** Schiffsquerschnitte **/
   private double[] aShipNode, aShipCell;
@@ -121,9 +122,6 @@ public class OneDimensionalModel implements Model {
     Q1 = new double[nx + 1];
     A1 = new double[nx];
 
-    v1 = new double[nx + 1];
-    h1 = new double[nx];
-
     aShipNode = new double[nx + 1];
     aShipCell = new double[nx];
 
@@ -156,7 +154,13 @@ public class OneDimensionalModel implements Model {
 
     timeSeries = new double[maxStep + 1];
 
+    v1overT = new double[maxStep+1][nx + 1];
+    h1overT = new double[maxStep+1][nx];
+
     // Anfangsbedingungen der Felder setzen
+    v1 = v1overT[step];
+    h1 = h1overT[step];
+
     // Zellwerte
     for (int i = 0; i < nx; i++) {
       aShipCell[i] = data.getShipArea(dx * (i + 0.5));
@@ -345,6 +349,9 @@ public class OneDimensionalModel implements Model {
       // ***********************************************************************
       // Postprocessing:
       // ***********************************************************************
+
+      h1 = h1overT[step];
+      v1 = v1overT[step];
       
       h1Mean[step] = 0.;
       
@@ -475,7 +482,7 @@ public class OneDimensionalModel implements Model {
       }
 
       @Override
-      public double[] getChamberWaterLevelOverTime() {
+      public double[] getMeanChamberWaterLevelOverTime() {
         return Arrays.copyOf(h1Mean, step);
       }
 
@@ -488,6 +495,12 @@ public class OneDimensionalModel implements Model {
       public double[] getValveOpeningOverTime() {
         return Arrays.copyOf(valveOpening, step);
       }
+
+      @Override
+      public double[][] getChamberWaterLevelOverTime() { return Arrays.copyOf(h1overT, step); }
+
+      @Override
+      public double[][] getFlowVelocityOverTime() { return Arrays.copyOf(v1overT, step); }
     };
   }
 

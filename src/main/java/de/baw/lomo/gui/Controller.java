@@ -35,7 +35,6 @@ import javax.imageio.ImageIO;
 import de.baw.lomo.core.data.*;
 import de.baw.lomo.utils.SavingLockDesigner;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.*;
 import javafx.util.converter.DoubleStringConverter;
 import org.controlsfx.control.PropertySheet;
@@ -433,7 +432,7 @@ public class Controller implements Initializable {
           final double[] timeResults = results.getTimeline();
           final double[] dischargeResults = results.getDischargeOverTime();
           final double[] forceResults = results.getLongitudinalForceOverTime();
-          final double[] waterLevelResults = results.getChamberWaterLevelOverTime();
+          final double[] waterLevelResults = results.getMeanChamberWaterLevelOverTime();
           final double[] valveOpeningResults = results.getValveOpeningOverTime();
 
           final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(timeResults.length);
@@ -986,7 +985,7 @@ public class Controller implements Initializable {
     final double[] timeResults = results.getTimeline();
     final double[] dischargeResults = results.getDischargeOverTime();
     final double[] forceResults = results.getLongitudinalForceOverTime();
-    final double[] waterLevelResults = results.getChamberWaterLevelOverTime();
+    final double[] waterLevelResults = results.getMeanChamberWaterLevelOverTime();
     final double[] valveOpeningResults = results.getValveOpeningOverTime();
    
     final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(timeResults.length);

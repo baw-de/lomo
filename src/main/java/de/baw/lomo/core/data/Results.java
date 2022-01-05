@@ -33,7 +33,7 @@ public interface Results {
   double[] getSlopeOverTime();
   
   @XmlList
-  double[] getChamberWaterLevelOverTime();
+  double[] getMeanChamberWaterLevelOverTime();
 
   @XmlList
   double[] getLongitudinalForceOverTime();
@@ -41,4 +41,7 @@ public interface Results {
   @XmlList
   double[] getValveOpeningOverTime();
 
+  double[][] getChamberWaterLevelOverTime();
+
+  double[][] getFlowVelocityOverTime();
 }
