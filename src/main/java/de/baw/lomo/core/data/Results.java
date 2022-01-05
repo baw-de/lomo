@@ -17,28 +17,18 @@
  */
 package de.baw.lomo.core.data;
 
-import jakarta.xml.bind.annotation.XmlList;
-import jakarta.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
 public interface Results {
-  
-  @XmlList
+
   double[] getTimeline();
-  
-  @XmlList
+
   double[] getDischargeOverTime();
-  
-  @XmlList
+
   double[] getSlopeOverTime();
-  
-  @XmlList
+
   double[] getMeanChamberWaterLevelOverTime();
 
-  @XmlList
   double[] getLongitudinalForceOverTime();
-  
-  @XmlList
+
   double[] getValveOpeningOverTime();
 
   double[][] getChamberWaterLevelOverTime();

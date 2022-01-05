@@ -17,10 +17,13 @@
  */
 package de.baw.lomo.core;
 
+import de.baw.lomo.core.data.AbstractGateFillingType;
+import de.baw.lomo.core.data.Case;
+import de.baw.lomo.core.data.FillingType;
+import de.baw.lomo.core.data.Results;
+
 import java.util.Arrays;
 import java.util.List;
-
-import de.baw.lomo.core.data.*;
 
 public class OneDimensionalModel implements Model {
   
@@ -418,6 +421,7 @@ public class OneDimensionalModel implements Model {
         }
       }
 
+      @SuppressWarnings("StringBufferReplaceableByString")
       final StringBuffer bf = new StringBuffer();
 
       bf.append("*******************************************************\n"); //$NON-NLS-1$
