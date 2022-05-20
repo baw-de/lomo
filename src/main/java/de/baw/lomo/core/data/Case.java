@@ -52,6 +52,8 @@ public class Case {
 
   private List<KeyValueEntry> shipAreaLookup = new ArrayList<>();
 
+  private double[] forceComputationBounds = new double[] {Double.NaN, Double.NaN};
+
   private double timeMax = 1000.;
 
   private int numberOfNodes = 100;
@@ -236,4 +238,11 @@ public class Case {
     return Utils.linearInterpolate(shipAreaLookup, x);
   }
 
+  public double[] getForceComputationBounds() {
+    return forceComputationBounds;
+  }
+
+  public void setForceComputationBounds(double[] forceComputationBounds) {
+    this.forceComputationBounds = forceComputationBounds;
+  }
 }

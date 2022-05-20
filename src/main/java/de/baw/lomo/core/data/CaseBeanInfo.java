@@ -21,6 +21,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.beans.SimpleBeanInfo;
 
+import de.baw.lomo.gui.RangeEditor;
 import org.controlsfx.property.BeanProperty;
 
 import de.baw.lomo.gui.PopOverKeyValueListPropertyEditor;
@@ -30,7 +31,7 @@ public class CaseBeanInfo extends SimpleBeanInfo {
 	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
 	  		
-		PropertyDescriptor[] properties = new PropertyDescriptor[13];
+		PropertyDescriptor[] properties = new PropertyDescriptor[14];
 		
 		try {
 		  
@@ -70,54 +71,61 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[4].setShortDescription(Messages.getString("descrShipAreaLookup")); //$NON-NLS-1$
       properties[4].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);
       properties[4].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameGeometry")); //$NON-NLS-1$
-		  
-      properties[5] = new PropertyDescriptor("timeMax", Case.class); //$NON-NLS-1$
-      properties[5].setValue("order", 7); //$NON-NLS-1$
-      properties[5].setDisplayName(Messages.getString("nameMaxSimTime")); //$NON-NLS-1$
-      properties[5].setShortDescription(Messages.getString("descrMaxSimTime")); //$NON-NLS-1$
+
+      properties[5] = new PropertyDescriptor("forceComputationBounds", Case.class); //$NON-NLS-1$
+      properties[5].setValue("order", 6); //$NON-NLS-1$
+      properties[5].setDisplayName(Messages.getString("nameForceComputationBounds")); //$NON-NLS-1$
+      properties[5].setShortDescription(Messages.getString("descrForceComputationBounds")); //$NON-NLS-1$
+      properties[5].setPropertyEditorClass(RangeEditor.class);
       properties[5].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
-      
-      properties[6] = new PropertyDescriptor("numberOfNodes", Case.class); //$NON-NLS-1$
-      properties[6].setValue("order", 8); //$NON-NLS-1$
-      properties[6].setDisplayName(Messages.getString("nameNbOfNodes")); //$NON-NLS-1$
-      properties[6].setShortDescription(Messages.getString("descrNbOfNodes")); //$NON-NLS-1$
+		  
+      properties[6] = new PropertyDescriptor("timeMax", Case.class); //$NON-NLS-1$
+      properties[6].setValue("order", 7); //$NON-NLS-1$
+      properties[6].setDisplayName(Messages.getString("nameMaxSimTime")); //$NON-NLS-1$
+      properties[6].setShortDescription(Messages.getString("descrMaxSimTime")); //$NON-NLS-1$
       properties[6].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
       
-      properties[7] = new PropertyDescriptor("deltaWaterDepthStop", Case.class); //$NON-NLS-1$
-      properties[7].setValue("order", 5); //$NON-NLS-1$
-      properties[7].setDisplayName(Messages.getString("nameDeltaWaterDepthStop")); //$NON-NLS-1$
-      properties[7].setShortDescription(Messages.getString("descrDeltaWaterDepthStop")); //$NON-NLS-1$
-      properties[7].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameGeometry")); //$NON-NLS-1$
+      properties[7] = new PropertyDescriptor("numberOfNodes", Case.class); //$NON-NLS-1$
+      properties[7].setValue("order", 8); //$NON-NLS-1$
+      properties[7].setDisplayName(Messages.getString("nameNbOfNodes")); //$NON-NLS-1$
+      properties[7].setShortDescription(Messages.getString("descrNbOfNodes")); //$NON-NLS-1$
+      properties[7].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
       
-      properties[8] = new PropertyDescriptor("cfl", Case.class); //$NON-NLS-1$
-      properties[8].setValue("order", 10); //$NON-NLS-1$
-      properties[8].setDisplayName(Messages.getString("nameCfl")); //$NON-NLS-1$
-      properties[8].setShortDescription(Messages.getString("descrCfl")); //$NON-NLS-1$
-      properties[8].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
+      properties[8] = new PropertyDescriptor("deltaWaterDepthStop", Case.class); //$NON-NLS-1$
+      properties[8].setValue("order", 5); //$NON-NLS-1$
+      properties[8].setDisplayName(Messages.getString("nameDeltaWaterDepthStop")); //$NON-NLS-1$
+      properties[8].setShortDescription(Messages.getString("descrDeltaWaterDepthStop")); //$NON-NLS-1$
+      properties[8].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameGeometry")); //$NON-NLS-1$
       
-      properties[9] = new PropertyDescriptor("theta", Case.class); //$NON-NLS-1$
-      properties[9].setValue("order", 11); //$NON-NLS-1$
-      properties[9].setDisplayName(Messages.getString("nameTheta")); //$NON-NLS-1$
-      properties[9].setShortDescription(Messages.getString("descrTheta")); //$NON-NLS-1$
+      properties[9] = new PropertyDescriptor("cfl", Case.class); //$NON-NLS-1$
+      properties[9].setValue("order", 10); //$NON-NLS-1$
+      properties[9].setDisplayName(Messages.getString("nameCfl")); //$NON-NLS-1$
+      properties[9].setShortDescription(Messages.getString("descrCfl")); //$NON-NLS-1$
       properties[9].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
-                 
-      properties[10] = new PropertyDescriptor("upwind", Case.class); //$NON-NLS-1$
-      properties[10].setValue("order", 12); //$NON-NLS-1$
-      properties[10].setDisplayName(Messages.getString("nameUpwind")); //$NON-NLS-1$
-      properties[10].setShortDescription(Messages.getString("descrUpwind")); //$NON-NLS-1$
+      
+      properties[10] = new PropertyDescriptor("theta", Case.class); //$NON-NLS-1$
+      properties[10].setValue("order", 11); //$NON-NLS-1$
+      properties[10].setDisplayName(Messages.getString("nameTheta")); //$NON-NLS-1$
+      properties[10].setShortDescription(Messages.getString("descrTheta")); //$NON-NLS-1$
       properties[10].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
+                 
+      properties[11] = new PropertyDescriptor("upwind", Case.class); //$NON-NLS-1$
+      properties[11].setValue("order", 12); //$NON-NLS-1$
+      properties[11].setDisplayName(Messages.getString("nameUpwind")); //$NON-NLS-1$
+      properties[11].setShortDescription(Messages.getString("descrUpwind")); //$NON-NLS-1$
+      properties[11].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
       
-      properties[11] = new PropertyDescriptor("author", Case.class); //$NON-NLS-1$
-      properties[11].setValue("order", 13); //$NON-NLS-1$
-      properties[11].setDisplayName(Messages.getString("nameAuthor")); //$NON-NLS-1$
-      properties[11].setShortDescription(Messages.getString("descrAuthor")); //$NON-NLS-1$
-      properties[11].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameMisc")); //$NON-NLS-1$
-      
-      properties[12] = new PropertyDescriptor("description", Case.class); //$NON-NLS-1$
-      properties[12].setValue("order", 14); //$NON-NLS-1$
-      properties[12].setDisplayName(Messages.getString("nameDescription")); //$NON-NLS-1$
-      properties[12].setShortDescription(Messages.getString("descrDescription")); //$NON-NLS-1$
+      properties[12] = new PropertyDescriptor("author", Case.class); //$NON-NLS-1$
+      properties[12].setValue("order", 13); //$NON-NLS-1$
+      properties[12].setDisplayName(Messages.getString("nameAuthor")); //$NON-NLS-1$
+      properties[12].setShortDescription(Messages.getString("descrAuthor")); //$NON-NLS-1$
       properties[12].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameMisc")); //$NON-NLS-1$
+      
+      properties[13] = new PropertyDescriptor("description", Case.class); //$NON-NLS-1$
+      properties[13].setValue("order", 14); //$NON-NLS-1$
+      properties[13].setDisplayName(Messages.getString("nameDescription")); //$NON-NLS-1$
+      properties[13].setShortDescription(Messages.getString("descrDescription")); //$NON-NLS-1$
+      properties[13].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameMisc")); //$NON-NLS-1$
       
 		} catch (IntrospectionException e) {
 			e.printStackTrace();

@@ -179,9 +179,25 @@ public class OneDimensionalModel implements Model {
       positions[i] = dx * (i + 0.5);
     }
 
+    final double[] forceComputationBounds = data.getForceComputationBounds().clone();
+
+    if (Double.isNaN(forceComputationBounds[0])) {
+      forceComputationBounds[0] = 0.0;
+    }
+
+    if (Double.isNaN(forceComputationBounds[1])) {
+      forceComputationBounds[1] = kL;
+    }
+
     // Knotenwerte
     for (int i = 0; i < nx + 1; i++) {
-      aShipNode[i] = data.getShipArea(dx * i);
+
+      final double pos = dx * i;
+
+//      if (forceComputationBounds[0] <= pos && pos <= forceComputationBounds[1]) {
+        aShipNode[i] = data.getShipArea(pos);
+//        shipVol += aShipNode[i] * dx;
+//      }
       Q00[i] = 0.;
       Q0[i] = 0.;
       Q05[i] = 0.;
@@ -386,8 +402,8 @@ public class OneDimensionalModel implements Model {
         final double AB = aShipNode[i];
 
         // Über Flächendifferenzen*Druecke
-        longitudinalForce[step] += -(h1[i] - h1[i + 1]) / dx * 1000. * GRAVITY * 0.5
-            * (AA + AB) * dx;
+        longitudinalForce[step] += -(h1[i] - h1[i + 1]) / dx // slope
+                * 1000. * 0.5 * (AA + AB) * dx * GRAVITY; // weight force
       }
       
     } while ((step < maxStep) && (Math.abs(h1Mean[step] - ow) > ow_uw));
@@ -424,7 +440,7 @@ public class OneDimensionalModel implements Model {
       @SuppressWarnings("StringBufferReplaceableByString")
       final StringBuffer bf = new StringBuffer();
 
-      bf.append("*******************************************************\n"); //$NON-NLS-1$
+      bf.append("* * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"); //$NON-NLS-1$
 
       bf.append(String.format(Messages.getString("resultTimeSteps") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
           step));
@@ -435,15 +451,22 @@ public class OneDimensionalModel implements Model {
       bf.append(String.format(Messages.getString("resultFillingVolume") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
           chamberVol));
 
-      bf.append(String.format(Messages.getString("resultShipVolume") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-          shipVol));
-
       bf.append(String.format(Messages.getString("resultMinMaxFlowRate") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
           Qmin, Qmax));
 
       bf.append(String.format(
-          Messages.getString("resultMinMaxLongitudinalForces") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-          Fmin * 1.e-3, Fmax * 1.e-3));
+              Messages.getString("resultMinMaxFlowRateChange") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+              dQ_dt_min, dQ_dt_max));
+
+      bf.append(String.format(Messages.getString("resultMinMaxSlope") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+              Imin * 1000., Imax * 1000.));
+
+      bf.append(String.format(Messages.getString("resultShipVolume") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+              shipVol));
+
+      bf.append(String.format(
+              Messages.getString("resultMinMaxLongitudinalForces") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
+              Fmin * 1.e-3, Fmax * 1.e-3));
 
       bf.append(String.format(
           Messages.getString("resultMinMaxLongitudinalForceToGravityForce") //$NON-NLS-1$
@@ -452,14 +475,7 @@ public class OneDimensionalModel implements Model {
           Math.abs(Fmin) / (shipVol * GRAVITY),
           Math.abs(Fmax) / (shipVol * GRAVITY)));
 
-      bf.append(String.format(Messages.getString("resultMinMaxSlope") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-          Imin * 1000., Imax * 1000.));
-
-      bf.append(String.format(
-          Messages.getString("resultMinMaxFlowRateChange") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
-          dQ_dt_min, dQ_dt_max));
-
-      bf.append("*******************************************************\n"); //$NON-NLS-1$
+      bf.append("* * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"); //$NON-NLS-1$
 
       bf.append(String.format(Messages.getString("resultTotalRuntime") + " \n", //$NON-NLS-1$ //$NON-NLS-2$
           runtime * 1.e-9));
