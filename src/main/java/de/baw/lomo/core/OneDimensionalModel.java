@@ -236,7 +236,7 @@ public class OneDimensionalModel implements Model {
         final double[][] source = ft.getSource(time, positions, h1, v1, data);
 
         Arrays.setAll(volumeSource, i -> volumeSource[i] + source[0][i]);
-        Arrays.setAll(momentumSource, i -> volumeSource[i] + source[1][i]);
+        Arrays.setAll(momentumSource, i -> momentumSource[i] + source[1][i]);
       }
       
       // Alte Zeitebene wird ganz alte Zeitebene, neue Zeitebene wird alte
