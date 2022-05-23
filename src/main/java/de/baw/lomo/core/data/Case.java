@@ -23,11 +23,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElementRef;
-import jakarta.xml.bind.annotation.XmlElementWrapper;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.*;
 
 import de.baw.lomo.utils.Utils;
 
@@ -238,11 +234,16 @@ public class Case {
     return Utils.linearInterpolate(shipAreaLookup, x);
   }
 
+  @XmlList
   public double[] getForceComputationBounds() {
     return forceComputationBounds;
   }
 
   public void setForceComputationBounds(double[] forceComputationBounds) {
+    if (forceComputationBounds.length != 2) {
+      throw new IllegalArgumentException("Force computation bounds must be two values. Using default values.");
+    }
+
     this.forceComputationBounds = forceComputationBounds;
   }
 }

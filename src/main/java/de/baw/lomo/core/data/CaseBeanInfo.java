@@ -66,7 +66,7 @@ public class CaseBeanInfo extends SimpleBeanInfo {
 //      properties[4].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameFilling")); //$NON-NLS-1$
       
       properties[4] = new PropertyDescriptor("shipAreaLookup", Case.class); //$NON-NLS-1$
-      properties[4].setValue("order", 6); //$NON-NLS-1$
+      properties[4].setValue("order", 5); //$NON-NLS-1$
       properties[4].setDisplayName(Messages.getString("nameShipAreaLookup")); //$NON-NLS-1$
       properties[4].setShortDescription(Messages.getString("descrShipAreaLookup")); //$NON-NLS-1$
       properties[4].setPropertyEditorClass(PopOverKeyValueListPropertyEditor.class);
@@ -77,7 +77,7 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[5].setDisplayName(Messages.getString("nameForceComputationBounds")); //$NON-NLS-1$
       properties[5].setShortDescription(Messages.getString("descrForceComputationBounds")); //$NON-NLS-1$
       properties[5].setPropertyEditorClass(RangeEditor.class);
-      properties[5].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
+      properties[5].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameGeometry")); //$NON-NLS-1$
 		  
       properties[6] = new PropertyDescriptor("timeMax", Case.class); //$NON-NLS-1$
       properties[6].setValue("order", 7); //$NON-NLS-1$

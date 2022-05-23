@@ -35,19 +35,16 @@ public class RangeEditor implements PropertyEditor<double[]> {
     private final TextField low;
     private final TextField high;
 
+    private double[] value;
+
     public RangeEditor(PropertySheet.Item property) {
         
         rangeEditor = new HBox(5);
 
-        Pattern validEditingState = Pattern.compile("(-?(([1-9][0-9]*)|0)?(\\.[0-9]*)?)|NaN");
+        Pattern validEditingState = Pattern.compile("(-?(([1-9][0-9]*)|0)?(\\.[0-9]*)?)|[Na]+");
         final UnaryOperator<TextFormatter.Change> filter =
                 change -> {
                     if (validEditingState.matcher(change.getControlNewText()).matches()) {
-
-                        if (change.getControlNewText().isEmpty()) {
-                            change.setText("NaN");
-                        }
-
                         return change; //if change is a number
                     } else {
                         return null;
@@ -55,13 +52,31 @@ public class RangeEditor implements PropertyEditor<double[]> {
                 };
 
         low = new TextField();
-        low.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), 1.0, filter));
+        low.setTextFormatter(new TextFormatter<>(new DoubleStringConverter() {
+            @Override
+            public Double fromString(String value) {
+                if (value.isEmpty()) value = "NaN";
+                return super.fromString(value);
+            }
+        }, 1.0, filter));
         low.setPrefColumnCount(5);
         HBox.setHgrow(low, Priority.ALWAYS);
         high = new TextField();
         high.setPrefColumnCount(5);
         HBox.setHgrow(high, Priority.ALWAYS);
-        high.setTextFormatter(new TextFormatter<Double>(new DoubleStringConverter(), 1.0, filter));
+        high.setTextFormatter(new TextFormatter<>(new DoubleStringConverter() {
+            @Override
+            public Double fromString(String value) {
+                if (value.isEmpty()) value = "NaN";
+                return super.fromString(value);
+            }
+        }, 1.0, filter));
+
+        low.getTextFormatter().valueProperty().addListener((observable, oldValue, newValue)
+                -> value[0] = (double) low.getTextFormatter().getValue());
+
+        high.getTextFormatter().valueProperty().addListener((observable, oldValue, newValue)
+                -> value[1] = (double) high.getTextFormatter().getValue());
 
         rangeEditor.getChildren().addAll(low, high);
     }
@@ -73,11 +88,12 @@ public class RangeEditor implements PropertyEditor<double[]> {
 
     @Override
     public double[] getValue() {
-        return new double[] { (double)low.getTextFormatter().getValue(), (double)high.getTextFormatter().getValue() };
+        return value;
     }
 
     @Override
     public void setValue(double[] value) {
+        this.value = value;
         ((TextFormatter<Double>)low.getTextFormatter()).setValue(value[0]);
         ((TextFormatter<Double>)high.getTextFormatter()).setValue(value[1]);
     }

@@ -167,7 +167,6 @@ public class OneDimensionalModel implements Model {
     // Zellwerte
     for (int i = 0; i < nx; i++) {
       aShipCell[i] = data.getShipArea(dx * (i + 0.5));
-      shipVol += data.getShipArea(dx * i) * dx;
 
       A00[i] = uw * kB - aShipCell[i];
       A0[i] = A00[i];
@@ -193,11 +192,11 @@ public class OneDimensionalModel implements Model {
     for (int i = 0; i < nx + 1; i++) {
 
       final double pos = dx * i;
-
-//      if (forceComputationBounds[0] <= pos && pos <= forceComputationBounds[1]) {
+      if (forceComputationBounds[0] <= pos && pos <= forceComputationBounds[1]) {
         aShipNode[i] = data.getShipArea(pos);
-//        shipVol += aShipNode[i] * dx;
-//      }
+        shipVol += aShipNode[i] * dx;
+      }
+
       Q00[i] = 0.;
       Q0[i] = 0.;
       Q05[i] = 0.;
