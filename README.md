@@ -10,7 +10,7 @@ direction are computed.
 
 **LoMo** can be run using our [released runtime images](https://github.com/baw-de/lomo/releases). Download and extract
 the ZIP or TAR.GZ archive depending on your operating system. On Windows you can execute `bin\lomo.bat` with a double
-click. On a UN*X system execute `bin\lomo`.
+click. On a UN*X system execute `bin/lomo`.
 
 To build **LoMo** from source a Java JDK 11+ (e.g. [Oracle OpenJDK](https://openjdk.java.net/)) is required. Make sure
 the environment variable`JAVA_HOME` is pointing to your JDK. **LoMo** is build and run using
@@ -23,6 +23,7 @@ git checkout -t <TAG>
 gradlew.bat run        # Windows
 ./gradlew run          # UN*X systems
 ```
+After installing **LoMo** you can continue reading our information on [getting started](https://github.com/baw-de/lomo/wiki/Getting-started).
 
 
 ## Development
