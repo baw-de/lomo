@@ -12,9 +12,8 @@ direction are computed.
 the ZIP or TAR.GZ archive depending on your operating system. On Windows you can execute `bin\lomo.bat` with a double
 click. On a UN*X system execute `bin/lomo`.
 
-To build **LoMo** from source a Java JDK 11+ (e.g. [Oracle OpenJDK](https://openjdk.java.net/)) is required. Make sure
-the environment variable`JAVA_HOME` is pointing to your JDK. **LoMo** is build and run using
-the [Gradle Build Tool](https://gradle.org/):
+To build **LoMo** from source a Java JDK 11+ is required. Make sure the environment variable`JAVA_HOME` is pointing to 
+your JDK. **LoMo** is build and run using the [Gradle Build Tool](https://gradle.org/):
 
 ```
 git clone https://github.com/baw-de/lomo.git
@@ -62,7 +61,7 @@ See [LICENSE.txt](LICENSE.txt) for details.
 **LoMo** runtime images include the following third party libraries which are distributed under 
 their own terms. See [3RD-PARTY.txt](3RD-PARTY.txt) for details.
 
-* [Oracle OpenJDK](https://openjdk.java.net/): GNU General Public License 2, with the Classpath Exception
+* [Eclipse Temurin OpenJDK](https://adoptium.net/): GNU General Public License 2, with the Classpath Exception
 * [JavaFX](https://openjfx.io/): GNU General Public License 2, with the Classpath Exception
 * [ControlsFX](https://github.com/controlsfx/controlsfx): 3-Clause BSD License
 * [Jakarta XML Binding](https://github.com/eclipse-ee4j/jaxb-api): Eclipse Distribution License (EDL) v1.0

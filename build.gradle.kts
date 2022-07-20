@@ -70,11 +70,11 @@ jlink {
 
         if (releasePlatform != null && releasePlatform != "local") {
             val jdkUrl = when (releasePlatform) {
-                "win-x64" -> "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_windows-x64_bin.zip"
-                "linux-x64" -> "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz"
-                "linux-aarch64" -> "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-aarch64_bin.tar.gz"
-                "mac-x64" -> "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-x64_bin.tar.gz"
-                "mac-aarch64" -> "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_macos-aarch64_bin.tar.gz"
+                "win-x64" -> "https://api.adoptium.net/v3/binary/latest/17/ga/windows/x64/jdk/hotspot/normal/eclipse?project=jdk"
+                "linux-x64" -> "https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jdk/hotspot/normal/eclipse?project=jdk"
+                "linux-aarch64" -> "https://api.adoptium.net/v3/binary/latest/17/ga/linux/aarch64/jdk/hotspot/normal/eclipse?project=jdk"
+                "mac-x64" -> "https://api.adoptium.net/v3/binary/latest/17/ga/mac/x64/jdk/hotspot/normal/eclipse?project=jdk"
+                "mac-aarch64" -> "https://api.adoptium.net/v3/binary/latest/17/ga/mac/aarch64/jdk/hotspot/normal/eclipse?project=jdk"
                 else -> throw InvalidUserDataException("Invalid release platform: $releasePlatform")
             }
 
@@ -82,6 +82,7 @@ jlink {
             setJdkHome(jdkDownload(jdkUrl,
                 closureOf<org.beryx.jlink.util.JdkUtil.JdkDownloadOptions> {
                     downloadDir = "${project.buildDir}/jdks/$releasePlatform"
+                    archiveExtension = if (releasePlatform == "win-x64") "zip" else "tar.gz"
                 }))
         }
     }
