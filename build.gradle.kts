@@ -1,3 +1,5 @@
+@file:Suppress("HardCodedStringLiteral")
+
 import org.openjfx.gradle.*
 import java.lang.reflect.Field
 import java.lang.reflect.Method
