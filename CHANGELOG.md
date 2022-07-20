@@ -1,3 +1,21 @@
+# Release 2.0-beta4
+
+## Core
+* Results now include water level and flow velocity over space and time
+* It is now possible to define bounds for ship force computation
+
+## GUI
+* Possibility to enter bounds for ship force computation
+
+## Other
+* Releases are build using Eclipse Temurin OpenJDK
+
+## Known bugs and flaws
+* The valve opening line in the chart is not yet optimized for multiple filling elements.
+* There are no consistent default values for the saving basins yet.
+* No rounding of values set by saving lock design assistant.
+
+
 # Release 2.0-beta3
 
 ## Core
