@@ -17,15 +17,14 @@
  */
 package de.baw.lomo.core.data;
 
+import de.baw.lomo.utils.Utils;
+import jakarta.xml.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import jakarta.xml.bind.annotation.*;
-
-import de.baw.lomo.utils.Utils;
 
 @XmlRootElement(name="BAWLomoCase")
 public class Case {
@@ -82,7 +81,7 @@ public class Case {
   }
 
   public void setVersion(String version) {
-    if (!version.equals(VERSION)) {
+    if (!VERSION.equals(version)) {
       throw new IllegalArgumentException("Wrong case version: " + version
           + " Required version is: " + VERSION);
     }
@@ -160,7 +159,7 @@ public class Case {
         int inc = Integer.parseInt(num) + 1;
         fillingType.setName(matcher.replaceFirst(String.valueOf(inc)));
       } else if(fillingType.getName().equals(lastFtOfSameType.get().getName())) {
-        fillingType.setName(String.format("%s 1", lastFtOfSameType.get().getName()));
+        fillingType.setName(String.format("%s 1", lastFtOfSameType.get().getName())); //$NON-NLS-1$
       }
 
     }
@@ -173,7 +172,7 @@ public class Case {
   }
 
   @XmlElementWrapper
-  @XmlElement(name = "entry")
+  @XmlElement(name = "entry") //$NON-NLS-1$
   public List<KeyValueEntry> getShipAreaLookup() {
     return shipAreaLookup;
   }

@@ -17,11 +17,11 @@
  */
 package de.baw.lomo.utils;
 
-import java.util.List;
-
 import de.baw.lomo.core.data.KeyValueEntry;
 
-public class Utils {
+import java.util.List;
+
+public final class Utils {
 
   private Utils() {
     throw new AssertionError();
@@ -45,7 +45,7 @@ public class Utils {
         throw new IllegalArgumentException("x values are not monotonic.");
       }
 
-      if ((source.get(i).getKey() <= x) && (x <= source.get(i + 1).getKey())) {
+      if (source.get(i).getKey() <= x && x <= source.get(i + 1).getKey()) {
 
         final double yi = source.get(i).getValue();
         final double yii = source.get(i + 1).getValue();

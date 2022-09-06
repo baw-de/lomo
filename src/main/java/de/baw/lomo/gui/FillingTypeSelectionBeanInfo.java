@@ -32,8 +32,8 @@ public class FillingTypeSelectionBeanInfo extends SimpleBeanInfo {
         try {
             properties[0] = new PropertyDescriptor("fillingElement", FillingTypeSelection.class); //$NON-NLS-1$
             properties[0].setValue("order", 0); //$NON-NLS-1$
-            properties[0].setDisplayName(de.baw.lomo.gui.Messages.getString("nameSelectedFillingElement")); //$NON-NLS-1$
-            properties[0].setShortDescription(de.baw.lomo.gui.Messages.getString("descrSelectedFillingElement")); //$NON-NLS-1$
+            properties[0].setDisplayName(Messages.getString("nameSelectedFillingElement")); //$NON-NLS-1$
+            properties[0].setShortDescription(Messages.getString("descrSelectedFillingElement")); //$NON-NLS-1$
             properties[0].setPropertyEditorClass(FillingTypeSelectionEditor.class);
             properties[0].setValue(BeanProperty.CATEGORY_LABEL_KEY, de.baw.lomo.core.data.Messages.getString("catNameFilling")); //$NON-NLS-1$
 

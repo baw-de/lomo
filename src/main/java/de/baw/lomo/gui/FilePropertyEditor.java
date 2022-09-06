@@ -17,11 +17,6 @@
  */
 package de.baw.lomo.gui;
 
-import java.io.File;
-
-import org.controlsfx.control.PropertySheet;
-import org.controlsfx.property.editor.PropertyEditor;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -31,6 +26,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.OverrunStyle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import org.controlsfx.control.PropertySheet;
+import org.controlsfx.property.editor.PropertyEditor;
+
+import java.io.File;
 
 public class FilePropertyEditor implements PropertyEditor<String> {
 
@@ -59,7 +58,7 @@ public class FilePropertyEditor implements PropertyEditor<String> {
         new ExtensionFilter(Messages.getString("descrAllFileFilter"), "*.*")); //$NON-NLS-1$ //$NON-NLS-2$
 
     if (!value.get().isEmpty()) {
-      fileChooser.setInitialDirectory((new File(value.get())).getParentFile());
+      fileChooser.setInitialDirectory(new File(value.get()).getParentFile());
     }
 
     final File selectedFile = fileChooser

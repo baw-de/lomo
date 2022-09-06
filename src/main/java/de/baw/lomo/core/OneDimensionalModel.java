@@ -405,7 +405,7 @@ public class OneDimensionalModel implements Model {
                 * 1000. * 0.5 * (AA + AB) * dx * GRAVITY; // weight force
       }
       
-    } while ((step < maxStep) && (Math.abs(h1Mean[step] - ow) > ow_uw));
+    } while (step < maxStep && Math.abs(h1Mean[step] - ow) > ow_uw);
 
     runtime = System.nanoTime() - runtime;
   }

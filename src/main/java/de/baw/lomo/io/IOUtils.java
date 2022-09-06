@@ -17,6 +17,14 @@
  */
 package de.baw.lomo.io;
 
+import de.baw.lomo.core.data.Case;
+import de.baw.lomo.core.data.FillingType;
+import de.baw.lomo.core.data.Results;
+import jakarta.xml.bind.*;
+import jakarta.xml.bind.util.JAXBSource;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -27,22 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.baw.lomo.core.data.FillingType;
-import jakarta.xml.bind.*;
-
-import de.baw.lomo.core.data.Case;
-import de.baw.lomo.core.data.Results;
-import jakarta.xml.bind.util.JAXBSource;
-
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
-
-public class IOUtils {
+public final class IOUtils {
 
   private IOUtils() {
     throw new AssertionError();
   }
 
+  @SuppressWarnings("unchecked") // we have just marshalled the object before
   public static <T extends FillingType> T deepCopyDataObjects(T obj) {
 
     try {
@@ -230,11 +229,11 @@ public class IOUtils {
           break;
         }
         
-        if (lineData[0].toLowerCase().startsWith("time")) { //$NON-NLS-1$
+        if (lineData[0].toLowerCase(Locale.ENGLISH).startsWith("time")) { //$NON-NLS-1$
 
           for (String lineDatum : lineData) {
 
-            final String columnHeader = lineDatum.toLowerCase();
+            final String columnHeader = lineDatum.toLowerCase(Locale.ENGLISH);
 
             if (columnHeader.startsWith("time")) { //$NON-NLS-1$
               listList.add(timeList);

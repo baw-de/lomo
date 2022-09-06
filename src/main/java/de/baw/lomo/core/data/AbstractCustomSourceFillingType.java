@@ -27,7 +27,7 @@ public abstract class AbstractCustomSourceFillingType extends FillingType {
 
   private List<CustomSource> sources = new ArrayList<>();
 
-  @XmlElement(name = "source")
+  @XmlElement(name = "source") //$NON-NLS-1$
   public List<CustomSource> getSources() {
     return sources;
   }
@@ -79,7 +79,7 @@ public abstract class AbstractCustomSourceFillingType extends FillingType {
         } else if (cellMinPos < sourcePos + 0.5 * sourceLength
             && sourcePos + 0.5 * sourceLength <= cellMaxPos) {
 
-          source[0][cell] += ((sourcePos + 0.5 * sourceLength)
+          source[0][cell] += (sourcePos + 0.5 * sourceLength
               - Math.max(cellMinPos, sourcePos - 0.5 * sourceLength))
               / sourceLength * s.getSource(time);
 

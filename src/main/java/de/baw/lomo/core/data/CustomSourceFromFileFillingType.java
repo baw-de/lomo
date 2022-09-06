@@ -17,20 +17,16 @@
  */
 package de.baw.lomo.core.data;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name = "customSourceFromFileFillingType")
 public class CustomSourceFromFileFillingType extends AbstractCustomSourceFillingType {
@@ -50,11 +46,6 @@ public class CustomSourceFromFileFillingType extends AbstractCustomSourceFilling
   @Override
   public List<CustomSource> getSources() {
     return super.getSources();
-  }
-
-  @Override
-  public void setSources(List<CustomSource> sources) {
-    super.setSources(sources);
   }
 
   @Override
@@ -97,7 +88,7 @@ public class CustomSourceFromFileFillingType extends AbstractCustomSourceFilling
           continue;
         }
 
-        if (lineData[0].equals("#")) { //$NON-NLS-1$
+        if ("#".equals(lineData[0])) { //$NON-NLS-1$
           
           if (lineData.length == 4) {
 
@@ -125,7 +116,7 @@ public class CustomSourceFromFileFillingType extends AbstractCustomSourceFilling
 
         } else {
 
-          if (sources.size() == 0) {
+          if (sources.isEmpty()) {
             System.out.format(
                 Messages.getString("customSourceFromFile.missingHeaderLinesError")); //$NON-NLS-1$
             return;

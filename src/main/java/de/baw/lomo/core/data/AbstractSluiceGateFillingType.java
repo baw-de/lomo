@@ -17,13 +17,12 @@
  */
 package de.baw.lomo.core.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.baw.lomo.utils.Utils;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 
-import de.baw.lomo.utils.Utils;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractSluiceGateFillingType
     extends AbstractGateFillingType {
@@ -34,12 +33,8 @@ public abstract class AbstractSluiceGateFillingType
 
   private boolean prescribedJetOutletEnabled = false;
 
-  public AbstractSluiceGateFillingType() {
-    super();
-  }
-
   @XmlElementWrapper
-  @XmlElement(name = "entry")
+  @XmlElement(name = "entry") //$NON-NLS-1$
   public List<KeyValueEntry> getSluiceGateHeightLookup() {
     return sluiceGateHeightLookup;
   }
@@ -49,7 +44,7 @@ public abstract class AbstractSluiceGateFillingType
   }
 
   @XmlElementWrapper
-  @XmlElement(name = "entry")
+  @XmlElement(name = "entry") //$NON-NLS-1$
   public List<KeyValueEntry> getSluiceGateWidthLookup() {
     return sluiceGateWidthLookup;
   }
@@ -59,7 +54,7 @@ public abstract class AbstractSluiceGateFillingType
   }
 
   @XmlElementWrapper
-  @XmlElement(name = "entry")
+  @XmlElement(name = "entry") //$NON-NLS-1$
   public List<KeyValueEntry> getSluiceGateDischargeCoefficientLookup() {
     return sluiceGateDischargeCoefficientLookup;
   }

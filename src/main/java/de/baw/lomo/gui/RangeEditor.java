@@ -55,7 +55,7 @@ public class RangeEditor implements PropertyEditor<double[]> {
         low.setTextFormatter(new TextFormatter<>(new DoubleStringConverter() {
             @Override
             public Double fromString(String value) {
-                if (value.isEmpty()) value = "NaN";
+                if (value.isEmpty()) { value = "NaN"; }
                 return super.fromString(value);
             }
         }, 1.0, filter));
@@ -67,7 +67,7 @@ public class RangeEditor implements PropertyEditor<double[]> {
         high.setTextFormatter(new TextFormatter<>(new DoubleStringConverter() {
             @Override
             public Double fromString(String value) {
-                if (value.isEmpty()) value = "NaN";
+                if (value.isEmpty()) { value = "NaN"; }
                 return super.fromString(value);
             }
         }, 1.0, filter));
@@ -92,6 +92,7 @@ public class RangeEditor implements PropertyEditor<double[]> {
     }
 
     @Override
+    @SuppressWarnings("unchecked") // We have set the TextFormatter above
     public void setValue(double[] value) {
         this.value = value;
         ((TextFormatter<Double>)low.getTextFormatter()).setValue(value[0]);

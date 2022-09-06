@@ -17,13 +17,6 @@
  */
 package de.baw.lomo.gui;
 
-import java.util.Comparator;
-import java.util.List;
-
-import org.controlsfx.control.PopOver;
-import org.controlsfx.control.PropertySheet;
-import org.controlsfx.property.editor.PropertyEditor;
-
 import de.baw.lomo.core.data.KeyValueEntry;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -47,6 +40,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.DoubleStringConverter;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.PropertySheet;
+import org.controlsfx.property.editor.PropertyEditor;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class PopOverKeyValueListPropertyEditor
     implements PropertyEditor<List<KeyValueEntry>> {
@@ -146,7 +145,7 @@ public class PopOverKeyValueListPropertyEditor
             
       data.sort(Comparator.comparingDouble(KeyValueEntry::getKey));
       
-      syncVisualData(data, visualData);
+      syncVisualData(visualData);
     });
 
     final TableColumn<KeyValueEntry, Double> valueCol = new TableColumn<>(
@@ -178,7 +177,7 @@ public class PopOverKeyValueListPropertyEditor
 
       t.getTableView().getItems().get(t.getTablePosition().getRow())
           .setValue(t.getNewValue());
-      syncVisualData(data, visualData);
+      syncVisualData(visualData);
     });
 
     table.getColumns().addAll(keyCol, valueCol);
@@ -189,7 +188,7 @@ public class PopOverKeyValueListPropertyEditor
     addButton.setOnAction((ActionEvent e) -> {
 
       data.add(new KeyValueEntry(data.get(data.size()-1).getKey(), 0.0));
-      syncVisualData(data, visualData);
+      syncVisualData(visualData);
     });
 
     final Button delButton = new Button(Messages.getString("btnTbDelete"));
@@ -202,7 +201,7 @@ public class PopOverKeyValueListPropertyEditor
         }
         
         data.remove(table.getSelectionModel().getSelectedIndex());
-        syncVisualData(data, visualData);
+        syncVisualData(visualData);
       }
     });
 
@@ -240,8 +239,7 @@ public class PopOverKeyValueListPropertyEditor
     popOver.setContentNode(pane);
   }
 
-  private void syncVisualData(ObservableList<KeyValueEntry> data,
-      ObservableList<XYChart.Data<Number, Number>> visualData) {
+  private void syncVisualData(ObservableList<XYChart.Data<Number, Number>> visualData) {
 
       visualData.clear();
 

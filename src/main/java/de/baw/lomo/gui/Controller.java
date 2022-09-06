@@ -17,6 +17,45 @@
  */
 package de.baw.lomo.gui;
 
+import de.baw.lomo.core.Model;
+import de.baw.lomo.core.data.*;
+import de.baw.lomo.io.IOUtils;
+import de.baw.lomo.utils.SavingLockDesigner;
+import javafx.application.HostServices;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
+import javafx.util.converter.DoubleStringConverter;
+import org.controlsfx.control.PropertySheet;
+import org.controlsfx.control.PropertySheet.Item;
+import org.controlsfx.property.BeanProperty;
+import org.controlsfx.property.BeanPropertyUtils;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyDescriptor;
 import java.io.*;
@@ -29,51 +68,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
-
-import javax.imageio.ImageIO;
-
-import de.baw.lomo.core.data.*;
-import de.baw.lomo.utils.SavingLockDesigner;
-import javafx.beans.value.ChangeListener;
-import javafx.scene.control.*;
-import javafx.util.converter.DoubleStringConverter;
-import org.controlsfx.control.PropertySheet;
-import org.controlsfx.control.PropertySheet.Item;
-import org.controlsfx.property.BeanProperty;
-import org.controlsfx.property.BeanPropertyUtils;
-
-import de.baw.lomo.core.Model;
-import de.baw.lomo.io.IOUtils;
-import javafx.application.HostServices;
-import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.WritableImage;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.TilePane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Modality;
 
 public class Controller implements Initializable {
   @FXML
@@ -212,16 +206,15 @@ public class Controller implements Initializable {
 
   public void initConsole() {
 
-    try {
-
-      PrintStream out = new PrintStream(new MyOutputStream(), true, StandardCharsets.UTF_8); //$NON-NLS-1$
+    try (PrintStream out = new PrintStream(new MyOutputStream(), true,
+            StandardCharsets.UTF_8)) {
 
       System.setOut(out);
       System.setErr(out);
 
     } catch (IOException e) {
       e.printStackTrace();
-    } 
+    }
   }
 
   public void processMenuCopyFillingType(ActionEvent actionEvent) {
@@ -389,6 +382,12 @@ public class Controller implements Initializable {
       });
 
     }
+
+    @Override
+    public void close() throws IOException {
+      out.close();
+      super.close();
+    }
   }
 
   public void initModel(Model model, Case data) {
@@ -447,7 +446,7 @@ public class Controller implements Initializable {
           int iStepSize = Math.max(10000, timeResults.length) / 10000;
 
           // avoid even step size:
-          if (iStepSize % 2 == 0) iStepSize += 1;
+          if (iStepSize % 2 == 0) { iStepSize += 1; }
 
           for (int i = 0; i < timeResults.length - iStepSize; i += iStepSize) {
 
@@ -523,8 +522,7 @@ public class Controller implements Initializable {
       task.exceptionProperty().addListener((observable, oldValue, newValue) ->  {
         if(newValue != null) {
           Exception ex = (Exception) newValue;
-          System.out.println(String
-              .format(Messages.getString("errInComputation"), ex.getMessage())); //$NON-NLS-1$
+          System.out.printf((Messages.getString("errInComputation")) + "%n", ex.getMessage()); //$NON-NLS-1$
         }
       });
       
@@ -897,6 +895,7 @@ public class Controller implements Initializable {
     });
   }
 
+  @SuppressWarnings("unchecked") // we build the ComboBox
   public void initGUI() {
     ObservableList<Item> liste = BeanPropertyUtils.getProperties(data);
     liste.sort(propertyComparator);
@@ -911,14 +910,15 @@ public class Controller implements Initializable {
     if (propList.getSkin() != null) {
       Accordion acc = (Accordion) propList.getSkin().getNode().lookup(".accordion");
 
-      if (lastOpenAccordionPane >= 0)
+      if (lastOpenAccordionPane >= 0) {
         acc.setExpandedPane(acc.getPanes().get(lastOpenAccordionPane));
+      }
 
       acc.expandedPaneProperty().addListener(
               (observable, oldValue, newValue) -> lastOpenAccordionPane = acc.getPanes().indexOf(newValue));
 
       Platform.runLater(() -> {
-        ComboBox<FillingType> cb = (ComboBox<FillingType>) propList.getSkin().getNode().lookup("#ftSelector");
+        ComboBox<FillingType> cb = (ComboBox<FillingType>) propList.getSkin().getNode().lookup("#ftSelector"); //$NON-NLS-1$
         cb.setItems(FXCollections.observableList(data.getFillingTypes()));
       });
     }
@@ -997,7 +997,7 @@ public class Controller implements Initializable {
     int iStepSize = Math.max(10000,timeResults.length) / 10000;
     
     // avoid even step size:
-    if (iStepSize % 2 == 0) iStepSize += 1;
+    if (iStepSize % 2 == 0) { iStepSize += 1; }
 
     for (int i = 0; i < timeResults.length-iStepSize; i+=iStepSize) {
 

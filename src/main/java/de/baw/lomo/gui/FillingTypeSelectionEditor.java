@@ -38,12 +38,12 @@ public class FillingTypeSelectionEditor extends AbstractPropertyEditor<FillingTy
         getEditor().getEditor().textProperty()
                 .addListener((observable, oldValue, newValue) -> {
 
-                    getEditor().getEditor().getStyleClass().remove("warning");
+                    getEditor().getEditor().getStyleClass().remove("warning"); //$NON-NLS-1$
 
                     if (getEditor().getItems().size() > 1 &&
                             getEditor().getItems().stream()
                                     .anyMatch(ft -> ft.getName().equals(newValue.strip()))) {
-                      getEditor().getEditor().getStyleClass().add("warning");
+                      getEditor().getEditor().getStyleClass().add("warning"); //$NON-NLS-1$
                         isValid = false;
                     } else {
                         isValid = true;
@@ -54,7 +54,7 @@ public class FillingTypeSelectionEditor extends AbstractPropertyEditor<FillingTy
             if (!newValue) {
                 if (!isValid) {
                     getEditor().cancelEdit();
-                    getEditor().getEditor().getStyleClass().remove("warning");
+                    getEditor().getEditor().getStyleClass().remove("warning"); //$NON-NLS-1$
                     isValid = true;
                 } else {
                     final String editorText = getEditor().getEditor().getText();
@@ -75,8 +75,7 @@ public class FillingTypeSelectionEditor extends AbstractPropertyEditor<FillingTy
 
             @Override
             public FillingType fromString(String string) {
-                if (!isValid)
-                    return getValue();
+                if (!isValid) { return getValue(); }
 
                 return getEditor().getItems().stream()
                         .filter(ft -> ft.getName().equals(string))

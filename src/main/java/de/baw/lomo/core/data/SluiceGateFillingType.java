@@ -17,14 +17,7 @@
  */
 package de.baw.lomo.core.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
-
-import de.baw.lomo.utils.Utils;
 
 @XmlRootElement(name="sluiceGateFillingType")
 public class SluiceGateFillingType extends AbstractSluiceGateFillingType {

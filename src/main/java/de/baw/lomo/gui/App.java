@@ -17,13 +17,6 @@
  */
 package de.baw.lomo.gui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
-
 import de.baw.lomo.core.OneDimensionalModel;
 import de.baw.lomo.core.data.Case;
 import de.baw.lomo.io.IOUtils;
@@ -33,6 +26,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.ResourceBundle;
+
 public class App extends Application {
   
   @Override
@@ -41,7 +42,7 @@ public class App extends Application {
     Locale.setDefault(determineLocale());
       
     FXMLLoader loader = new FXMLLoader(Controller.class.getResource("ui.fxml"), 
-        de.baw.lomo.gui.Messages.RESOURCE_BUNDLE);
+        Messages.RESOURCE_BUNDLE);
     loader.load();  
       
     Controller c = loader.getController(); 
@@ -60,7 +61,7 @@ public class App extends Application {
     Parent root = loader.getRoot();    
     Scene scene = new Scene(root);
     scene.getStylesheets().add(
-        Controller.class.getResource("ui.css").toExternalForm());
+        Objects.requireNonNull(Controller.class.getResource("ui.css")).toExternalForm());
     primaryStage.setScene(scene);
     primaryStage.setTitle(ResourceBundle.getBundle("de.baw.lomo.version").getString("lomo.name"));
     primaryStage.show();
