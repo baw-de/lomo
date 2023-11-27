@@ -27,7 +27,7 @@ After installing **LoMo** you can continue reading our information on [getting s
 
 ## Development
 
-**LoMo** is developed at the [Federal Waterways Engineering and Research Institute](http://www.baw.de/).
+**LoMo** is developed at the [Federal Waterways Engineering and Research Institute](https://www.baw.de/).
 It is based on an object-oriented software design to allow simple extension of 
 the software. 
 
