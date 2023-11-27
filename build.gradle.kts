@@ -61,10 +61,16 @@ jlink {
     launcher {
         noConsole = true
     }
-    addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
+    addOptions("--strip-debug", "--compress", "1", "--no-header-files", "--no-man-pages")
     addOptions("--release-info",
         "add:LOMO_VERSION=${project.version}:OS_CLASSIFIER=${releasePlatform}"
                 + ":SOURCE=${versioning.info.build}" + (if (versioning.info.dirty) "-dirty" else ""))
+
+    mergedModule {
+        additive = true
+        // Needed to consume API with JPype
+        requires("jdk.zipfs")
+    }
 
     imageZip.set(file("${project.buildDir}/${project.name}.zip"))
 
