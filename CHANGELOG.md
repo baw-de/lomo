@@ -1,3 +1,22 @@
+# Release 2.0-beta5
+
+## Core
+n/a
+
+## GUI
+* Show two decimal places for longitudinal force and slope
+
+## Other
+* It is now possible to access the LoMo API inside jlink image with JPype (Python)
+* Refactor code using results from PMD source code analyzer
+* Update dependencies
+
+## Known bugs and flaws
+* The valve opening line in the chart is not yet optimized for multiple filling elements.
+* There are no consistent default values for the saving basins yet.
+* No rounding of values set by saving lock design assistant.
+
+
 # Release 2.0-beta4
 
 ## Core
