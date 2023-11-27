@@ -26,9 +26,9 @@ javafx {
 }
 
 dependencies {
-    implementation("org.controlsfx:controlsfx:11.1.1")
-    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.0")
-    implementation("org.glassfish.jaxb:jaxb-runtime:4.0.0")
+    implementation("org.controlsfx:controlsfx:11.2.0")
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.1")
+    implementation("org.glassfish.jaxb:jaxb-runtime:4.0.4")
 }
 
 tasks.compileJava {
