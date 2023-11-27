@@ -53,7 +53,7 @@ Proceedings of the 34th PIANC World Congress 2018, Panama. [PDF](https://coms.ev
 
 ## License 
 
-**LoMo** is distributed by the [Federal Waterways Engineering and Research Institute](http://www.baw.de/) 
+**LoMo** is distributed by the [Federal Waterways Engineering and Research Institute](https://www.baw.de/) 
 and is freely available and open source, licensed under the 
 [GNU General Public License 3](https://www.gnu.org/licenses/gpl.html). 
 See [LICENSE.txt](LICENSE.txt) for details.
