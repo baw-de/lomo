@@ -285,7 +285,12 @@ public final class IOUtils {
       public double[] getTimeline() {
         return timeList.stream().mapToDouble(d -> d).toArray();
       }
-      
+
+      @Override
+      public double[] getPositions() {
+        throw new UnsupportedOperationException(Messages.getString("resultsNotSupportPositions")); //$NON-NLS-1$
+      }
+
       @Override
       public double[] getSlopeOverTime() {
         return slopeList.stream().mapToDouble(d -> d).toArray();

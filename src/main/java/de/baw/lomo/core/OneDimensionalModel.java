@@ -491,6 +491,9 @@ public class OneDimensionalModel implements Model {
       }
 
       @Override
+      public double[] getPositions() { return Arrays.copyOf(positions, positions.length); }
+
+      @Override
       public double[] getSlopeOverTime() {
         return Arrays.copyOf(I, step);
       }

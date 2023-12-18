@@ -21,6 +21,8 @@ public interface Results {
 
   double[] getTimeline();
 
+  double[] getPositions();
+
   double[] getDischargeOverTime();
 
   double[] getSlopeOverTime();
