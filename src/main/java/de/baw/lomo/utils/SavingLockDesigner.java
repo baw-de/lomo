@@ -22,6 +22,9 @@ import de.baw.lomo.core.data.KeyValueEntry;
 import de.baw.lomo.core.data.SavingBasinFillingType;
 import de.baw.lomo.core.data.SluiceGateFillingType;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class SavingLockDesigner {
 
     private final Case data;
@@ -77,9 +80,11 @@ public class SavingLockDesigner {
             basin.setName(String.format("%s %d", basin, i)); //$NON-NLS-1$
             basin.getSavingBasinSurfaceAreaLookup().get(0)
                     .setValue(ratioAreaBasinToAreaChamber * data.getChamberWidth() * data.getChamberLength());
-            basin.setFloorHeight(Math.min(data.getDownstreamWaterLevel(), data.getUpstreamWaterLevel())
-                    + i * getLamellaHeight() + restFillingHeightBasins);
-            basin.setInitialFillHeight(basin.getFloorHeight() + getWaterDepthBasins());
+            final double floorHeight = Math.min(data.getDownstreamWaterLevel(), data.getUpstreamWaterLevel())
+                    + i * getLamellaHeight() + restFillingHeightBasins;
+            basin.setFloorHeight(BigDecimal.valueOf(floorHeight).setScale(1, RoundingMode.HALF_UP).doubleValue());
+            final double initialFillHeight = basin.getFloorHeight() + getWaterDepthBasins();
+            basin.setInitialFillHeight(BigDecimal.valueOf(initialFillHeight).setScale(1, RoundingMode.HALF_UP).doubleValue());
 
             if (i == 1) {
                 double[][] source;
