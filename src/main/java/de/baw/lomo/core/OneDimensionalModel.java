@@ -161,8 +161,8 @@ public class OneDimensionalModel implements Model {
     h1overT = new double[maxStep+1][nx];
 
     // Anfangsbedingungen der Felder setzen
-    v1 = v1overT[step];
-    h1 = h1overT[step];
+    v1 = new double[nx + 1];
+    h1 = new double[nx];
 
     // Zellwerte
     for (int i = 0; i < nx; i++) {
@@ -471,8 +471,8 @@ public class OneDimensionalModel implements Model {
           Messages.getString("resultMinMaxLongitudinalForceToGravityForce") //$NON-NLS-1$
               + " \n", //$NON-NLS-1$
           // Ratios given in per mille, Fg=shipVol*1000*g:
-          Math.abs(Fmin) / (shipVol * GRAVITY),
-          Math.abs(Fmax) / (shipVol * GRAVITY)));
+          Fmin / (shipVol * GRAVITY),
+          Fmax / (shipVol * GRAVITY)));
 
       bf.append("* * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"); //$NON-NLS-1$
 
