@@ -66,8 +66,8 @@ public class Case {
     if (shipAreaLookup.isEmpty()) {
       shipAreaLookup.add(new KeyValueEntry(5, 0));
       shipAreaLookup.add(new KeyValueEntry(7, 32.06));
-      shipAreaLookup.add(new KeyValueEntry(133, 32.06));
-      shipAreaLookup.add(new KeyValueEntry(135, 0));
+      shipAreaLookup.add(new KeyValueEntry(138, 32.06));
+      shipAreaLookup.add(new KeyValueEntry(140, 0));
     }
 
     if (fillingTypes.isEmpty()) {
