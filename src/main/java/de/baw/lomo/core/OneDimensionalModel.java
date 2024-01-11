@@ -161,8 +161,9 @@ public class OneDimensionalModel implements Model {
     h1overT = new double[maxStep+1][nx];
 
     // Anfangsbedingungen der Felder setzen
-    v1 = new double[nx + 1];
-    h1 = new double[nx];
+    v1 = v1overT[0];
+    h1 = h1overT[0];
+    h1Mean[0] = uw;
 
     // Zellwerte
     for (int i = 0; i < nx; i++) {
@@ -174,7 +175,7 @@ public class OneDimensionalModel implements Model {
       A1[i] = A0[i];
 
       beta[i] = 1.;
-      h1[i] = 0.;
+      h1[i] = uw;
       positions[i] = dx * (i + 0.5);
     }
 
