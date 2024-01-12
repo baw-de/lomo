@@ -1,3 +1,22 @@
+# Release 2.0-beta6
+
+## Core
+* New method 'getPositions' to retrieve node positions from results
+* Results now include the opening over time for all filling elements. Therefore, the return type of 'getValveOpeningOverTime' method was changed.
+* Water level result at time step zero is now initialized with downstream water level (before it was set to zero)
+* Default ship length set to 135 m (before it was 130 m)
+* Default maximum simulation time set to 3600 s (before it was 1000 s)
+* Ship force is no longer displayed as absolute value but with a sign
+
+## GUI
+* Show opening over time for all filling elements in the chart
+* Export/import results with opening over time for all filling elements
+* Round output of SavingLockDesigner to two decimal places
+
+## Other
+n/a
+
+
 # Release 2.0-beta5
 
 ## Core
