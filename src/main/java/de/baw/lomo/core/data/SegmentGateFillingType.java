@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Bundesanstalt für Wasserbau
+ * Copyright (c) 2019-2024 Bundesanstalt für Wasserbau
  *
  * This file is part of LoMo.
  *
@@ -17,14 +17,13 @@
  */
 package de.baw.lomo.core.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.baw.lomo.utils.Utils;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import de.baw.lomo.utils.Utils;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlRootElement(name="segmentGateFillingType")
 public class SegmentGateFillingType extends AbstractSegmentGateFillingType {
@@ -68,7 +67,7 @@ public class SegmentGateFillingType extends AbstractSegmentGateFillingType {
   }  
   
   @XmlElementWrapper
-  @XmlElement(name = "entry")
+  @XmlElement(name = "entry") //$NON-NLS-1$
   public List<KeyValueEntry> getSegmentGateAngleLookup() {
     return segmentGateAngleLookup;
   }
