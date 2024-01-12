@@ -1,3 +1,10 @@
+.root {
+   -color-f: #f9d900;
+   -color-q: #a9e200;
+   -color-h: #2f357f;
+   -color-o: #860061;
+}
+
 #fgchart .readonly-checkbox *.text:disabled {
    -fx-opacity: 1.0;
 }
@@ -20,78 +27,20 @@
    -fx-padding: 6px 130px 6px 0px;   
 }
 
-#fgchart .default-color0.chart-series-line { -fx-stroke: #f9d900; }
-#fgchart .default-color1.chart-series-line { -fx-stroke: #a9e200; }
-#fgchart .default-color2.chart-series-line { 
-   -fx-stroke: #f9d900; 
-   -fx-stroke-dash-array: 1 10;
-}
-#fgchart .default-color3.chart-series-line { 
-   -fx-stroke: #a9e200; 
-   -fx-stroke-dash-array: 1 10;
-}
-#fgchart .default-color4.chart-series-line { 
-   -fx-stroke: #f9d900; 
-   -fx-stroke-dash-array: 1 5 1 10;
-}
-#fgchart .default-color5.chart-series-line { 
-   -fx-stroke: #a9e200; 
-   -fx-stroke-dash-array: 1 5 1 10;
-}
-#fgchart .default-color6.chart-series-line { 
-   -fx-stroke: #f9d900; 
-   -fx-stroke-dash-array: 1 5 1 5 1 10;
-}
-#fgchart .default-color7.chart-series-line { 
-   -fx-stroke: #a9e200; 
-   -fx-stroke-dash-array: 1 5 1 5 1 10;
-}
+#fgchart .default-color0.chart-line-symbol { -fx-background-color: -color-f, white; }
+#fgchart .default-color1.chart-line-symbol { -fx-background-color: -color-q, white; }
+#fgchart .default-color2.chart-line-symbol { -fx-background-color: -color-f, white; }
+#fgchart .default-color3.chart-line-symbol { -fx-background-color: -color-q, white; }
+#bgchart .default-color0.chart-line-symbol { -fx-background-color: -color-h, white; }
+#bgchart .default-color1.chart-line-symbol { -fx-background-color: -color-o, white; }
+#bgchart .default-color2.chart-line-symbol { -fx-background-color: -color-h, white; }
+#bgchart .default-color3.chart-line-symbol { -fx-background-color: -color-o, white; }
 
-#fgchart .default-color0.chart-line-symbol { -fx-background-color: #f9d900, white; }
-#fgchart .default-color1.chart-line-symbol { -fx-background-color: #a9e200, white; }
-#fgchart .default-color2.chart-line-symbol { -fx-background-color: #f9d900, white; }
-#fgchart .default-color3.chart-line-symbol { -fx-background-color: #a9e200, white; }
-#fgchart .default-color4.chart-line-symbol { -fx-background-color: #f9d900, white; }
-#fgchart .default-color5.chart-line-symbol { -fx-background-color: #a9e200, white; }
-#fgchart .default-color6.chart-line-symbol { -fx-background-color: #f9d900, white; }
-#fgchart .default-color7.chart-line-symbol { -fx-background-color: #a9e200, white; }
+#fgchart .default-color0.chart-series-line { -fx-stroke: -color-f; }
+#fgchart .default-color1.chart-series-line { -fx-stroke: -color-q; }
 
-#bgchart .default-color0.chart-series-line { -fx-stroke: #2f357f; }
-#bgchart .default-color1.chart-series-line { -fx-stroke: #860061; }
-#bgchart .default-color2.chart-series-line { 
-   -fx-stroke: #2f357f;
-   -fx-stroke-dash-array: 1 10;
-}
-#bgchart .default-color3.chart-series-line { 
-   -fx-stroke: #860061;
-   -fx-stroke-dash-array: 1 10;
-}
-#bgchart .default-color4.chart-series-line { 
-   -fx-stroke: #2f357f;
-   -fx-stroke-dash-array: 1 5 1 10;
-}
-#bgchart .default-color5.chart-series-line { 
-   -fx-stroke: #860061;
-   -fx-stroke-dash-array: 1 5 1 10;
-}
-#bgchart .default-color6.chart-series-line { 
-   -fx-stroke: #2f357f;
-   -fx-stroke-dash-array: 1 5 1 5 1 10;
-}
-#bgchart .default-color7.chart-series-line { 
-   -fx-stroke: #860061;
-   -fx-stroke-dash-array: 1 5 1 5 1 10;
-}
-
-#bgchart .default-color0.chart-line-symbol { -fx-background-color: #2f357f, white; }
-#bgchart .default-color1.chart-line-symbol { -fx-background-color: #860061, white; }
-#bgchart .default-color2.chart-line-symbol { -fx-background-color: #2f357f, white; }
-#bgchart .default-color3.chart-line-symbol { -fx-background-color: #860061, white; }
-#bgchart .default-color4.chart-line-symbol { -fx-background-color: #2f357f, white; }
-#bgchart .default-color5.chart-line-symbol { -fx-background-color: #860061, white; }
-#bgchart .default-color6.chart-line-symbol { -fx-background-color: #2f357f, white; }
-#bgchart .default-color7.chart-line-symbol { -fx-background-color: #860061, white; }
-
+#bgchart .default-color0.chart-series-line { -fx-stroke: -color-h; }
+#bgchart .default-color1.chart-series-line { -fx-stroke: -color-o; }
 
 #plot {
    -fx-background-color: #fff;

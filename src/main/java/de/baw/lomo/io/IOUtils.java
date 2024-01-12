@@ -34,6 +34,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 public final class IOUtils {
 
@@ -95,7 +96,7 @@ public final class IOUtils {
   public static void writeResultsToText(Results results, File file, String comment) {
 
     final double[] timeResults = results.getTimeline();
-    final double[] valeOpeningResults = results.getValveOpeningOverTime();
+    final double[][] valeOpeningResults = results.getValveOpeningOverTime();
     final double[] waterLevelResults = results.getMeanChamberWaterLevelOverTime();
     final double[] dischargeResults = results.getDischargeOverTime();
     final double[] slopeResults = results.getSlopeOverTime();   
@@ -115,13 +116,24 @@ public final class IOUtils {
         bw.newLine();
       }
       
-      bw.write("TIME[s] VALVE_OPENING[m,°,%] CHAMBER_WATER_LEVEL[m] FLOW_RATE[m^3/s] SLOPE[-] LONGITUDINAL_FORCE[N]"); //$NON-NLS-1$
+      bw.write("TIME[s] "); //$NON-NLS-1$
+      for (int j = 0; j < valeOpeningResults[0].length; j++) {
+        String valveStr = "";
+        if (valeOpeningResults[0].length > 1) {
+          valveStr = "_" + j;
+        }
+        bw.write("VALVE_OPENING" + valveStr + "[m,°,%] "); //$NON-NLS-1$  //$NON-NLS-2$
+      }
+      bw.write("CHAMBER_WATER_LEVEL[m] FLOW_RATE[m^3/s] SLOPE[-] LONGITUDINAL_FORCE[N]"); //$NON-NLS-1$
       bw.newLine();
 
       for (int i = 0; i < timeResults.length; i++) {
 
         bw.write(df.format(timeResults[i]) + " "); //$NON-NLS-1$
-        bw.write(df.format(valeOpeningResults[i]) + " "); //$NON-NLS-1$
+
+        for (int j = 0; j < valeOpeningResults[0].length; j++) {
+          bw.write(df.format(valeOpeningResults[i][j]) + " "); //$NON-NLS-1$
+        }
         bw.write(df.format(waterLevelResults[i]) + " "); //$NON-NLS-1$
         bw.write(df.format(dischargeResults[i]) + " "); //$NON-NLS-1$
         bw.write(df.format(slopeResults[i]) + " "); //$NON-NLS-1$
@@ -204,7 +216,7 @@ public final class IOUtils {
   public static Results readResultsFromFile(File file) {
     
     final List<Double> timeList = new ArrayList<>();
-    final List<Double> openingList = new ArrayList<>();
+    final List<List<Double>> openingLists = new ArrayList<>();
     final List<Double> waterLevelList = new ArrayList<>();
     final List<Double> dischargeList = new ArrayList<>();
     final List<Double> slopeList = new ArrayList<>();
@@ -238,7 +250,9 @@ public final class IOUtils {
             if (columnHeader.startsWith("time")) { //$NON-NLS-1$
               listList.add(timeList);
             } else if (columnHeader.startsWith("valve_opening")) { //$NON-NLS-1$
-              listList.add(openingList);
+              final List<Double> vList = new ArrayList<>();
+              listList.add(vList);
+              openingLists.add(vList);
             } else if (columnHeader.startsWith("chamber_water_level")) { //$NON-NLS-1$
               listList.add(waterLevelList);
             } else if (columnHeader.startsWith("flow_rate")) { //$NON-NLS-1$
@@ -277,8 +291,9 @@ public final class IOUtils {
     return new Results() {
       
       @Override
-      public double[] getValveOpeningOverTime() {
-        return openingList.stream().mapToDouble(d -> d).toArray();
+      public double[][] getValveOpeningOverTime() {
+        return IntStream.range(0, timeList.size()).mapToObj(
+                i -> openingLists.stream().mapToDouble(l -> l.get(i)).toArray()).toArray(double[][]::new);
       }
 
       @Override

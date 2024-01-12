@@ -68,6 +68,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Controller implements Initializable {
   @FXML
@@ -120,6 +121,9 @@ public class Controller implements Initializable {
   private boolean isComputing = false;
   private FillingTypeSelection guiDataModel;
   private int lastOpenAccordionPane;
+
+  private List<XYChart.Series<Number,Number>> resultsSeries = new ArrayList<>();
+  private int comparisonCount = 0;
 
   @Override
   public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
@@ -426,71 +430,7 @@ public class Controller implements Initializable {
           super.succeeded();
 
           Results results = getValue();
-
-          final double[] timeResults = results.getTimeline();
-          final double[] dischargeResults = results.getDischargeOverTime();
-          final double[] forceResults = results.getLongitudinalForceOverTime();
-          final double[] waterLevelResults = results.getMeanChamberWaterLevelOverTime();
-          final double[] valveOpeningResults = results.getValveOpeningOverTime();
-
-          final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(timeResults.length);
-          final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(timeResults.length);
-          final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(timeResults.length);
-          final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(timeResults.length);
-
-          bgYmax = Double.MIN_VALUE;
-          bgYmin = Double.MAX_VALUE;
-
-          // thinning out of result values to optimize plotting speed
-          int iStepSize = Math.max(10000, timeResults.length) / 10000;
-
-          // avoid even step size:
-          if (iStepSize % 2 == 0) { iStepSize += 1; }
-
-          for (int i = 0; i < timeResults.length - iStepSize; i += iStepSize) {
-
-            dataQ.add(new XYChart.Data<>(timeResults[i], dischargeResults[i]));
-            dataF.add(new XYChart.Data<>(timeResults[i], forceResults[i] / 1000.));
-            dataH.add(new XYChart.Data<>(timeResults[i], waterLevelResults[i]));
-
-            double scale = 1.;
-
-            if (data.getFillingTypes().stream().anyMatch(ft -> ft instanceof SluiceGateFillingType
-              || ft instanceof SavingBasinFillingType)) {
-              scale = 10.;
-            }
-
-            dataO.add(new XYChart.Data<>(timeResults[i], valveOpeningResults[i] * scale));
-
-            bgYmax = Math.max(bgYmax, Math.max(waterLevelResults[i], valveOpeningResults[i] * scale));
-            bgYmin = Math.min(bgYmin, Math.min(waterLevelResults[i], valveOpeningResults[i] * scale));
-          }
-
-          final XYChart.Series<Number, Number> seriesF = new XYChart.Series<>(
-                  FXCollections.observableList(dataF));
-          seriesF.setName(Messages.getString("lblSeriesF")); //$NON-NLS-1$
-          fgChart.getData().set(0, seriesF);
-
-          final XYChart.Series<Number, Number> seriesQ = new XYChart.Series<>(
-                  FXCollections.observableList(dataQ));
-          seriesQ.setName(Messages.getString("lblSeriesQ")); //$NON-NLS-1$
-          fgChart.getData().set(1, seriesQ);
-
-          final XYChart.Series<Number, Number> seriesH = new XYChart.Series<>(
-                  FXCollections.observableList(dataH));
-          seriesH.setName(Messages.getString("lblSeriesH")); //$NON-NLS-1$
-          bgChart.getData().set(0, seriesH);
-
-          final XYChart.Series<Number, Number> seriesO = new XYChart.Series<>(
-                  FXCollections.observableList(dataO));
-          seriesO.setName(Messages.getString("lblSeriesO")); //$NON-NLS-1$
-          bgChart.getData().set(1, seriesO);
-
-          clearLegend();
-
-          if (data.getFillingTypes().stream().noneMatch(ft -> ft instanceof AbstractGateFillingType)) {
-            seriesO.getData().clear();
-          }
+          plot(results,false);
 
           lastResults = results;
           isComputing = false;
@@ -527,6 +467,145 @@ public class Controller implements Initializable {
       
       new Thread(task).start();
     } 
+  }
+
+  private void plot(Results results, boolean isComparison) {
+
+    if (!isComparison) {
+      bgChart.getData().removeAll(resultsSeries);
+      fgChart.getData().removeAll(resultsSeries);
+      resultsSeries.clear();
+    } else {
+      if (comparisonCount > 2) {
+        clearComparison();
+      }
+    }
+
+    final String dashArray;
+
+    switch (comparisonCount) {
+      case 0:
+        dashArray = "-fx-stroke-dash-array: 1 10;"; //$NON-NLS-1$
+        break;
+      case 1:
+        dashArray = "-fx-stroke-dash-array: 1 5 1 10;"; //$NON-NLS-1$
+        break;
+      case 2:
+        dashArray = "-fx-stroke-dash-array: 1 5 1 5 1 10;"; //$NON-NLS-1$
+        break;
+      default:
+        dashArray = "";
+    }
+
+    final double[] timeResults = results.getTimeline();
+    final double[] dischargeResults = results.getDischargeOverTime();
+    final double[] forceResults = results.getLongitudinalForceOverTime();
+    final double[] waterLevelResults = results.getMeanChamberWaterLevelOverTime();
+    final double[][] valveOpeningResults = results.getValveOpeningOverTime();
+
+    final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(timeResults.length);
+    final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(timeResults.length);
+    final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(timeResults.length);
+    final List<List<XYChart.Data<Number, Number>>> dataO = new ArrayList<>(valveOpeningResults[0].length);
+
+    bgYmax = Double.MIN_VALUE;
+    bgYmin = Double.MAX_VALUE;
+
+    // thinning out of result values to optimize plotting speed
+    int iStepSize = Math.max(10000, timeResults.length) / 10000;
+
+    // avoid even step size:
+    if (iStepSize % 2 == 0) { iStepSize += 1; }
+
+    for (int i = 0; i < timeResults.length - iStepSize; i += iStepSize) {
+      dataQ.add(new XYChart.Data<>(timeResults[i], dischargeResults[i]));
+      dataF.add(new XYChart.Data<>(timeResults[i], forceResults[i] / 1000.));
+      dataH.add(new XYChart.Data<>(timeResults[i], waterLevelResults[i]));
+
+      bgYmax = Math.max(bgYmax, waterLevelResults[i]);
+      bgYmin = Math.min(bgYmin, waterLevelResults[i]);
+    }
+
+    final List<FillingType> gateList = data.getFillingTypes().stream().filter(ft -> ft instanceof AbstractGateFillingType).collect(Collectors.toList());
+
+    for (int j = 0; j < valveOpeningResults[0].length; j++) {
+
+        double scale = 1.;
+
+        if (gateList.get(j) instanceof SluiceGateFillingType
+                || gateList.get(j) instanceof SavingBasinFillingType) {
+          scale = 10.;
+        }
+
+        List<XYChart.Data<Number, Number>> dataOSub = new ArrayList<>(timeResults.length);
+
+        for (int i = 0; i < timeResults.length - iStepSize; i += iStepSize) {
+
+          dataOSub.add(new XYChart.Data<>(timeResults[i], valveOpeningResults[i][j] * scale));
+
+          bgYmax = Math.max(bgYmax, valveOpeningResults[i][j] * scale);
+          bgYmin = Math.min(bgYmin, valveOpeningResults[i][j] * scale);
+        }
+        dataO.add(dataOSub);
+    }
+
+    final XYChart.Series<Number, Number> seriesF = new XYChart.Series<>(
+            FXCollections.observableList(dataF));
+    seriesF.setName(Messages.getString("lblSeriesF")); //$NON-NLS-1$
+    fgChart.getData().add(seriesF);
+    if (!isComparison) { resultsSeries.add(seriesF); }
+    Platform.runLater(() -> {
+      String style = "-fx-stroke: -color-f;"; //$NON-NLS-1$
+      if (isComparison) {
+        style = style + dashArray;
+      }
+      seriesF.getNode().setStyle(style);
+    });
+
+    final XYChart.Series<Number, Number> seriesQ = new XYChart.Series<>(
+            FXCollections.observableList(dataQ));
+    seriesQ.setName(Messages.getString("lblSeriesQ")); //$NON-NLS-1$
+    fgChart.getData().add(seriesQ);
+    if (!isComparison) { resultsSeries.add(seriesQ); }
+    Platform.runLater(() -> {
+      String style = "-fx-stroke: -color-q;"; //$NON-NLS-1$
+      if (isComparison) {
+        style = style + dashArray;
+      }
+      seriesQ.getNode().setStyle(style);
+    });
+
+    final XYChart.Series<Number, Number> seriesH = new XYChart.Series<>(
+            FXCollections.observableList(dataH));
+    seriesH.setName(Messages.getString("lblSeriesH")); //$NON-NLS-1$
+    bgChart.getData().add(seriesH);
+    if (!isComparison) { resultsSeries.add(seriesH); }
+    Platform.runLater(() -> {
+      String style = "-fx-stroke: -color-h;"; //$NON-NLS-1$
+      if (isComparison) {
+        style = style + dashArray;
+      }
+      seriesH.getNode().setStyle(style);
+    });
+
+    for (List<XYChart.Data<Number, Number>> dataOSub : dataO) {
+      final XYChart.Series<Number, Number> seriesO = new XYChart.Series<>(
+              FXCollections.observableList(dataOSub));
+      seriesO.setName(Messages.getString("lblSeriesO")); //$NON-NLS-1$
+      bgChart.getData().add(seriesO);
+      if (!isComparison) { resultsSeries.add(seriesO); }
+      Platform.runLater(() -> {
+        String style = "-fx-stroke: -color-o;"; //$NON-NLS-1$
+        if (isComparison) {
+          style = style + dashArray;
+        }
+        seriesO.getNode().setStyle(style);
+      });
+    }
+
+    if (isComparison) { comparisonCount++; }
+
+    clearLegend();
   }
 
   @FXML
@@ -792,7 +871,12 @@ public class Controller implements Initializable {
 
     try {
       final Results results = IOUtils.readResultsFromFile(selectedFile);
-      plotComparison(results);  
+      if (results.getValveOpeningOverTime()[0].length
+              != data.getFillingTypes().stream().filter(ft -> ft instanceof AbstractGateFillingType).count()) {
+        System.out.println(Messages.getString("errLoadComparisonFillingTypeCount")); //$NON-NLS-1$
+        return;
+      }
+      plot(results,true);
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
@@ -800,7 +884,7 @@ public class Controller implements Initializable {
   
   @FXML
   public void processMenuSnapshotComparison(ActionEvent event) {
-    plotComparison(lastResults);
+    plot(lastResults,true);
   }
   
   @FXML
@@ -924,6 +1008,8 @@ public class Controller implements Initializable {
   }
 
   private void clearFigure() {
+
+    clearComparison();
     
     fgChart.getData().clear();
     bgChart.getData().clear();
@@ -931,24 +1017,28 @@ public class Controller implements Initializable {
     final XYChart.Series<Number, Number> seriesF = new XYChart.Series<>();
     seriesF.setName(Messages.getString("lblSeriesF")); //$NON-NLS-1$
     fgChart.getData().add(seriesF);
+    resultsSeries.add(seriesF);
 
     final XYChart.Series<Number, Number> seriesQ = new XYChart.Series<>();
     seriesQ.setName(Messages.getString("lblSeriesQ")); //$NON-NLS-1$
     fgChart.getData().add(seriesQ);
+    resultsSeries.add(seriesQ);
 
     final XYChart.Series<Number, Number> seriesH = new XYChart.Series<>();
     seriesH.setName(Messages.getString("lblSeriesH")); //$NON-NLS-1$
     bgChart.getData().add(seriesH);
+    resultsSeries.add(seriesH);
 
     final XYChart.Series<Number, Number> seriesO = new XYChart.Series<>();
     seriesO.setName(Messages.getString("lblSeriesO")); //$NON-NLS-1$
     bgChart.getData().add(seriesO);
-
+    resultsSeries.add(seriesO);
   }
   
   private void clearComparison() {
-    fgChart.getData().remove(2, fgChart.getData().size());
-    bgChart.getData().remove(2, bgChart.getData().size());
+    fgChart.getData().retainAll(resultsSeries);
+    bgChart.getData().retainAll(resultsSeries);
+    comparisonCount = 0;
   }
   
   private String getExportTag() {
@@ -977,64 +1067,6 @@ public class Controller implements Initializable {
     }
     
     return bf.toString();
-  }
-  
-  private void plotComparison(Results results) {
-    
-    final double[] timeResults = results.getTimeline();
-    final double[] dischargeResults = results.getDischargeOverTime();
-    final double[] forceResults = results.getLongitudinalForceOverTime();
-    final double[] waterLevelResults = results.getMeanChamberWaterLevelOverTime();
-    final double[] valveOpeningResults = results.getValveOpeningOverTime();
-   
-    final List<XYChart.Data<Number, Number>> dataF = new ArrayList<>(timeResults.length);
-    final List<XYChart.Data<Number, Number>> dataQ = new ArrayList<>(timeResults.length);
-    final List<XYChart.Data<Number, Number>> dataH = new ArrayList<>(timeResults.length);
-    final List<XYChart.Data<Number, Number>> dataO = new ArrayList<>(timeResults.length);
-    
-    // thinning out of result values to optimize plotting speed
-    int iStepSize = Math.max(10000,timeResults.length) / 10000;
-    
-    // avoid even step size:
-    if (iStepSize % 2 == 0) { iStepSize += 1; }
-
-    for (int i = 0; i < timeResults.length-iStepSize; i+=iStepSize) {
-
-      if (i < dischargeResults.length && !Double.isNaN(dischargeResults[i])) {
-        dataQ.add(new XYChart.Data<>(timeResults[i], dischargeResults[i]));
-      }
-      if (i < forceResults.length && !Double.isNaN(forceResults[i])) {
-        dataF.add(new XYChart.Data<>(timeResults[i], forceResults[i] / 1000.));
-      }
-      if (i < waterLevelResults.length && !Double.isNaN(waterLevelResults[i])) {
-        dataH.add(new XYChart.Data<>(timeResults[i], waterLevelResults[i]));
-      }
-
-      double scale = 1.;
-
-      if (data.getFillingTypes() instanceof SluiceGateFillingType) {
-        scale = 10.;
-      }
-      if (i < valveOpeningResults.length && !Double.isNaN(valveOpeningResults[i])) {
-        dataO.add(new XYChart.Data<>(timeResults[i], valveOpeningResults[i] * scale));
-      }
-    }
-    
-    final XYChart.Series<Number, Number> seriesFComp =
-            new XYChart.Series<>(FXCollections.observableList(dataF));
-    fgChart.getData().add(seriesFComp);
-    final XYChart.Series<Number, Number> seriesQComp =
-            new XYChart.Series<>(FXCollections.observableList(dataQ));
-    fgChart.getData().add(seriesQComp);
-    final XYChart.Series<Number, Number> seriesHComp =
-            new XYChart.Series<>(FXCollections.observableList(dataH));
-    bgChart.getData().add(seriesHComp);
-    final XYChart.Series<Number, Number> seriesOComp =
-            new XYChart.Series<>(FXCollections.observableList(dataO));
-    bgChart.getData().add(seriesOComp);
-    
-    clearLegend();
-
   }
 
   private void clearLegend() {

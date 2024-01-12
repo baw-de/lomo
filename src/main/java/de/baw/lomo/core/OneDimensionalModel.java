@@ -81,7 +81,7 @@ public class OneDimensionalModel implements Model {
   /** Durch Schiff verdrängtes Volumen **/
   private double shipVol;
   /** Aktuelle Schuetzoeffnungshoehe **/
-  private double[] valveOpening;
+  private double[][] valveOpening;
   /** Zeitabhaengige Ergebnisse protokollieren **/
   private double[] inflow, h1Mean, I, longitudinalForce;
   /** Strickler Wert **/
@@ -147,7 +147,7 @@ public class OneDimensionalModel implements Model {
     maxStep = (int) (data.getTimeMax() / dt);
 
     // Aktuelle Schuetzoeffnungshoehe
-    valveOpening = new double[maxStep + 1];
+    valveOpening = new double[maxStep + 1][(int) data.getFillingTypes().stream().filter(ft -> ft instanceof AbstractGateFillingType).count()];
 
     // Zeitabhaengige Ergebnisse protokollieren
     inflow = new double[maxStep + 1];
@@ -227,10 +227,13 @@ public class OneDimensionalModel implements Model {
       final double[] volumeSource = new double[positions.length];
       final double[] momentumSource = new double[positions.length];
 
+      int ftIdx = 0;
+
       for (FillingType ft : fillingTypes) {
 
         if (ft instanceof AbstractGateFillingType) {
-          valveOpening[step] += ((AbstractGateFillingType) ft).getGateOpening(time);
+          valveOpening[step][ftIdx] = ((AbstractGateFillingType) ft).getGateOpening(time);
+          ftIdx++;
         }
 
         final double[][] source = ft.getSource(time, positions, h1, v1, data);
@@ -515,15 +518,13 @@ public class OneDimensionalModel implements Model {
       }
 
       @Override
-      public double[] getValveOpeningOverTime() {
-        return Arrays.copyOf(valveOpening, step);
-      }
+      public double[][] getValveOpeningOverTime() { return Arrays.stream(valveOpening,0, step).map(double[]::clone).toArray(double[][]::new); }
 
       @Override
-      public double[][] getChamberWaterLevelOverTime() { return Arrays.copyOf(h1overT, step); }
+      public double[][] getChamberWaterLevelOverTime() { return Arrays.stream(h1overT,0, step).map(double[]::clone).toArray(double[][]::new); }
 
       @Override
-      public double[][] getFlowVelocityOverTime() { return Arrays.copyOf(v1overT, step); }
+      public double[][] getFlowVelocityOverTime() { return Arrays.stream(v1overT,0, step).map(double[]::clone).toArray(double[][]::new); }
     };
   }
 

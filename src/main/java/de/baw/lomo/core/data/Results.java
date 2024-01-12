@@ -31,7 +31,7 @@ public interface Results {
 
   double[] getLongitudinalForceOverTime();
 
-  double[] getValveOpeningOverTime();
+  double[][] getValveOpeningOverTime();
 
   double[][] getChamberWaterLevelOverTime();
 
