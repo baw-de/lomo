@@ -82,9 +82,9 @@ public class SavingLockDesigner {
                     .setValue(ratioAreaBasinToAreaChamber * data.getChamberWidth() * data.getChamberLength());
             final double floorHeight = Math.min(data.getDownstreamWaterLevel(), data.getUpstreamWaterLevel())
                     + i * getLamellaHeight() + restFillingHeightBasins;
-            basin.setFloorHeight(BigDecimal.valueOf(floorHeight).setScale(1, RoundingMode.HALF_UP).doubleValue());
+            basin.setFloorHeight(BigDecimal.valueOf(floorHeight).setScale(2, RoundingMode.HALF_UP).doubleValue());
             final double initialFillHeight = basin.getFloorHeight() + getWaterDepthBasins();
-            basin.setInitialFillHeight(BigDecimal.valueOf(initialFillHeight).setScale(1, RoundingMode.HALF_UP).doubleValue());
+            basin.setInitialFillHeight(BigDecimal.valueOf(initialFillHeight).setScale(2, RoundingMode.HALF_UP).doubleValue());
 
             if (i == 1) {
                 double[][] source;
