@@ -49,7 +49,7 @@ public class Case {
 
   private double[] forceComputationBounds = new double[] {Double.NaN, Double.NaN};
 
-  private double timeMax = 1000.;
+  private double timeMax = 3600.;
 
   private int numberOfNodes = 100;
 
