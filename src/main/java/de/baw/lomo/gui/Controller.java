@@ -206,9 +206,8 @@ public class Controller implements Initializable {
 
   public void initConsole() {
 
-    try (PrintStream out = new PrintStream(new MyOutputStream(), true,
-            StandardCharsets.UTF_8)) {
-
+    try {
+      final PrintStream out = new PrintStream(new MyOutputStream(), true, StandardCharsets.UTF_8);
       System.setOut(out);
       System.setErr(out);
 
