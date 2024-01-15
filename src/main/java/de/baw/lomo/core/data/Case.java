@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 @XmlRootElement(name="BAWLomoCase")
 public class Case {
 
-  private final static String VERSION = "1.0";
+  private final static String VERSION = "2.0";
   
   private String author = "BAW";
   

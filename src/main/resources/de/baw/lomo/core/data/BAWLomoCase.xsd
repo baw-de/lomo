@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
   Copyright (c) 2019-2024 Bundesanstalt für Wasserbau
-  
+
   This file is part of LoMo.
-  
+
   LoMo is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -12,7 +12,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with LoMo.  If not, see <http://www.gnu.org/licenses/>.
 -->
@@ -29,6 +29,8 @@
   <xs:element name="genericGateFillingType" type="genericGateFillingType"/>
 
   <xs:element name="keyValueEntry" type="keyValueEntry"/>
+
+  <xs:element name="savingBasinFillingType" type="savingBasinFillingType"/>
 
   <xs:element name="segmentGateFillingType" type="segmentGateFillingType"/>
 
@@ -47,7 +49,7 @@
       <xs:element name="deltaWaterDepthStop" type="xs:double"/>
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:element name="downstreamWaterLevel" type="xs:double"/>
-      <xs:choice>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="fillingType"/>
         <xs:element ref="sluiceGateFillingType"/>
         <xs:element ref="segmentGateFillingType"/>
@@ -55,7 +57,13 @@
         <xs:element ref="genericGateFillingType"/>
         <xs:element ref="customSourceFillingType"/>
         <xs:element ref="customSourceFromFileFillingType"/>
+        <xs:element ref="savingBasinFillingType"/>
       </xs:choice>
+      <xs:element name="forceComputationBounds" minOccurs="0">
+        <xs:simpleType>
+          <xs:list itemType="xs:double"/>
+        </xs:simpleType>
+      </xs:element>
       <xs:element name="numberOfNodes" type="xs:int"/>
       <xs:element name="shipAreaLookup" minOccurs="0">
         <xs:complexType>
@@ -74,26 +82,14 @@
 
   <xs:complexType name="fillingType" abstract="true">
     <xs:sequence/>
+    <xs:attribute name="name" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="sluiceGateFillingType">
     <xs:complexContent>
       <xs:extension base="abstractSluiceGateFillingType">
         <xs:sequence>
-          <xs:element name="sluiceGateHeightLookup" minOccurs="0">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="sluiceGateWidthLookup" minOccurs="0">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
+          <xs:element name="maximumPressureHead" type="xs:double"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -105,6 +101,20 @@
         <xs:sequence>
           <xs:element name="prescribedJetOutletEnabled" type="xs:boolean"/>
           <xs:element name="sluiceGateDischargeCoefficientLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="sluiceGateHeightLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="sluiceGateWidthLookup" minOccurs="0">
             <xs:complexType>
               <xs:sequence>
                 <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
@@ -131,7 +141,6 @@
               </xs:sequence>
             </xs:complexType>
           </xs:element>
-          <xs:element name="maximumPressureHead" type="xs:double"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -165,6 +174,7 @@
     <xs:complexContent>
       <xs:extension base="abstractGateFillingType">
         <xs:sequence>
+          <xs:element name="maximumPressureHead" type="xs:double"/>
           <xs:element name="segmentGateAMueLookup" minOccurs="0">
             <xs:complexType>
               <xs:sequence>
@@ -211,6 +221,7 @@
               </xs:sequence>
             </xs:complexType>
           </xs:element>
+          <xs:element name="maximumPressureHead" type="xs:double"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -246,6 +257,24 @@
       <xs:extension base="fillingType">
         <xs:sequence>
           <xs:element name="file" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="savingBasinFillingType">
+    <xs:complexContent>
+      <xs:extension base="abstractSluiceGateFillingType">
+        <xs:sequence>
+          <xs:element name="floorHeight" type="xs:double"/>
+          <xs:element name="initialFillHeight" type="xs:double"/>
+          <xs:element name="savingBasinSurfaceAreaLookup" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="entry" type="keyValueEntry" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
