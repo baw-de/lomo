@@ -220,7 +220,7 @@ public class Controller implements Initializable {
     }
   }
 
-  public void processMenuCopyFillingType(ActionEvent actionEvent) {
+  public void processMenuAddFillingType(ActionEvent actionEvent) {
     data.addFillingType(IOUtils.deepCopyDataObjects(guiDataModel.getFillingElement()));
     guiDataModel.setFillingElement(data.getFillingTypes().get(data.getFillingTypes().size()-1));
     initGUI();
@@ -927,7 +927,8 @@ public class Controller implements Initializable {
       item.setOnAction(event -> {
         try {
           FillingType newFt = (FillingType) item.getUserData().getClass().getDeclaredConstructor().newInstance();
-          data.addFillingType(newFt);
+          data.getFillingTypes()
+                  .set(data.getFillingTypes().indexOf(guiDataModel.getFillingElement()), newFt);
           guiDataModel.setFillingElement(newFt);
           initGUI();
         } catch (InstantiationException | InvocationTargetException

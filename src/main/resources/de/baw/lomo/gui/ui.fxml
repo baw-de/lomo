@@ -43,8 +43,8 @@
 				<MenuItem mnemonicParsing="false" onAction="#processMenuExit" text="%menuExit"/>
 			</Menu>
 			<Menu mnemonicParsing="false" text="%menuEdit">
-				<Menu fx:id="menuFillingType" mnemonicParsing="false" text="%menuAddFillingType"/>
-				<MenuItem mnemonicParsing="false" onAction="#processMenuCopyFillingType" text="%menuCopyFillingType"/>
+				<Menu fx:id="menuFillingType" mnemonicParsing="false" text="%menuSelectFillingType"/>
+				<MenuItem mnemonicParsing="false" onAction="#processMenuAddFillingType" text="%menuAddFillingType"/>
 				<MenuItem mnemonicParsing="false" onAction="#processMenuDeleteFillingType" text="%menuDeleteFillingType"/>
 			</Menu>
 			<Menu mnemonicParsing="false" text="%menuSettings">
