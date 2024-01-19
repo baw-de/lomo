@@ -1,16 +1,12 @@
 @file:Suppress("HardCodedStringLiteral")
 
-import org.openjfx.gradle.*
-import java.lang.reflect.Field
-import java.lang.reflect.Method
-
 val releasePlatform: String? by project
 
 plugins {
     java
     application
-    id("org.openjfx.javafxplugin") version "0.0.10"
-    id("org.beryx.jlink") version "2.24.4"
+    id("org.openjfx.javafxplugin") version "0.1.0"
+    id("org.beryx.jlink") version "2.26.0"
     id("net.nemerosa.versioning") version "2.15.1"
 }
 
@@ -22,7 +18,10 @@ javafx {
     version = "17"
     modules("javafx.swing", "javafx.fxml", "javafx.controls")
 
-    overrideJavaFXPlatform(this)
+    if (releasePlatform != null && releasePlatform != "local") {
+        setPlatform(releasePlatform.takeUnless { releasePlatform?.substringAfter("-") == "x64" }
+            ?: releasePlatform?.substringBefore("-"))
+    }
 }
 
 dependencies {
@@ -53,7 +52,7 @@ tasks.jar {
 tasks.register<Copy>("jarRelease") {
     from(tasks.jar)
     from(configurations.runtimeClasspath)
-    into("${project.buildDir}/jars")
+    into(layout.buildDirectory.dir("jars"))
 }
 
 jlink {
@@ -72,7 +71,7 @@ jlink {
         requires("jdk.zipfs")
     }
 
-    imageZip.set(file("${project.buildDir}/${project.name}.zip"))
+    imageZip.set(layout.buildDirectory.file("${project.name}.zip"))
 
     targetPlatform("${project.version}-" + (releasePlatform ?: "local")) {
 
@@ -89,7 +88,7 @@ jlink {
             @Suppress("INACCESSIBLE_TYPE")
             setJdkHome(jdkDownload(jdkUrl,
                 closureOf<org.beryx.jlink.util.JdkUtil.JdkDownloadOptions> {
-                    downloadDir = "${project.buildDir}/jdks/$releasePlatform"
+                    downloadDir = layout.buildDirectory.dir("jdks/$releasePlatform").get().toString()
                     archiveExtension = if (releasePlatform == "win-x64") "zip" else "tar.gz"
                 }))
         }
@@ -110,32 +109,5 @@ tasks.named<org.beryx.jlink.JlinkTask>("jlink") {
             into("$imageDir/${project.name}-${project.version}-"
                 + (releasePlatform ?: "local") + ("/legal/de.baw.lomo/"))
         }
-    }
-}
-
-fun overrideJavaFXPlatform(javaFXOptions: JavaFXOptions) {
-
-    val javafxPlatformOverride = releasePlatform?.substringBefore("-")
-
-    if (javafxPlatformOverride != null && javafxPlatformOverride != "local") {
-        val javafxPlatform: JavaFXPlatform = JavaFXPlatform.values()
-            .firstOrNull { it.classifier == javafxPlatformOverride }
-            ?: throw IllegalArgumentException(
-                "JavaFX platform $javafxPlatformOverride not in list:" +
-                        " ${JavaFXPlatform.values().map { it.classifier }}"
-            )
-
-        logger.info("Overriding JavaFX platform to {}", javafxPlatform)
-
-        // Override the private platform field
-        val platformField: Field = JavaFXOptions::class.java.getDeclaredField("platform")
-        platformField.isAccessible = true
-        platformField.set(javaFXOptions, javafxPlatform)
-
-        // Invoke the private updateJavaFXDependencies() method
-        val updateDeps: Method =
-            JavaFXOptions::class.java.getDeclaredMethod("updateJavaFXDependencies")
-        updateDeps.isAccessible = true
-        updateDeps.invoke(javaFXOptions)
     }
 }
