@@ -42,7 +42,7 @@ to support the development of **LoMo**.
 
 The numerical core is described in detail in this paper, which we kindly ask you to cite if you are using **LoMo**:  
 Belzner, F., Simons, F. & Thorenz, C. (2018): 'An application-oriented model for lock filling processes',
-Proceedings of the 34th PIANC World Congress 2018, Panama. [PDF](https://coms.events/pianc-panama/data/full_papers/full_paper_183.pdf)
+Proceedings of the 34th PIANC World Congress 2018, Panama. [PDF](https://hdl.handle.net/20.500.11970/107576)
 
 
 ## Further information
