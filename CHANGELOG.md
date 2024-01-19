@@ -1,3 +1,19 @@
+# Release 2.0-beta7
+
+## Core
+n/a
+
+## GUI
+* Updated 'Edit' menu: Change filling type for selected filling element. 
+Adding a filling element will copy the currently selected element.
+
+## Other
+* Update Gradle and plugins
+* Due to the changes in the filling types the XML case version was updated to 1.0.
+  To load XML case files from version 0.9, replace the `version` attribute of the
+  `BAWLomoCase` element with 1.0 in a text editor.
+
+
 # Release 2.0-beta6
 
 ## Core
