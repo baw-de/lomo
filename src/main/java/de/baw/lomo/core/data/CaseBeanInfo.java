@@ -17,21 +17,20 @@
  */
 package de.baw.lomo.core.data;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-import java.beans.SimpleBeanInfo;
-
+import de.baw.lomo.gui.PopOverKeyValueListPropertyEditor;
 import de.baw.lomo.gui.RangeEditor;
 import org.controlsfx.property.BeanProperty;
 
-import de.baw.lomo.gui.PopOverKeyValueListPropertyEditor;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.beans.SimpleBeanInfo;
 
 public class CaseBeanInfo extends SimpleBeanInfo {
 
 	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
 	  		
-		PropertyDescriptor[] properties = new PropertyDescriptor[14];
+		PropertyDescriptor[] properties = new PropertyDescriptor[15];
 		
 		try {
 		  
@@ -102,30 +101,36 @@ public class CaseBeanInfo extends SimpleBeanInfo {
       properties[9].setDisplayName(Messages.getString("nameCfl")); //$NON-NLS-1$
       properties[9].setShortDescription(Messages.getString("descrCfl")); //$NON-NLS-1$
       properties[9].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
-      
-      properties[10] = new PropertyDescriptor("theta", Case.class); //$NON-NLS-1$
+
+      properties[10] = new PropertyDescriptor("timeStepMax", Case.class); //$NON-NLS-1$
       properties[10].setValue("order", 11); //$NON-NLS-1$
-      properties[10].setDisplayName(Messages.getString("nameTheta")); //$NON-NLS-1$
-      properties[10].setShortDescription(Messages.getString("descrTheta")); //$NON-NLS-1$
+      properties[10].setDisplayName(Messages.getString("nameMaxTimeStep")); //$NON-NLS-1$
+      properties[10].setShortDescription(Messages.getString("descrMaxTimeStep")); //$NON-NLS-1$
       properties[10].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
-                 
-      properties[11] = new PropertyDescriptor("upwind", Case.class); //$NON-NLS-1$
+
+      properties[11] = new PropertyDescriptor("theta", Case.class); //$NON-NLS-1$
       properties[11].setValue("order", 12); //$NON-NLS-1$
-      properties[11].setDisplayName(Messages.getString("nameUpwind")); //$NON-NLS-1$
-      properties[11].setShortDescription(Messages.getString("descrUpwind")); //$NON-NLS-1$
+      properties[11].setDisplayName(Messages.getString("nameTheta")); //$NON-NLS-1$
+      properties[11].setShortDescription(Messages.getString("descrTheta")); //$NON-NLS-1$
       properties[11].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
-      
-      properties[12] = new PropertyDescriptor("author", Case.class); //$NON-NLS-1$
+                 
+      properties[12] = new PropertyDescriptor("upwind", Case.class); //$NON-NLS-1$
       properties[12].setValue("order", 13); //$NON-NLS-1$
-      properties[12].setDisplayName(Messages.getString("nameAuthor")); //$NON-NLS-1$
-      properties[12].setShortDescription(Messages.getString("descrAuthor")); //$NON-NLS-1$
-      properties[12].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameMisc")); //$NON-NLS-1$
+      properties[12].setDisplayName(Messages.getString("nameUpwind")); //$NON-NLS-1$
+      properties[12].setShortDescription(Messages.getString("descrUpwind")); //$NON-NLS-1$
+      properties[12].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameNumerics")); //$NON-NLS-1$
       
-      properties[13] = new PropertyDescriptor("description", Case.class); //$NON-NLS-1$
+      properties[13] = new PropertyDescriptor("author", Case.class); //$NON-NLS-1$
       properties[13].setValue("order", 14); //$NON-NLS-1$
-      properties[13].setDisplayName(Messages.getString("nameDescription")); //$NON-NLS-1$
-      properties[13].setShortDescription(Messages.getString("descrDescription")); //$NON-NLS-1$
+      properties[13].setDisplayName(Messages.getString("nameAuthor")); //$NON-NLS-1$
+      properties[13].setShortDescription(Messages.getString("descrAuthor")); //$NON-NLS-1$
       properties[13].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameMisc")); //$NON-NLS-1$
+      
+      properties[14] = new PropertyDescriptor("description", Case.class); //$NON-NLS-1$
+      properties[14].setValue("order", 15); //$NON-NLS-1$
+      properties[14].setDisplayName(Messages.getString("nameDescription")); //$NON-NLS-1$
+      properties[14].setShortDescription(Messages.getString("descrDescription")); //$NON-NLS-1$
+      properties[14].setValue(BeanProperty.CATEGORY_LABEL_KEY, Messages.getString("catNameMisc")); //$NON-NLS-1$
       
 		} catch (IntrospectionException e) {
 			e.printStackTrace();

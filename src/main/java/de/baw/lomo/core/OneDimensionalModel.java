@@ -141,7 +141,7 @@ public class OneDimensionalModel implements Model {
     shipVol = 0;
 
     // Zeitschrittweite aus Wellengeschwindigkeit und CFL:
-    dt = dx / Math.sqrt(GRAVITY * Math.max(ow,uw)) * data.getCfl();
+    dt = Math.min(dx / Math.sqrt(GRAVITY * Math.max(ow,uw)) * data.getCfl(), data.getTimeStepMax());
 
     // Maximale Anzahl Zeitschritte:
     maxStep = (int) (data.getTimeMax() / dt);

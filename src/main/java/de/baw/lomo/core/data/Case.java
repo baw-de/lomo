@@ -51,6 +51,8 @@ public class Case {
 
   private double timeMax = 3600.;
 
+  private double timeStepMax = Double.POSITIVE_INFINITY;
+
   private int numberOfNodes = 100;
 
   private double deltaWaterDepthStop = 0.1;
@@ -188,6 +190,10 @@ public class Case {
   public void setTimeMax(double timeMax) {
     this.timeMax = timeMax;
   }
+
+  public double getTimeStepMax() { return timeStepMax; }
+
+  public void setTimeStepMax(double timeStepMax) { this.timeStepMax = timeStepMax; }
 
   public int getNumberOfNodes() {
     return numberOfNodes;
