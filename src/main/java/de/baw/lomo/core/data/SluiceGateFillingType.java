@@ -28,7 +28,7 @@ public class SluiceGateFillingType extends AbstractSluiceGateFillingType {
     
     super();
     
-    maximumPressureHead = 4.0;
+    maximumPressureHead = Double.POSITIVE_INFINITY;
     
     if (sluiceGateHeightLookup.isEmpty()) {
       sluiceGateHeightLookup.add(new KeyValueEntry(0.0, 0.0));
