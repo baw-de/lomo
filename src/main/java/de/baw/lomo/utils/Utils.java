@@ -31,6 +31,10 @@ public final class Utils {
 
     final int tbSize = source.size();
 
+    if (tbSize == 1) {
+      return source.get(0).getValue();
+    }
+
     if (x <= source.get(0).getKey()) {
       return source.get(0).getValue();
     }

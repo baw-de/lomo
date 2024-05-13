@@ -20,6 +20,7 @@ package de.baw.lomo.core.data;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @XmlTransient
@@ -102,8 +103,10 @@ public abstract class AbstractCustomSourceFillingType extends FillingType {
   }
 
   @Override
-  public double getEffectiveFlowSection(double time, double position) {
-    return Double.NaN;
+  public double[] getEffectiveFlowArea(double time, double[] positions) {
+    final double[] arr = new double[positions.length];
+    Arrays.fill(arr, Double.NaN);
+    return arr;
   }
 
 }

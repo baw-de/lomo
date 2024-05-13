@@ -85,7 +85,7 @@ public class OneDimensionalModel implements Model {
   /** Zeitabhaengige Ergebnisse protokollieren **/
   private double[] inflow, h1Mean, I, longitudinalForce;
   /** Strickler Wert **/
-  private double kSt = 100; // Fest verdrahtet
+  private final double kSt = 100; // Fest verdrahtet
   
   private double[] positions;
 
@@ -263,6 +263,26 @@ public class OneDimensionalModel implements Model {
       // Q mit Adams-Bashforth-Diskretisierung fuer Q und mit
       // Crank-Nicolson fuer A mit implizitem A fuer dh/dx-Term
 
+      // Strahlausbreitung
+      final double[] effectiveFlowArea = fillingTypes.get(0).getEffectiveFlowArea(time, positions);
+
+      for (int i = 1; i < fillingTypes.size(); i++) {
+
+        final double[] ftEffectiveFlowArea = fillingTypes.get(i).getEffectiveFlowArea(time, positions);
+
+        for (int j = 0; j < positions.length; j++) {
+
+          if (!Double.isNaN(ftEffectiveFlowArea[j])) {
+
+            if (Double.isNaN(effectiveFlowArea[j])) {
+              effectiveFlowArea[j] = ftEffectiveFlowArea[j];
+            } else {
+              effectiveFlowArea[j] = Math.min(effectiveFlowArea[j], ftEffectiveFlowArea[j]);
+            }
+          }
+        }
+      }
+
       // Schleife fuer Predictor-Corrector
       for (int corrStep = 0; corrStep <= 2; corrStep++) {
 
@@ -272,26 +292,17 @@ public class OneDimensionalModel implements Model {
 
           beta[i] = 1.;
 
-          // Strahlausbreitung
-          double aEffective = A05[i];
-
-          for (FillingType ft : fillingTypes) {
-
-            double aEffSection = ft.getEffectiveFlowSection(time, dx * i);
-
-            if (Double.isNaN(aEffSection)) {
-              continue;
-            }
-
-            // aEffective cannot be larger than actual wet cross section
-            aEffective = Math.min(aEffective, aEffSection);
+          if (Double.isNaN(effectiveFlowArea[i])) {
+            continue;
           }
+
+          // aEffective cannot be larger than actual wet cross section
+          final double aEffective = Math.min(A05[i], effectiveFlowArea[i]);
 
           // avoid division by zero
           if (aEffective > 1.e-3) {
             beta[i] = A05[i] / aEffective;
           }
-
         }
 
         // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA

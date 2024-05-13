@@ -22,6 +22,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractGateFillingType extends FillingType {
@@ -114,7 +115,7 @@ public abstract class AbstractGateFillingType extends FillingType {
   }
 
   @Override
-  public double getEffectiveFlowSection(double time, double position) {
+  public double[] getEffectiveFlowArea(double time, double[] positions) {
 
     final double jetOutlet = getJetOutlet(getGateOpening(time));
     final double c0 = getJetCoefficientC0();
@@ -122,7 +123,7 @@ public abstract class AbstractGateFillingType extends FillingType {
     final double c2 = getJetCoefficientC2();
     final double c3 = getJetCoefficientC3();
 
-    return c0 + c1 * jetOutlet + c2 * Math.pow(position, c3);
+    return Arrays.stream(positions).map(p -> c0 + c1 * jetOutlet + c2 * Math.pow(p, c3)).toArray();
   }
 
 }

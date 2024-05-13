@@ -68,10 +68,10 @@ public abstract class FillingType {
    * 
    * @param time
    *          Current time in seconds
-   * @param position
-   *          Position in longitudinal direction.
-   * @return Effective cross section in m². Returns NaN if not available.
+   * @param positions
+   *          Positions in longitudinal direction.
+   * @return Effective cross section area in m². Returns NaN if not available.
    */
-  public abstract double getEffectiveFlowSection(double time, double position);
+  public abstract double[] getEffectiveFlowArea(double time, double[] positions);
 
 }
