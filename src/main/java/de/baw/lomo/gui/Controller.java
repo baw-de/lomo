@@ -33,6 +33,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -1005,6 +1006,12 @@ public class Controller implements Initializable {
         ComboBox<FillingType> cb = (ComboBox<FillingType>) propList.getSkin().getNode().lookup("#ftSelector"); //$NON-NLS-1$
         cb.setItems(FXCollections.observableList(data.getFillingTypes()));
       });
+    }
+
+    // we adjust the alignment in fgLegend for the German legend items to make the GUI more beautiful
+    if (Locale.getDefault().equals(Locale.GERMANY)) {
+      final TilePane fgLegend = (TilePane) fgChart.lookup(".chart-legend"); //$NON-NLS-1$
+      fgLegend.setTileAlignment(Pos.CENTER_RIGHT);
     }
   }
 

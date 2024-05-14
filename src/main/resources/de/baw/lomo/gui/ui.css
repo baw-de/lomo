@@ -19,7 +19,7 @@
 
 #fgchart .chart-legend {
    -fx-background-color: transparent;
-   -fx-padding: 6px 0px 6px 230px;
+   -fx-padding: 6px 0px 6px 200px;
 }
 
 #bgchart .chart-legend {
