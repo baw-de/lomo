@@ -87,7 +87,8 @@ public class OneDimensionalModel implements Model {
   /** Strickler Wert **/
   private final double kSt = 100; // Fest verdrahtet
   
-  private double[] positions;
+  private double[] positionsCell;
+  private double[] positionsNode;
 
   private void init() {
 
@@ -111,7 +112,8 @@ public class OneDimensionalModel implements Model {
     // *************************************************************************
 
     beta = new double[nx];
-    positions = new double[nx];
+    positionsCell = new double[nx];
+    positionsNode = new double[nx + 1];
 
     Q00 = new double[nx + 1];
     A00 = new double[nx];
@@ -176,7 +178,7 @@ public class OneDimensionalModel implements Model {
 
       beta[i] = 1.;
       h1[i] = uw;
-      positions[i] = dx * (i + 0.5);
+      positionsCell[i] = dx * (i + 0.5);
     }
 
     final double[] forceComputationBounds = data.getForceComputationBounds().clone();
@@ -193,6 +195,7 @@ public class OneDimensionalModel implements Model {
     for (int i = 0; i < nx + 1; i++) {
 
       final double pos = dx * i;
+      positionsNode[i] = pos;
       if (forceComputationBounds[0] <= pos && pos <= forceComputationBounds[1]) {
         aShipNode[i] = data.getShipArea(pos);
         shipVol += aShipNode[i] * dx;
@@ -224,8 +227,8 @@ public class OneDimensionalModel implements Model {
 
       timeSeries[step] = time;
 
-      final double[] volumeSource = new double[positions.length];
-      final double[] momentumSource = new double[positions.length];
+      final double[] volumeSource = new double[positionsCell.length];
+      final double[] momentumSource = new double[positionsCell.length];
 
       int ftIdx = 0;
 
@@ -236,7 +239,7 @@ public class OneDimensionalModel implements Model {
           ftIdx++;
         }
 
-        final double[][] source = ft.getSource(time, positions, h1, v1, data);
+        final double[][] source = ft.getSource(time, positionsCell, h1, v1, data);
 
         Arrays.setAll(volumeSource, i -> volumeSource[i] + source[0][i]);
         Arrays.setAll(momentumSource, i -> momentumSource[i] + source[1][i]);
@@ -264,13 +267,13 @@ public class OneDimensionalModel implements Model {
       // Crank-Nicolson fuer A mit implizitem A fuer dh/dx-Term
 
       // Strahlausbreitung
-      final double[] effectiveFlowArea = fillingTypes.get(0).getEffectiveFlowArea(time, positions);
+      final double[] effectiveFlowArea = fillingTypes.get(0).getEffectiveFlowArea(time, positionsNode);
 
       for (int i = 1; i < fillingTypes.size(); i++) {
 
-        final double[] ftEffectiveFlowArea = fillingTypes.get(i).getEffectiveFlowArea(time, positions);
+        final double[] ftEffectiveFlowArea = fillingTypes.get(i).getEffectiveFlowArea(time, positionsNode);
 
-        for (int j = 0; j < positions.length; j++) {
+        for (int j = 0; j < positionsNode.length; j++) {
 
           if (!Double.isNaN(ftEffectiveFlowArea[j])) {
 
@@ -514,7 +517,7 @@ public class OneDimensionalModel implements Model {
       }
 
       @Override
-      public double[] getPositions() { return Arrays.copyOf(positions, positions.length); }
+      public double[] getPositions() { return Arrays.copyOf(positionsCell, positionsCell.length); }
 
       @Override
       public double[] getSlopeOverTime() {
