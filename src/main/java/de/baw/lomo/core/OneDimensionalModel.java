@@ -429,6 +429,8 @@ public class OneDimensionalModel implements Model {
     
     if (isVerbose) {
 
+      boolean success = !Double.isNaN(h1Mean[step]);
+
       double Qmax = Double.MIN_VALUE, Qmin = Double.MAX_VALUE, 
           Imax = Double.MIN_VALUE, Imin = Double.MAX_VALUE,
           Fmax = Double.MIN_VALUE, Fmin = Double.MAX_VALUE,
@@ -488,6 +490,12 @@ public class OneDimensionalModel implements Model {
           // Ratios given in per mille, Fg=shipVol*1000*g:
           Fmin / (shipVol * GRAVITY),
           Fmax / (shipVol * GRAVITY)));
+
+      if (!success) {
+        bf.append("\n");
+        bf.append(Messages.getString("numerical-error"));
+        bf.append("\n");
+      }
 
       bf.append("* * * * * * * * * * * * * * * * * * * * * * * * * * * *\n"); //$NON-NLS-1$
 
