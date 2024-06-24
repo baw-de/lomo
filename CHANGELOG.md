@@ -1,3 +1,18 @@
+# Release 2.0-beta8
+
+## Core
+* Improved speed for computing effective flow area
+* Set default value for maximum pressure head to positive infinity for sluice gate
+* Added possibility to restrict time step of simulation
+* Added error message on failing simulation due to numerical errors
+
+## GUI
+* Improved GUI wording and translation
+
+## Other
+* Added contact possibility to README
+
+
 # Release 2.0-beta7
 
 ## Core
