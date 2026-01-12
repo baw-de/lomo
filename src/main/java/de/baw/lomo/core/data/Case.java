@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Bundesanstalt für Wasserbau
+ * Copyright (c) 2019-2026 Bundesanstalt für Wasserbau
  *
  * This file is part of LoMo.
  *
