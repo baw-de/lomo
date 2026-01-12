@@ -5,6 +5,10 @@
    -color-o: #860061;
 }
 
+.tooltip {
+    -fx-show-duration: 10s;
+}
+
 #fgchart .readonly-checkbox *.text:disabled {
    -fx-opacity: 1.0;
 }
