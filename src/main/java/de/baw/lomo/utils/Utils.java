@@ -28,76 +28,125 @@ public final class Utils {
   }
 
   public static double linearInterpolate(List<KeyValueEntry> source, double x) {
-
     final int tbSize = source.size();
+
+    if (tbSize == 0) {
+      throw new IllegalArgumentException(Messages.getString("errorEmptySourceList")); //$NON-NLS-1$
+    }
 
     if (tbSize == 1) {
       return source.get(0).getValue();
     }
 
-    if (x <= source.get(0).getKey()) {
-      return source.get(0).getValue();
+    // Cache first and last entries
+    final KeyValueEntry first = source.get(0);
+    final KeyValueEntry last = source.get(tbSize - 1);
+
+    if (x <= first.getKey()) {
+      return first.getValue();
     }
 
-    if (x >= source.get(tbSize - 1).getKey()) {
-      return source.get(tbSize - 1).getValue();
+    if (x >= last.getKey()) {
+      return last.getValue();
     }
 
-    for (int i = 0; i < tbSize; i++) {
-      
-      if (source.get(i + 1).getKey() < source.get(i).getKey()) {
-        throw new IllegalArgumentException("x values are not monotonic.");
+    // Binary search for the interpolation range
+    int left = 0;
+    int right = tbSize - 1;
+
+    while (left < right - 1) {
+      int mid = left + (right - left) / 2;
+      double midKey = source.get(mid).getKey();
+
+      if (x < midKey) {
+        right = mid;
+      } else {
+        left = mid;
       }
-
-      if (source.get(i).getKey() <= x && x <= source.get(i + 1).getKey()) {
-
-        final double yi = source.get(i).getValue();
-        final double yii = source.get(i + 1).getValue();
-
-        final double xi = source.get(i).getKey();
-        final double xii = source.get(i + 1).getKey();
-
-        return yi + (yii - yi) / (xii - xi) * (x - xi);
-      }
     }
-    return Double.NaN;
+
+    // Perform interpolation
+    final KeyValueEntry lower = source.get(left);
+    final KeyValueEntry upper = source.get(left + 1);
+
+    final double xi = lower.getKey();
+    final double xii = upper.getKey();
+    final double yi = lower.getValue();
+    final double yii = upper.getValue();
+
+    return yi + (yii - yi) / (xii - xi) * (x - xi);
   }
-  
+
   public static double linearIntegrate(List<KeyValueEntry> source, double x) {
+    final int tbSize = source.size();
 
-    double integral = 0.0;
-
-    if (x <= source.get(0).getKey()) {
-      return integral;
+    if (tbSize == 0) {
+      throw new IllegalArgumentException(Messages.getString("errorEmptySourceList")); //$NON-NLS-1$
     }
 
-    final int tbSize = source.size();
-    
     if (tbSize == 1) {
       return x * source.get(0).getValue();      
     }
 
+    // Cache first entry
+    final KeyValueEntry first = source.get(0);
+
+    if (x <= first.getKey()) {
+      return 0.0;
+    }
+
+    double integral = 0.0;
+    KeyValueEntry prev = first;
+
     for (int i = 1; i < tbSize; i++) {
+      final KeyValueEntry curr = source.get(i);
+      final double currKey = curr.getKey();
 
-      if (source.get(i).getKey() <= x) {
+      if (currKey <= x) {
+        // Complete segment: trapezoidal rule
+        final double width = currKey - prev.getKey();
+        final double avgHeight = 0.5 * (curr.getValue() + prev.getValue());
+        integral += width * avgHeight;
 
-        integral += 0.5
-            * (source.get(i).getValue() + source.get(i - 1).getValue())
-            * (source.get(i).getKey() - source.get(i - 1).getKey());
-
+        prev = curr;
       } else {
+        // Partial segment: x falls between prev and curr
+        final double width = x - prev.getKey();
 
-        integral += (0.5
-            * (source.get(i).getValue() - source.get(i - 1).getValue())
-            / (source.get(i).getKey() - source.get(i - 1).getKey())
-            * (x - source.get(i - 1).getKey()) + source.get(i - 1).getValue())
-            * (x - source.get(i - 1).getKey());
+        // Linear interpolation for y-value at x
+        final double slope = (curr.getValue() - prev.getValue()) / (currKey - prev.getKey());
+        final double yAtX = prev.getValue() + slope * width;
+
+        // Trapezoidal rule for partial segment
+        final double avgHeight = 0.5 * (prev.getValue() + yAtX);
+        integral += width * avgHeight;
+
         break;
-
       }
+    }
+
+    // Handle case where x is beyond all points
+    if (x > source.get(tbSize - 1).getKey()) {
+      final KeyValueEntry last = source.get(tbSize - 1);
+      final double extraWidth = x - last.getKey();
+      integral += extraWidth * last.getValue();
     }
 
     return integral;
   }
- 
+
+  public static void validateMonotonicity(List<KeyValueEntry> source) throws IllegalArgumentException {
+    if (source.size() < 2) {
+      return; // Single point or empty is trivially monotonic
+    }
+
+    for (int i = 0; i < source.size() - 1; i++) {
+      if (source.get(i + 1).getKey() <= source.get(i).getKey()) {
+        throw new IllegalArgumentException(String.format(
+                Messages.getString("errorNotMonotonic"), //$NON-NLS-1$
+                i,source.get(i).getKey(),source.get(i + 1).getKey())
+        );
+      }
+    }
+  }
 }
