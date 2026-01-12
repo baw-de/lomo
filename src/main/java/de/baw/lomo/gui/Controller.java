@@ -340,7 +340,7 @@ public class Controller implements Initializable {
 
     dlg.showAndWait().filter(response -> response == ButtonType.APPLY).ifPresent(response -> {
       lockDesigner.generateSavingBasins();
-      initGUI();
+      initModel(model,data);
     });
   }
 
