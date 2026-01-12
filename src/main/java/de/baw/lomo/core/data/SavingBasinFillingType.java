@@ -125,6 +125,10 @@ public class SavingBasinFillingType extends AbstractSluiceGateFillingType {
 		return source;
 	}
 
+	public double getBasinWaterLevel() {
+		return currentFillHeight;
+	}
+
 	@Override
   	public String toString() {
     return Messages.getString("fillingTypeSavingBasin");

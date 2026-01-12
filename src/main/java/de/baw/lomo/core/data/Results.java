@@ -36,4 +36,6 @@ public interface Results {
   double[][] getChamberWaterLevelOverTime();
 
   double[][] getFlowVelocityOverTime();
+
+  double[][] getSavingBasinsWaterLevelOverTime();
 }

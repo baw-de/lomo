@@ -96,11 +96,12 @@ public final class IOUtils {
   public static void writeResultsToText(Results results, File file, String comment) {
 
     final double[] timeResults = results.getTimeline();
-    final double[][] valeOpeningResults = results.getValveOpeningOverTime();
+    final double[][] valveOpeningResults = results.getValveOpeningOverTime();
     final double[] waterLevelResults = results.getMeanChamberWaterLevelOverTime();
     final double[] dischargeResults = results.getDischargeOverTime();
     final double[] slopeResults = results.getSlopeOverTime();   
-    final double[] forceResults = results.getLongitudinalForceOverTime();  
+    final double[] forceResults = results.getLongitudinalForceOverTime();
+    final double[][] savingBasinsWaterLevel = results.getSavingBasinsWaterLevelOverTime();
     
     
     DecimalFormatSymbols dSep = new DecimalFormatSymbols();
@@ -117,27 +118,37 @@ public final class IOUtils {
       }
       
       bw.write("TIME[s] "); //$NON-NLS-1$
-      for (int j = 0; j < valeOpeningResults[0].length; j++) {
+      for (int j = 0; j < valveOpeningResults[0].length; j++) {
         String valveStr = "";
-        if (valeOpeningResults[0].length > 1) {
+        if (valveOpeningResults[0].length > 1) {
           valveStr = "_" + j;
         }
         bw.write("VALVE_OPENING" + valveStr + "[m,°,%] "); //$NON-NLS-1$  //$NON-NLS-2$
       }
       bw.write("CHAMBER_WATER_LEVEL[m] FLOW_RATE[m^3/s] SLOPE[-] LONGITUDINAL_FORCE[N]"); //$NON-NLS-1$
+      for (int j = 0; j < savingBasinsWaterLevel[0].length; j++) {
+        String basinStr = "";
+        if (savingBasinsWaterLevel[0].length > 1) {
+          basinStr = "_" + j;
+        }
+        bw.write(" SAVING_BASIN" + basinStr + "_WATER_LEVEL[m]"); //$NON-NLS-1$  //$NON-NLS-2$
+      }
       bw.newLine();
 
       for (int i = 0; i < timeResults.length; i++) {
 
         bw.write(df.format(timeResults[i]) + " "); //$NON-NLS-1$
 
-        for (int j = 0; j < valeOpeningResults[0].length; j++) {
-          bw.write(df.format(valeOpeningResults[i][j]) + " "); //$NON-NLS-1$
+        for (int j = 0; j < valveOpeningResults[0].length; j++) {
+          bw.write(df.format(valveOpeningResults[i][j]) + " "); //$NON-NLS-1$
         }
         bw.write(df.format(waterLevelResults[i]) + " "); //$NON-NLS-1$
         bw.write(df.format(dischargeResults[i]) + " "); //$NON-NLS-1$
         bw.write(df.format(slopeResults[i]) + " "); //$NON-NLS-1$
         bw.write(df.format(forceResults[i]) + ""); //$NON-NLS-1$
+        for (int j = 0; j < savingBasinsWaterLevel[0].length; j++) {
+          bw.write(" " + df.format(savingBasinsWaterLevel[i][j])); //$NON-NLS-1$
+        }
         bw.newLine();
       }
 
@@ -221,6 +232,7 @@ public final class IOUtils {
     final List<Double> dischargeList = new ArrayList<>();
     final List<Double> slopeList = new ArrayList<>();
     final List<Double> forceList = new ArrayList<>();
+    final List<List<Double>> savingBasinLists = new ArrayList<>();
     
     final List<List<Double>> listList = new ArrayList<>();
     
@@ -261,6 +273,10 @@ public final class IOUtils {
               listList.add(slopeList);
             } else if (columnHeader.startsWith("longitudinal_force")) { //$NON-NLS-1$
               listList.add(forceList);
+            } else if (columnHeader.startsWith("saving_basin")) { //$NON-NLS-1$
+              final List<Double> sbList = new ArrayList<>();
+              listList.add(sbList);
+              savingBasinLists.add(sbList);
             } else {
               throw new RuntimeException(String.format(Messages.getString("errorLoadingResults"), columnHeader)); //$NON-NLS-1$
             }
@@ -334,6 +350,12 @@ public final class IOUtils {
       @Override
       public double[][] getFlowVelocityOverTime() {
         return new double[timeList.size()][];
+      }
+
+      @Override
+      public double[][] getSavingBasinsWaterLevelOverTime() {
+        return IntStream.range(0, timeList.size()).mapToObj(
+                i -> savingBasinLists.stream().mapToDouble(l -> l.get(i)).toArray()).toArray(double[][]::new);
       }
     };    
   }

@@ -17,10 +17,7 @@
  */
 package de.baw.lomo.core;
 
-import de.baw.lomo.core.data.AbstractGateFillingType;
-import de.baw.lomo.core.data.Case;
-import de.baw.lomo.core.data.FillingType;
-import de.baw.lomo.core.data.Results;
+import de.baw.lomo.core.data.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -82,6 +79,8 @@ public class OneDimensionalModel implements Model {
   private double shipVol;
   /** Aktuelle Schuetzoeffnungshoehe **/
   private double[][] valveOpening;
+  /** Wasserstand in Sparbecken **/
+  private double[][] savingBasinsWaterLevel;
   /** Zeitabhaengige Ergebnisse protokollieren **/
   private double[] inflow, h1Mean, I, longitudinalForce;
   /** Strickler Wert **/
@@ -150,6 +149,9 @@ public class OneDimensionalModel implements Model {
 
     // Aktuelle Schuetzoeffnungshoehe
     valveOpening = new double[maxStep + 1][(int) data.getFillingTypes().stream().filter(ft -> ft instanceof AbstractGateFillingType).count()];
+
+    // Wasserstand in Sparbecken
+    savingBasinsWaterLevel = new double[maxStep + 1][(int) data.getFillingTypes().stream().filter(ft -> ft instanceof SavingBasinFillingType).count()];
 
     // Zeitabhaengige Ergebnisse protokollieren
     inflow = new double[maxStep + 1];
@@ -231,6 +233,7 @@ public class OneDimensionalModel implements Model {
       final double[] momentumSource = new double[positionsCell.length];
 
       int ftIdx = 0;
+      int sbIdx = 0;
 
       for (FillingType ft : fillingTypes) {
 
@@ -243,6 +246,11 @@ public class OneDimensionalModel implements Model {
 
         Arrays.setAll(volumeSource, i -> volumeSource[i] + source[0][i]);
         Arrays.setAll(momentumSource, i -> momentumSource[i] + source[1][i]);
+
+        if (ft instanceof SavingBasinFillingType) {
+          savingBasinsWaterLevel[step][sbIdx] = ((SavingBasinFillingType) ft).getBasinWaterLevel();
+          sbIdx++;
+        }
       }
       
       // Alte Zeitebene wird ganz alte Zeitebene, neue Zeitebene wird alte
@@ -547,6 +555,9 @@ public class OneDimensionalModel implements Model {
 
       @Override
       public double[][] getFlowVelocityOverTime() { return Arrays.stream(v1overT,0, step).map(double[]::clone).toArray(double[][]::new); }
+
+      @Override
+      public double[][] getSavingBasinsWaterLevelOverTime() { return Arrays.stream(savingBasinsWaterLevel,0, step).map(double[]::clone).toArray(double[][]::new); }
     };
   }
 
