@@ -1,3 +1,19 @@
+# Release 2.0-beta9
+
+## Core
+* Water level of saving basins is now part of the results
+* Improved linear interpolation and integration
+* Introduced init method in Case to give the chance for one-time computations and initialization
+* Fixed bugs in SavingLockDesigner
+
+## GUI
+* Improved tooltips
+
+## Other
+* Updated Gradle versioning plugin
+* Updated dependencies
+
+
 # Release 2.0-beta8
 
 ## Core
