@@ -74,6 +74,7 @@ public class SavingLockDesigner {
 
         // Add saving basins
         double tFill = 0.0;
+        double sluiceGateHeight = 0.0;
 
         for (int i = 1; i <= nbBasins; i++) {
             SavingBasinFillingType basin = new SavingBasinFillingType();
@@ -92,14 +93,19 @@ public class SavingLockDesigner {
                     source = basin.getSource(tFill, new double[]{0.0}, new double[]{basin.getFloorHeight()}, null, data);
                     tFill += 30.0;
                 } while (tFill < 120. || source[0][0] > 0.1);
-            } else {
-                for (KeyValueEntry entry : basin.getSluiceGateHeightLookup()) {
-                    entry.setKey(entry.getKey() + (i - 1) * tFill);
-                }
+                sluiceGateHeight = basin.getSluiceGateHeight(tFill);
             }
 
-            basin.getSluiceGateHeightLookup().add(new KeyValueEntry(i * tFill - 1., basin.getSluiceGateHeightLookup().get(basin.getSluiceGateHeightLookup().size() - 1).getValue()));
-            basin.getSluiceGateHeightLookup().add(new KeyValueEntry(i * tFill, 0.0));
+            if (basin.getSluiceGateHeightLookup().get(basin.getSluiceGateHeightLookup().size()-1).getKey() > tFill) {
+                basin.getSluiceGateHeightLookup().remove(basin.getSluiceGateHeightLookup().size() - 1);
+            }
+
+            basin.getSluiceGateHeightLookup().add(new KeyValueEntry(tFill,sluiceGateHeight));
+            basin.getSluiceGateHeightLookup().add(new KeyValueEntry(2. * tFill, 0.0));
+
+            for (KeyValueEntry entry : basin.getSluiceGateHeightLookup()) {
+                entry.setKey(entry.getKey() + (i - 1) * tFill);
+            }
 
             data.addFillingType(basin);
         }
