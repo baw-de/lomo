@@ -126,4 +126,14 @@ public abstract class AbstractGateFillingType extends FillingType {
     return Arrays.stream(positions).map(p -> c0 + c1 * jetOutlet + c2 * Math.pow(p, c3)).toArray();
   }
 
+  @Override
+  public void init() {
+    try {
+      Utils.validateMonotonicity(jetOutletLookup);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("jetOutletLookup: " + e.getMessage());
+    }
+    super.init();
+  }
+
 }

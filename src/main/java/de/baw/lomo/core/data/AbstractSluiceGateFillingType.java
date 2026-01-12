@@ -115,4 +115,27 @@ public abstract class AbstractSluiceGateFillingType
     }
   }
 
+  @Override
+  public void init() {
+    try {
+      Utils.validateMonotonicity(sluiceGateDischargeCoefficientLookup);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("sluiceGateDischargeCoefficientLookup: " + e.getMessage());
+    }
+
+    try {
+      Utils.validateMonotonicity(sluiceGateHeightLookup);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("sluiceGateHeightLookup: " + e.getMessage());
+    }
+
+    try {
+      Utils.validateMonotonicity(sluiceGateWidthLookup);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("sluiceGateWidthLookup: " + e.getMessage());
+    }
+
+    super.init();
+  }
+
 }

@@ -109,4 +109,11 @@ public abstract class AbstractCustomSourceFillingType extends FillingType {
     return arr;
   }
 
+  @Override
+  public void init() {
+    for (CustomSource s : sources) {
+      s.init();
+    }
+    super.init();
+  }
 }

@@ -74,4 +74,12 @@ public abstract class FillingType {
    */
   public abstract double[] getEffectiveFlowArea(double time, double[] positions);
 
+  /**
+   * This method is called once in the begining of a new simulation
+   * to give the chance for one-time checks and computations.
+   * Always call init method of super class in your implementation.
+   */
+  public void init() {
+
+  }
 }

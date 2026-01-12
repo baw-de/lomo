@@ -95,6 +95,8 @@ public class OneDimensionalModel implements Model {
     // Daten aus Case lesen
     // *************************************************************************
 
+    data.init();
+
     theta = data.getTheta();
     upwind = data.getUpwind();
     nx = data.getNumberOfNodes();

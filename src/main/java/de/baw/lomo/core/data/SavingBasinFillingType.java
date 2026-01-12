@@ -111,11 +111,7 @@ public class SavingBasinFillingType extends AbstractSluiceGateFillingType {
 	@Override
 	public double[][] getSource(double time, double[] positions, double[] h, double[] v, Case data) {
 
-		if (time < lastTime) {
-			currentFillHeight = getInitialFillHeight();
-		} else {
-			currentFillHeight -= (time - lastTime) * lastFlowRate / getSavingBasinSurfaceArea(currentFillHeight);
-		}
+		currentFillHeight -= (time - lastTime) * lastFlowRate / getSavingBasinSurfaceArea(currentFillHeight);
 
 		final double[][] source = super.getSource(time, positions, h, v, data);
 
@@ -130,7 +126,18 @@ public class SavingBasinFillingType extends AbstractSluiceGateFillingType {
 	}
 
 	@Override
+	public void init() {
+		try {
+			Utils.validateMonotonicity(savingBasinSurfaceAreaLookup);
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException("savingBasinSurfaceAreaLookup: " + e.getMessage());
+		}
+		currentFillHeight = getInitialFillHeight();
+		super.init();
+	}
+
+	@Override
   	public String toString() {
-    return Messages.getString("fillingTypeSavingBasin");
-  }
+        return Messages.getString("fillingTypeSavingBasin");
+    }
 }

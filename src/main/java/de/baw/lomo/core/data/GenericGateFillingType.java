@@ -97,6 +97,23 @@ public class GenericGateFillingType extends AbstractGateFillingType {
   }
 
   @Override
+  public void init() {
+    try {
+      Utils.validateMonotonicity(genericGateOpeningLookup);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("genericGateOpeningLookup: " + e.getMessage());
+    }
+
+    try {
+      Utils.validateMonotonicity(genericGateAMueLookup);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("genericGateAMueLookup: " + e.getMessage());
+    }
+
+    super.init();
+  }
+
+  @Override
   public String toString() {
     return Messages.getString("fillingTypeGenericGate");
   }

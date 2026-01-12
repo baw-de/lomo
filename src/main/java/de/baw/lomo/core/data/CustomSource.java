@@ -89,8 +89,11 @@ public class CustomSource {
   public void setData(double[] time, double[] source) {
     
     if (time.length != source.length) {
-      System.out.format(Messages.getString("customSourceArrayLengthError")); //$NON-NLS-1$
-      return;
+      throw new IllegalArgumentException(Messages.getString("customSourceArrayLengthError")); //$NON-NLS-1$
+    }
+
+    if (time.length == 0) {
+      throw new IllegalArgumentException(Messages.getString("customSourceEmptyArrayError")); //$NON-NLS-1$
     }
     
     sourceLookup.clear();
@@ -100,4 +103,11 @@ public class CustomSource {
     }
   }
 
+  public void init() {
+    try {
+      Utils.validateMonotonicity(sourceLookup);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("sourceLookup: " + e.getMessage());
+    }
+  }
 }

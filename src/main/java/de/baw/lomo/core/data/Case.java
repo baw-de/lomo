@@ -251,4 +251,20 @@ public class Case {
 
     this.forceComputationBounds = forceComputationBounds;
   }
+
+  /**
+   * This method is called once in the begining of a new simulation
+   * to give the chance for one-time checks and computations.
+   */
+  public void init() {
+    try {
+      Utils.validateMonotonicity(shipAreaLookup);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("shipAreaLookup: " + e.getMessage());
+    }
+
+    for (FillingType ft : fillingTypes) {
+      ft.init();
+    }
+  }
 }

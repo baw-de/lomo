@@ -73,4 +73,13 @@ public abstract class AbstractSegmentGateFillingType extends AbstractGateFilling
     return getSegmentGateAngle(time);
   }
 
+  @Override
+  public void init() {
+    try {
+      Utils.validateMonotonicity(segmentGateAMueLookup);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("segmentGateAMueLookup: " + e.getMessage());
+    }
+    super.init();
+  }
 }

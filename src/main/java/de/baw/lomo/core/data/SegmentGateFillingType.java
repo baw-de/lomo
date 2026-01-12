@@ -81,6 +81,16 @@ public class SegmentGateFillingType extends AbstractSegmentGateFillingType {
   }
 
   @Override
+  public void init() {
+    try {
+      Utils.validateMonotonicity(segmentGateAngleLookup);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("segmentGateAngleLookup: " + e.getMessage());
+    }
+    super.init();
+  }
+
+  @Override
   public String toString() {
     return Messages.getString("fillingTypeSegmentGate");
   }

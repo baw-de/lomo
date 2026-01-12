@@ -81,6 +81,16 @@ public class SegmentGateVelocityFillingType extends AbstractSegmentGateFillingTy
   }
 
   @Override
+  public void init() {
+    try {
+      Utils.validateMonotonicity(segmentGateVelocityLookup);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("segmentGateVelocityLookup: " + e.getMessage());
+    }
+    super.init();
+  }
+
+  @Override
   public String toString() {
     return Messages.getString("fillingTypeSegmentGateVelocity"); //$NON-NLS-1$
   }

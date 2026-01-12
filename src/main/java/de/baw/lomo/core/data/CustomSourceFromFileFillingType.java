@@ -39,7 +39,6 @@ public class CustomSourceFromFileFillingType extends AbstractCustomSourceFilling
 
   public void setFile(String file) {
     this.file = file;
-    readFile();
   }
 
   @XmlTransient
@@ -152,5 +151,11 @@ public class CustomSourceFromFileFillingType extends AbstractCustomSourceFilling
     } catch (final IOException e) {
       System.out.println(Messages.getString("customSourceFromFile.cannotReadFile"));
     }
+  }
+
+  @Override
+  public void init() {
+    readFile();
+    super.init();
   }
 }
