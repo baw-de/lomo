@@ -7,7 +7,7 @@ plugins {
     application
     id("org.openjfx.javafxplugin") version "0.1.0"
     id("org.beryx.jlink") version "2.26.0"
-    id("net.nemerosa.versioning") version "2.15.1"
+    id("net.nemerosa.versioning") version "3.1.0"
 }
 
 repositories {
