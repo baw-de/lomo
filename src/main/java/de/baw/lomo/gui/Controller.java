@@ -550,6 +550,12 @@ public class Controller implements Initializable {
         dataO.add(dataOSub);
     }
 
+    // We should have at least one dataset for a nice plot
+    if (dataO.size() == 0) {
+      List<XYChart.Data<Number, Number>> dataOSub = new ArrayList<>(timeResults.length);
+      dataO.add(dataOSub);
+    }
+
     final XYChart.Series<Number, Number> seriesF = new XYChart.Series<>(
             FXCollections.observableList(dataF));
     seriesF.setName(Messages.getString("lblSeriesF")); //$NON-NLS-1$
