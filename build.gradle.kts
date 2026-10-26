@@ -64,6 +64,7 @@ jlink {
     addOptions("--release-info",
         "add:LOMO_VERSION=${project.version}:OS_CLASSIFIER=${releasePlatform}"
                 + ":SOURCE=${versioning.info.build}" + (if (versioning.info.dirty) "-dirty" else ""))
+    addOptions("--add-options=-XX:+DisableAttachMechanism")
 
     mergedModule {
         additive = true
