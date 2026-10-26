@@ -79,7 +79,7 @@ public class SavingLockDesigner {
         for (int i = 1; i <= nbBasins; i++) {
             SavingBasinFillingType basin = new SavingBasinFillingType();
             basin.setName(String.format("%s %d", basin, i)); //$NON-NLS-1$
-            basin.getSavingBasinSurfaceAreaLookup().get(0)
+            basin.getSavingBasinSurfaceAreaLookup().get(1)
                     .setValue(ratioAreaBasinToAreaChamber * data.getChamberWidth() * data.getChamberLength());
             final double floorHeight = Math.min(data.getDownstreamWaterLevel(), data.getUpstreamWaterLevel())
                     + i * getLamellaHeight() + restFillingHeightBasins;

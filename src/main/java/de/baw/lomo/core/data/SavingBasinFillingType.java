@@ -61,7 +61,8 @@ public class SavingBasinFillingType extends AbstractSluiceGateFillingType {
 		}
 
 		if (savingBasinSurfaceAreaLookup.isEmpty()) {
-			savingBasinSurfaceAreaLookup.add(new KeyValueEntry(0.0, 1000.0));
+			savingBasinSurfaceAreaLookup.add(new KeyValueEntry(0.0, 100.0));
+			savingBasinSurfaceAreaLookup.add(new KeyValueEntry(0.001, 2000.0));
 		}
 	}
 
@@ -105,7 +106,7 @@ public class SavingBasinFillingType extends AbstractSluiceGateFillingType {
 
 	@Override
 	public double getPressureHead(double time, double[] positions, double[] h, double[] v, Case data) {
-		return Math.max(currentFillHeight - h[0], floorHeight - h[0]);
+		return currentFillHeight - h[0];
 	}
 
 	@Override
@@ -133,6 +134,8 @@ public class SavingBasinFillingType extends AbstractSluiceGateFillingType {
 			throw new RuntimeException("savingBasinSurfaceAreaLookup: " + e.getMessage());
 		}
 		currentFillHeight = getInitialFillHeight();
+		lastTime = Double.MAX_VALUE;
+		lastFlowRate = 0.0;
 		super.init();
 	}
 

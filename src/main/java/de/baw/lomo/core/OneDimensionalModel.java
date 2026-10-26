@@ -170,6 +170,8 @@ public class OneDimensionalModel implements Model {
     v1 = v1overT[0];
     h1 = h1overT[0];
     h1Mean[0] = uw;
+    savingBasinsWaterLevel[0] = data.getFillingTypes().stream().filter(ft -> ft instanceof SavingBasinFillingType)
+            .mapToDouble(ft -> ((SavingBasinFillingType) ft).getBasinWaterLevel()).toArray();
 
     // Zellwerte
     for (int i = 0; i < nx; i++) {
