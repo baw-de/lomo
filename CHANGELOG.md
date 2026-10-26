@@ -1,3 +1,17 @@
+# Release 2.0-beta10
+
+## Core
+* Initial values for water levels in saving basins are set
+* Better default values for area lookup in saving basins
+
+## GUI
+n/a
+
+## Other
+* Updated Gradle
+* Updated dependencies
+
+
 # Release 2.0-beta9
 
 ## Core
